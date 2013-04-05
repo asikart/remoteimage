@@ -36,3 +36,8 @@
 /* FOOTER */
 
 
+/* TREE */
+#remote-folder-wrap {
+	height: 500px;
+	overflow: auto ;
+}

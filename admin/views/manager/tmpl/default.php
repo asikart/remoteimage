@@ -95,6 +95,11 @@ if($app->isAdmin()) {
 		<!-- Bodys -->
 		<div class="row-fluid">
 			<div id="remote-folder" class="<?php echo ( JVERSION >= 3 ) ? 'span3' : 'width-30 fltlft' ?>">
+			
+				<div id="remote-folder-menu">
+					<input type="button" class="btn" id="add_folder" value="<?php echo JText::_('COM_REMOTEIMAGE_ADD_FOLDER'); ?>"/>
+				</div>
+				
 				<div id="remote-folder-wrap">
 					<ul>
 						<li id="phtml_1">

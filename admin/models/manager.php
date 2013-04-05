@@ -30,19 +30,31 @@ class RemoteimageModelManager extends JModelLegacy
 	
 	
 	/*
+	 * function __construct
+	 * @param 
+	 */
+	
+	public function __construct($config = array())
+	{
+		$this->params 		= $params = JComponentHelper::getParams('com_remoteimage') ;
+		$this->base_path 	= $params->get('Ftp_Path') ;
+		$this->path 		= trim($this->base_path, '/') . '/' . trim(JRequest::getVar('path'), '/' );
+		$this->ftp 			= RMHelper::getFTP();
+		
+		
+		parent::__construct($config) ;
+	}
+	
+	
+	
+	/*
 	 * function get_children
 	 * @param 
 	 */
 	
-	public function get_children()
+	public function getChildren()
 	{
-		//$ftp 	= RMHelper::getFTP();
-		$params = JComponentHelper::getParams('com_remoteimage') ;
-		$path 	= JRequest::getVar('path', $params->get('Ftp_Path')) ;
-		
-		$ftp = RMHelper::getFTP();
-		
-		$details = $ftp->listDetails($path, 'folders');
+		$details = $this->ftp->listDetails($this->path, 'folders');
 		
 		$return = array();
 		
@@ -51,8 +63,9 @@ class RemoteimageModelManager extends JModelLegacy
 			
 			
 			$tmp->attr = new JObject();
-			$tmp->attr->path = $path . '/' . $detail['name'] ;
+			$tmp->attr->path = trim($this->path, '/') . '/' . $detail['name'] ;
 			$tmp->attr->rel = 'folder' ;
+			$tmp->attr->id = 'rmpath-' . str_replace('/', '-', trim($tmp->attr->path, '/') ) ;
 			
 			$tmp->data = $detail['name'] ;
 			$tmp->state = 'closed' ;
@@ -65,4 +78,53 @@ class RemoteimageModelManager extends JModelLegacy
 	}
 	
 	
+	
+	/*
+	 * function createNode
+	 * @param 
+	 */
+	
+	public function createNode()
+	{
+		$title = JRequest::getVar('title') ;
+		$result = new JObject();
+		
+		if( $this->ftp->mkdir( trim($this->path, '/') . '/' . $title ) )
+		{
+			$result->status = 1 ;
+			$result->path 	= trim($this->path, '/') . '/' . $title ;
+		}else{
+			$result->status = 0 ;
+		}
+		
+		return $result ;
+	}
+	
+	
+	
+	/*
+	 * function removeNode
+	 * @param 
+	 */
+	
+	public function removeNode()
+	{
+		$result = new JObject();
+		
+		$lists = $this->ftp->listDetails($this->path);
+		if($lists > 0) {
+			$result->status = 0 ;
+			$result->msg = JText::_('COM_REMOTEIMAGE_FTP_CANNOT_DELETE_FOLDER_WITH_CHILDREN') ;
+			return $result ;
+		}
+		
+		if( $this->ftp->delete( trim($this->path, '/') ) )
+		{
+			$result->status = 1 ;
+		}else{
+			$result->status = 0 ;
+		}
+
+		return $result ;
+	}
 }

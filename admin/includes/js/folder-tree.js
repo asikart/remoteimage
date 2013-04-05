@@ -8,11 +8,28 @@
  * Author: Asika
  */
 
+var rmServerUrl = 'index.php?option=com_remoteimage&task=manager.server&type=ftp' ;
+var tmp ;
+
+var pathToId = function(path){
+	
+	console.log(path);
+	if(path){
+		id = path.toString().replace(/\//ig, '-') ;
+		return id ;
+	}else{
+		return null;
+	}
+}
+
 jQuery(document).ready(function($){
+	
+	var folderTree = $("#remote-folder-wrap") ;
+	
 	$(function () {
 
-		$("#remote-folder-wrap")
-			.bind("before.jstree", function (e, data) {
+		
+			folderTree.bind("before.jstree", function (e, data) {
 				$("#alog").append(data.func + "<br />");
 				//console.log(data.func);
 			})
@@ -29,7 +46,7 @@ jQuery(document).ready(function($){
 					// All the options are almost the same as jQuery's AJAX (read the docs)
 					"ajax" : {
 						// the URL to fetch the data
-						"url" : "index.php?option=com_remoteimage&task=manager.server&type=ftp",
+						"url" : rmServerUrl,
 						// the `data` function is executed in the instance's scope
 						// the parameter is the node being loaded 
 						// (may be -1, 0, or undefined when loading the root nodes)
@@ -37,7 +54,7 @@ jQuery(document).ready(function($){
 							// the result is fed to the AJAX request `data` option
 							console.log(n);
 							return { 
-								"operation" : "get_children", 
+								"operation" : "getChildren", 
 								"path" : n.attr ? n.attr('path') : null
 							}; 
 						}
@@ -118,38 +135,49 @@ jQuery(document).ready(function($){
 				}
 			})
 			.bind("create.jstree", function (e, data) {
-				$.post(
-					"/static/v.1.0pre/_demo/server.php", 
-					{ 
-						"operation" : "create_node", 
-						"id" : data.rslt.parent.attr("id").replace("node_",""), 
-						"position" : data.rslt.position,
+				tmp = data ;
+				$.get(
+					rmServerUrl, 
+					{
+						"operation" : "createNode", 
+						"id" : pathTpId(this.path), 
+						"path" : data.rslt.parent.attr('path'),
 						"title" : data.rslt.name,
 						"type" : data.rslt.obj.attr("rel")
 					}, 
 					function (r) {
 						if(r.status) {
 							$(data.rslt.obj).attr("id", "node_" + r.id);
+							$(data.rslt.obj).attr("path", r.path);
 						}
 						else {
 							$.jstree.rollback(data.rlbk);
 						}
-					}
+					},
+					'json'
 				);
 			})
 			.bind("remove.jstree", function (e, data) {
+				
 				data.rslt.obj.each(function () {
+					//tmp = data ;
 					$.ajax({
 						async : false,
-						type: 'POST',
-						url: "/static/v.1.0pre/_demo/server.php",
+						type: 'GET',
+						dataType: "json",
+						url: rmServerUrl,
 						data : { 
-							"operation" : "remove_node", 
-							"id" : this.id.replace("node_","")
+							"operation" : "removeNode", 
+							"path" : data.rslt.obj.attr('path')
 						}, 
 						success : function (r) {
 							if(!r.status) {
-								data.inst.refresh();
+								if(r.msg) {
+									alert(r.msg);
+								}
+								folderTree.jstree('refresh', '#'+data.rslt.parent.attr('id') ) ;
+							}else{
+								//folderTree.jstree('refresh', '#'+data.rslt.parent.attr('id') ) ;
 							}
 						}
 					});
@@ -157,17 +185,19 @@ jQuery(document).ready(function($){
 			})
 			.bind("rename.jstree", function (e, data) {
 				$.post(
-					"/static/v.1.0pre/_demo/server.php", 
+					rmServerUrl, 
 					{ 
-						"operation" : "rename_node", 
-						"id" : data.rslt.obj.attr("id").replace("node_",""),
-						"title" : data.rslt.new_name
+						"operation" : "renameNode", 
+						"path" : data.rslt.parent.attr('path'),
+						"title" : data.rslt.new_name,
+						"id" : pathTpId(this.path)
 					}, 
 					function (r) {
 						if(!r.status) {
 							$.jstree.rollback(data.rlbk);
 						}
-					}
+					},
+					'json'
 				);
 			})
 			.bind("move_node.jstree", function (e, data) {
@@ -175,9 +205,10 @@ jQuery(document).ready(function($){
 					$.ajax({
 						async : false,
 						type: 'POST',
-						url: "/static/v.1.0pre/_demo/server.php",
+						dataType: "json",
+						url: rmServerUrl,
 						data : { 
-							"operation" : "move_node", 
+							"operation" : "moveNode", 
 							"id" : $(this).attr("id").replace("node_",""), 
 							"ref" : data.rslt.cr === -1 ? 1 : data.rslt.np.attr("id").replace("node_",""), 
 							"position" : data.rslt.cp + i,
@@ -200,5 +231,30 @@ jQuery(document).ready(function($){
 				});
 			});
 		
+	});
+	
+	
+	
+	// Menu
+	// Code for the menu buttons
+	$(function () { 
+		$("#remote-folder-menu input").click(function () {
+			switch(this.id) {
+				case "add_default":
+				case "add_folder":
+					folderTree.jstree("create", null, "last", { "attr" : { "rel" : this.id.toString().replace("add_", "") } });
+					break;
+				case "search":
+					folderTree.jstree("search", document.getElementById("text").value);
+					break;
+				case "text": break;
+				default:
+					folderTree.jstree(this.id);
+					break;
+			}
 		});
+	});
 });
+
+
+
