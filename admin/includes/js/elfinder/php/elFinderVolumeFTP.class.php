@@ -650,23 +650,6 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 		return array();
 	}
 	
-	/**
-	 * Put file stat in cache and return it
-	 *
-	 * @param  string  $path   file path
-	 * @param  array   $stat   file stat
-	 * @return array
-	 * @author Dmitry (dio) Levashov
-	 **/
-	protected function updateCache($path, $stat) {
-		$stat = parent::updateCache($path, $stat);
-		if($stat){
-			//$stat['URL']	= trim($this->options['URL'], '/') . substr($path, strlen($this->root));
-			$stat['url']	= trim($this->options['URL'], '/') . substr($path, strlen($this->root));
-		}
-		
-		return $this->cache[$path] = $stat;
-	}
 	
 	/**
 	 * Return true if path is dir and has at least one childs directory

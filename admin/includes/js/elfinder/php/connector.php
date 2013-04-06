@@ -38,14 +38,6 @@ $root = $params->get('Ftp_Root', '/') ;
 $opts = array(
 	// 'debug' => true,
 	'roots' => array(
-		/*
-		array(
-			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
-			'path'          => JPATH_ROOT,         // path to files (REQUIRED)
-			'URL'           => JURI::root(), // URL to files (REQUIRED)
-			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
-		)
-		,*/
 		array(
 			'driver'        => 'FTP',
 			'host'          => $host,
@@ -63,6 +55,12 @@ $opts = array(
 			'fileMode'      => 0644,
 			'URL'			=> $url,
 			'debug'			=> true
+		),
+		array(
+			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
+			'path'          => JPATH_ROOT.'/images',         // path to files (REQUIRED)
+			'URL'           => JURI::root().'images', // URL to files (REQUIRED)
+			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
 		)
 	)
 );

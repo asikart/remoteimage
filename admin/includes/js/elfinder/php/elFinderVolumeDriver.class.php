@@ -2059,6 +2059,8 @@ abstract class elFinderVolumeDriver {
 			unset($stat['target']);
 		}
 		
+		$stat['url']	= trim($this->options['URL'], '/') . substr($path, strlen($this->root));
+		
 		return $this->cache[$path] = $stat;
 	}
 	
