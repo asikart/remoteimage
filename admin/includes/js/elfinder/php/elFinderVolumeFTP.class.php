@@ -138,7 +138,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 
 		$this->rootName = $this->options['alias'];
 		$this->options['separator'] = '/';
-
+	
 		return $this->connect();
 		
 	}
@@ -167,7 +167,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 			$this->disabled[] = 'mkfile';
 			$this->disabled[] = 'paste';
 			$this->disabled[] = 'duplicate';
-			$this->disabled[] = 'upload';
+			//$this->disabled[] = 'upload';
 			$this->disabled[] = 'edit';
 			$this->disabled[] = 'archive';
 			$this->disabled[] = 'extract';
@@ -271,6 +271,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 				}
 				$target = $this->_normpath($target);
 				$stat['name']  = $name;
+				
 				if ($this->_inpath($target, $this->root) 
 				&& ($tstat = $this->stat($target))) {
 					$stat['size']  = $tstat['mime'] == 'directory' ? 0 : $info[4];
@@ -636,11 +637,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 
 				$stat['read']  = $stat['mime'] == 'directory' ? $read && (($owner && $perm[0][2]) || $perm[1][2] || $perm[2][2]) : $read;
 				$stat['write'] = ($owner && $perm[0][1]) || $perm[1][1] || $perm[2][1];
-				$stat['URL']	= trim($this->options['URL'], '/') . substr($path, strlen($this->root));
 				
-				if( strpos($stat['mime'], 'image' ) !== false ){
-					$stat['tmb']	= AKHelper::_('thumb.resize', $stat['URL'], 100, 100, 1);
-				}
 				//if($stat['name']) $stat['url'] .= '/' . $stat['name'] ;AK::show($stat);
 				unset($stat['chmod']);
 
@@ -654,6 +651,26 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	}
 	
 	/**
+	 * Put file stat in cache and return it
+	 *
+	 * @param  string  $path   file path
+	 * @param  array   $stat   file stat
+	 * @return array
+	 * @author Dmitry (dio) Levashov
+	 **/
+	protected function updateCache($path, $stat) {
+		$stat = parent::updateCache($path, $stat);
+		
+		$stat['URL']	= trim($this->options['URL'], '/') . substr($path, strlen($this->root));
+				
+		if( strpos($stat['mime'], 'image' ) !== false ){
+			//$stat['tmb']	= 1;//AKHelper::_('thumb.resize', $stat['URL'], 100, 100, 1);
+		}
+		
+		return $this->cache[$path] = $stat;
+	}
+	
+	/**
 	 * Return true if path is dir and has at least one childs directory
 	 *
 	 * @param  string  $path  dir path
@@ -661,17 +678,18 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _subdirs($path) {
-		
-		$path = '/'.trim($path, '/');
-		$rawlist = ftp_rawlist($this->connect, $path) ;
-		$rawlist = $rawlist ? $rawlist : array();
-		
-		foreach ($rawlist as $str) {
-			if (($stat = $this->parseRaw($str)) && $stat['mime'] == 'directory') {
-				return true;
-			}
-		}
-		return false;
+		//
+		//$path = '/'.trim($path, '/');
+		//$rawlist = ftp_rawlist($this->connect, $path) ;
+		//$rawlist = $rawlist ? $rawlist : array();
+		//
+		//foreach ($rawlist as $str) {
+		//	if (($stat = $this->parseRaw($str)) && $stat['mime'] == 'directory') {
+		//		return true;
+		//	}
+		//}
+		//return false;
+		return true;
 	}
 	
 	/**
@@ -741,6 +759,8 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _fopen($path, $mode='rb') {
+		
+		$path = '/' . trim($path);
 		
 		if ($this->tmp) {
 			$local = $this->tmp.DIRECTORY_SEPARATOR.md5($path);

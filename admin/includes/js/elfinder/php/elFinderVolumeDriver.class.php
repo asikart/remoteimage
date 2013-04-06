@@ -1941,9 +1941,14 @@ abstract class elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function stat($path) {
-		return isset($this->cache[$path])
-			? $this->cache[$path]
-			: $this->updateCache($path, $this->_stat($path));
+		//echo $path . "\n";
+		if(isset($this->cache[$path])) {
+			$return = $this->cache[$path] ;
+		}else{
+			$return = $this->updateCache($path, $this->_stat($path));
+		}
+		
+		return $return;
 	}
 	
 	/**
@@ -2053,7 +2058,7 @@ abstract class elFinderVolumeDriver {
 			$stat['thash'] = $this->encode($stat['target']);
 			unset($stat['target']);
 		}
-
+		
 		return $this->cache[$path] = $stat;
 	}
 	
@@ -2259,9 +2264,9 @@ abstract class elFinderVolumeDriver {
 	 **/
 	protected function gettree($path, $deep, $exclude='') {
 		$dirs = array();
-		
+		$path = '/' . trim($path, '/') ;
 		!isset($this->dirsCache[$path]) && $this->cacheDir($path);
-	
+		
 		foreach ($this->dirsCache[$path] as $p) {
 			
 			$stat = $this->stat($p);
