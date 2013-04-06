@@ -10,4 +10,10 @@
 
 var Remoteimage = {
 	
+	insertImage : function(){
+		var imgs = elSelected ;
+		console.log(imgs);
+		SqueezeBox.close();
+	}
+	
 }

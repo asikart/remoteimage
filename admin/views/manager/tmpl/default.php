@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 $doc 	= JFactory::getDocument() ;
 
+
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
@@ -101,11 +102,12 @@ if($app->isSite()) {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
 	}
+	
 </script>
 
 <div id="remoteimage-manager-edit" class="<?php echo (JVERSION >= 3) ? 'joomla30' : 'joomla25' ?>">
 
-	<form action="<?php echo JRoute::_( JFactory::getURI()->toString() ); ?>" method="post" name="adminForm" id="manager-form" class="form-validate" enctype="multipart/form-data">	
+	<!--<form action="<?php echo JRoute::_( JFactory::getURI()->toString() ); ?>" method="post" name="adminForm" id="manager-form" class="form-validate" enctype="multipart/form-data">	-->
 		
 		<!-- Bodys -->
 		<div class="row-fluid">
@@ -114,15 +116,22 @@ if($app->isSite()) {
 			</div>
 		</div>
 		
+		<div class="row-fluid">
+			<div class="span12 form-actions">
+				<button class="btn btn-primary" onclick="if (window.parent) window.parent.insertImage(elSelected);">
+					<?php echo JText::_('COM_REMOTEIMAGE_INSERT_IMAGES'); ?>
+				</button>
+			</div>
+		</div>
 		
-		
-		<!-- Hidden Inputs -->
+	<!--	
+
 		<div id="hidden-inputs">
 			<input type="hidden" name="option" value="com_remoteimage" />
 			<input type="hidden" name="task" value="" />
 			<?php echo JHtml::_('form.token'); ?>
 		</div>
 		<div class="clr"></div>
-	</form>
+	</form>-->
 
 </div>
