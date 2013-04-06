@@ -32,7 +32,7 @@ class RemoteimageViewManager extends AKViewItem
 	public		$item_name 	= 'manager' ;
 	public		$sort_fields ;
 	
-	
+	public 		$modal ;
 
 	/**
 	 * Display the view
@@ -52,6 +52,10 @@ class RemoteimageViewManager extends AKViewItem
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
+		}
+		
+		if( JRequest::getVar('tmpl') == 'component' ) {
+			$this->modal = true ;
 		}
 
 		parent::displayWithPanel($tpl) ;

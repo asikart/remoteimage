@@ -117,14 +117,19 @@ if($app->isSite()) {
 			</div>
 		</div>
 		
+		
+		<?php if( $this->modal ): ?>
 		<div class="row-fluid">
 			<div class="span12 form-actions">
-				<button class="btn btn-primary" onclick="if (window.parent) window.parent.insertImage(elSelected);">
+				<label for=""></label><?php echo JText::_('COM_REMOTEIMAGE_WIDTH_HEIGHT'); ?>
+				<input type="text" class="input input-small" />
+				<input type="text" class="input input-small" />
+				<button class="btn btn-primary pull-right" onclick="if (window.parent) window.parent.insertImage(elSelected);">
 					<?php echo JText::_('COM_REMOTEIMAGE_INSERT_IMAGES'); ?>
 				</button>
 			</div>
 		</div>
-		
+		<?php endif; ?>
 	<!--	
 
 		<div id="hidden-inputs">
