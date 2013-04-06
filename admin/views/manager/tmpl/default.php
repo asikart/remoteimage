@@ -46,6 +46,7 @@ if( JVERSION >= 3){
 $script = <<<EL
 
 var elSelected ;
+var el ;
 
 jQuery().ready(function($) {
 	var elf = $('#elfinder').elfinder({

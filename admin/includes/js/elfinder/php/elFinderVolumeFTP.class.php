@@ -660,11 +660,9 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 **/
 	protected function updateCache($path, $stat) {
 		$stat = parent::updateCache($path, $stat);
-		
-		$stat['URL']	= trim($this->options['URL'], '/') . substr($path, strlen($this->root));
-				
-		if( strpos($stat['mime'], 'image' ) !== false ){
-			//$stat['tmb']	= 1;//AKHelper::_('thumb.resize', $stat['URL'], 100, 100, 1);
+		if($stat){
+			//$stat['URL']	= trim($this->options['URL'], '/') . substr($path, strlen($this->root));
+			$stat['url']	= trim($this->options['URL'], '/') . substr($path, strlen($this->root));
 		}
 		
 		return $this->cache[$path] = $stat;
@@ -887,6 +885,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _unlink($path) {
+		$path = '/' . trim($path, '/') ;
 		return ftp_delete($this->connect, $path);
 	}
 
@@ -914,6 +913,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 **/
 	protected function _save($fp, $dir, $name, $mime= null, $w = null , $h = null) {
 		$path = $dir.'/'.$name;
+		$path = '/' . trim($path, '/') ;
 		return ftp_fput($this->connect, $path, $fp, $this->ftpMode($path))
 			? $path
 			: false;
