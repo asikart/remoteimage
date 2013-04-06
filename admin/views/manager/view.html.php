@@ -67,7 +67,7 @@ class RemoteimageViewManager extends AKViewItem
 		AKToolBarHelper::title( 'Manager' . ' ' . JText::_('COM_REMOTEIMAGE_TITLE_ITEM_EDIT'), 'article-add.png');
 		$canDo	= RMHelper::getActions($this->option);
 		
-		parent::addToolbar();
+		//parent::addToolbar();
 		
 		if ($canDo->get('core.admin')) {
 			AKToolBarHelper::preferences($this->option);

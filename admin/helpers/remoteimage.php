@@ -118,7 +118,7 @@ class RemoteimageHelper extends AKProxy
 	{
 		$params = JComponentHelper::getParams('com_remoteimage') ;
 		$host = $host ? $host : $params->get('Ftp_Host', '127.0.0.1') ;
-		$port = $port ? $port : $params->get('Ftp_Port') ;
+		$port = $port ? $port : $params->get('Ftp_Port', 21) ;
 		$user = $user ? $user : $params->get('Ftp_User') ;
 		$pass = $pass ? $pass : $params->get('Ftp_Password') ;
 		

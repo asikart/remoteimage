@@ -34,4 +34,16 @@ class RemoteimageController extends JControllerLegacy
 
 		return $this;
 	}
+	
+	
+	/*
+	 * function manager
+	 * @param 
+	 */
+	
+	public function manager()
+	{
+		include_once REMOTEIMAGE_ADMIN.'/includes/js/elfinder/php/connector.php' ;
+		jexit();
+	}
 }

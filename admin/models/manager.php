@@ -57,22 +57,37 @@ class RemoteimageModelManager extends JModelLegacy
 		$details = $this->ftp->listDetails($this->path, 'folders');
 		
 		$return = array();
+		$root 	= JRequest::getVar('root') ;
 		
-		foreach( $details as $detail ):
+		if($root) {
+			
 			$tmp = new JObject();
-			
-			
 			$tmp->attr = new JObject();
-			$tmp->attr->path = trim($this->path, '/') . '/' . $detail['name'] ;
-			$tmp->attr->rel = 'folder' ;
-			$tmp->attr->id = 'rmpath-' . str_replace('/', '-', trim($tmp->attr->path, '/') ) ;
+			$tmp->attr->path 	= trim($this->path, '/') ;
+			$tmp->attr->rel 	= 'drive' ;
+			$tmp->attr->id 		= 'rmpath-root' ;
 			
-			$tmp->data = $detail['name'] ;
+			$tmp->data 	= 'FTP' ;
 			$tmp->state = 'closed' ;
 			
 			$return[] = $tmp ;
-		endforeach;
-		
+		}else{
+			
+			foreach( $details as $detail ):
+				$tmp = new JObject();
+				
+				
+				$tmp->attr 			= new JObject();
+				$tmp->attr->path 	= trim($this->path, '/') . '/' . $detail['name'] ;
+				$tmp->attr->rel 	= 'folder' ;
+				$tmp->attr->id 		= 'rmpath-' . str_replace('/', '-', trim($tmp->attr->path, '/') ) ;
+				
+				$tmp->data 	= $detail['name'] ;
+				$tmp->state = 'closed' ;
+				
+				$return[] = $tmp ;
+			endforeach;
+		}
 		
 		return $return;
 	}
@@ -117,6 +132,36 @@ class RemoteimageModelManager extends JModelLegacy
 			$result->msg = JText::_('COM_REMOTEIMAGE_FTP_CANNOT_DELETE_FOLDER_WITH_CHILDREN') ;
 			return $result ;
 		}
+		
+		if( $this->ftp->delete( trim($this->path, '/') ) )
+		{
+			$result->status = 1 ;
+		}else{
+			$result->status = 0 ;
+		}
+
+		return $result ;
+	}
+	
+	
+	
+	/*
+	 * function moveNode
+	 * @param 
+	 */
+	
+	public function moveNode()
+	{
+		$result = new JObject();
+		
+		/*
+		$lists = $this->ftp->listDetails($this->path);
+		if($lists > 0) {
+			$result->status = 0 ;
+			$result->msg = JText::_('COM_REMOTEIMAGE_FTP_CANNOT_DELETE_FOLDER_WITH_CHILDREN') ;
+			return $result ;
+		}
+		*/
 		
 		if( $this->ftp->delete( trim($this->path, '/') ) )
 		{

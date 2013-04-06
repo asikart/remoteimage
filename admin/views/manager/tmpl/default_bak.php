@@ -11,23 +11,15 @@
 // no direct access
 defined('_JEXEC') or die;
 
-$doc 	= JFactory::getDocument() ;
-
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 RemoteimageHelper::_('include.core');
 JHtml::_('jquery.framework', true);
-$doc->addStylesheet( 'components/com_akquickicons/includes/jquery-ui/css/smoothness/jquery-ui-1.8.24.custom.css' );
-//$doc->addscript( 'components/com_akquickicons/includes/jquery-ui/js/jquery-1.7.2.min.js' );
-$doc->addscript( 'components/com_akquickicons/includes/jquery-ui/js/jquery-ui-1.8.24.custom.min.js' );
-$doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/elfinder.min.css' );
-$doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/theme.css' );
-JHtml::script( JURI::base().'components/com_remoteimage/includes/js/elfinder/js/elfinder.min.js' );
-// RMHelper::_('include.addJS', 'jstree/_lib/jquery.cookie.js');
-// RMHelper::_('include.addJS', 'jstree/_lib/jquery.hotkeys.js');
-// RMHelper::_('include.addJS', 'jstree/jquery.jstree.js');
-// RMHelper::_('include.addJS', 'folder-tree.js');
+RMHelper::_('include.addJS', 'jstree/_lib/jquery.cookie.js');
+RMHelper::_('include.addJS', 'jstree/_lib/jquery.hotkeys.js');
+RMHelper::_('include.addJS', 'jstree/jquery.jstree.js');
+RMHelper::_('include.addJS', 'folder-tree.js');
 
 
 $app = JFactory::getApplication() ;
@@ -41,32 +33,6 @@ if( JVERSION >= 3){
 	// RemoteimageHelper::_('include.fixBootstrapToJoomla');
 }
 
-
-$script = <<<EL
-
-var elSelected ;
-
-jQuery().ready(function($) {
-	var elf = $('#elfinder').elfinder({
-		url : 'index.php?option=com_remoteimage&task=manager' ,
-		handlers : {
-			select : function(event, elfinderInstance) {
-				var selected = event.data.selected;
-
-				if (selected.length) {
-					elSelected = [];
-					jQuery.each(selected, function(i, e){
-						elSelected[i] = elfinderInstance.file(e);
-					});
-				}
-
-			}
-		}
-	}).elfinder('instance');
-});
-EL;
-
-$doc->addScriptDeclaration($script) ;
 
 
 // Init some API objects
@@ -85,6 +51,25 @@ if($app->isSite()) {
 }
 
 
+
+// Edit setting
+// ================================================================================
+$tabs 	= count( $this->fields ) > 1 ? true : false;
+
+
+if($app->isAdmin()) {
+	$span_left 	= 8 ;
+	$span_right = 4 ;
+	
+	$width_left = 60 ;
+	$width_right= 40 ;
+}else{
+	$span_left 	= 12 ;
+	$span_right = 12 ;
+	
+	$width_left = 100 ;
+	$width_right= 100 ;
+}
 
 ?>
 <script type="text/javascript">
@@ -109,8 +94,20 @@ if($app->isSite()) {
 		
 		<!-- Bodys -->
 		<div class="row-fluid">
-			<div id="elfinder" class="span12">
+			<div id="remote-folder" class="<?php echo ( JVERSION >= 3 ) ? 'span3' : 'width-30 fltlft' ?>">
+			
+				<div id="remote-folder-menu">
+					<input type="button" class="btn" id="add_folder" value="<?php echo JText::_('COM_REMOTEIMAGE_ADD_FOLDER'); ?>"/>
+				</div>
 				
+				<div id="remote-folder-wrap">
+					<ul></ul>
+				</div>
+			</div>
+			
+			
+			<div id="remote-images" class="<?php echo ( JVERSION >= 3 ) ? 'span9' : 'width-70 fltlft' ?>">
+				3212
 			</div>
 		</div>
 		

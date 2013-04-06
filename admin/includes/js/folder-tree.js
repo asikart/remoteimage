@@ -52,10 +52,11 @@ jQuery(document).ready(function($){
 						// (may be -1, 0, or undefined when loading the root nodes)
 						"data" : function (n) { 
 							// the result is fed to the AJAX request `data` option
-							console.log(n);
+							
 							return { 
 								"operation" : "getChildren", 
-								"path" : n.attr ? n.attr('path') : null
+								"path" : n.attr ? n.attr('path') : null,
+								"root" : n.attr ? 0 : 1 
 							}; 
 						}
 					}
@@ -125,13 +126,13 @@ jQuery(document).ready(function($){
 				// the UI plugin - it handles selecting/deselecting/hovering nodes
 				"ui" : {
 					// this makes the node with ID node_4 selected onload
-					"initially_select" : [ "node_4" ]
+					"initially_select" : [ "rmpath-root" ]
 				},
 				// the core plugin - not many options here
 				"core" : { 
 					// just open those two nodes up
 					// as this is an AJAX enabled tree, both will be downloaded from the server
-					"initially_open" : [ "node_2" , "node_3" ] 
+					"initially_open" : [ "rmpath-root" ] 
 				}
 			})
 			.bind("create.jstree", function (e, data) {
@@ -140,7 +141,7 @@ jQuery(document).ready(function($){
 					rmServerUrl, 
 					{
 						"operation" : "createNode", 
-						"id" : pathTpId(this.path), 
+						"id" : pathToId(this.path), 
 						"path" : data.rslt.parent.attr('path'),
 						"title" : data.rslt.name,
 						"type" : data.rslt.obj.attr("rel")
@@ -204,13 +205,12 @@ jQuery(document).ready(function($){
 				data.rslt.o.each(function (i) {
 					$.ajax({
 						async : false,
-						type: 'POST',
+						type: 'GET',
 						dataType: "json",
 						url: rmServerUrl,
 						data : { 
 							"operation" : "moveNode", 
-							"id" : $(this).attr("id").replace("node_",""), 
-							"ref" : data.rslt.cr === -1 ? 1 : data.rslt.np.attr("id").replace("node_",""), 
+							"path" : data.rslt.cr === -1 ? 1 : data.rslt.np.attr("path"), 
 							"position" : data.rslt.cp + i,
 							"title" : data.rslt.name,
 							"copy" : data.rslt.cy ? 1 : 0
@@ -225,7 +225,7 @@ jQuery(document).ready(function($){
 									data.inst.refresh(data.inst._get_parent(data.rslt.oc));
 								}
 							}
-							$("#analyze").click();
+							//$("#analyze").click();
 						}
 					});
 				});
