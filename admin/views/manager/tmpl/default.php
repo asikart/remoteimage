@@ -24,24 +24,24 @@ $app 	= JFactory::getApplication() ;
 // Include elFinder and JS
 // ================================================================================
 if( JVERSION >= 3){
-	// JHtml::_('formbehavior.chosen', 'select');
+	
+	// jQuery
 	JHtml::_('jquery.framework', true);
-	if($app->isSite()){
-		//RemoteimageHelper::_('include.fixBootstrapToJoomla');
-	}
+
 }else{
 	if($this->modal){
 		$doc->addStyleSheet('components/com_remoteimage/includes/bootstrap/css/bootstrap.min.css');
 	}
-	//RemoteimageHelper::_('include.bluestork');
-	// RemoteimageHelper::_('include.fixBootstrapToJoomla');
+	
+	// jQuery
+	$doc->addScript( 'components/com_remoteimage/includes/js/jquery/jquery.js' );
+	
 	$doc->addScriptDeclaration('jQuery.noConflict();');
 }
 
 
 JHtml::_('behavior.tooltip');
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/jquery-ui/css/smoothness/jquery-ui-1.8.24.custom.css' );
-$doc->addScript( 'components/com_remoteimage/includes/js/jquery/jquery.js' );
 $doc->addscript( 'components/com_remoteimage/includes/js/jquery-ui/js/jquery-ui-1.8.24.custom.min.js' );
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/elfinder.min.css' );
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/theme.css' );
@@ -110,7 +110,7 @@ if($app->isSite()) {
 		</div>
 		
 		
-		<?php if( $this->modal ): ?>
+		<?php if( $this->modal || AKDEBUG ): ?>
 		<div class="row-fluid">
 			<div id="rm-insert-panel" class="span12 form-actions">
 				<div class="form-inline pull-left">
