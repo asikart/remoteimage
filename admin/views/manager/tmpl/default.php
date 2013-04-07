@@ -11,27 +11,37 @@
 // no direct access
 defined('_JEXEC') or die;
 
+
+// Init some API objects
+// ================================================================================
+$date 	= JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
 $doc 	= JFactory::getDocument() ;
+$uri 	= JFactory::getURI() ;
+$user	= JFactory::getUser() ;
+$app 	= JFactory::getApplication() ;
 
 
+// Include elFinder and JS
+// ================================================================================
 JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-RemoteimageHelper::_('include.core');
 JHtml::_('jquery.framework', true);
 $doc->addStylesheet( 'components/com_akquickicons/includes/jquery-ui/css/smoothness/jquery-ui-1.8.24.custom.css' );
-//$doc->addscript( 'components/com_akquickicons/includes/jquery-ui/js/jquery-1.7.2.min.js' );
 $doc->addscript( 'components/com_akquickicons/includes/jquery-ui/js/jquery-ui-1.8.24.custom.min.js' );
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/elfinder.min.css' );
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/theme.css' );
 JHtml::script( JURI::base().'components/com_remoteimage/includes/js/elfinder/js/elfinder.min.js' );
-// RMHelper::_('include.addJS', 'jstree/_lib/jquery.cookie.js');
-// RMHelper::_('include.addJS', 'jstree/_lib/jquery.hotkeys.js');
-// RMHelper::_('include.addJS', 'jstree/jquery.jstree.js');
-// RMHelper::_('include.addJS', 'folder-tree.js');
+RMHelper::_('include.core');
 
 
-$app = JFactory::getApplication() ;
+/* jsTree
+RMHelper::_('include.addJS', 'jstree/_lib/jquery.cookie.js');
+RMHelper::_('include.addJS', 'jstree/_lib/jquery.hotkeys.js');
+RMHelper::_('include.addJS', 'jstree/jquery.jstree.js');
+RMHelper::_('include.addJS', 'folder-tree.js');
+*/
+
+
+
 if( JVERSION >= 3){
 	JHtml::_('formbehavior.chosen', 'select');
 	if($app->isSite()){
@@ -41,42 +51,6 @@ if( JVERSION >= 3){
 	RemoteimageHelper::_('include.bluestork');
 	// RemoteimageHelper::_('include.fixBootstrapToJoomla');
 }
-
-
-$script = <<<EL
-
-var elSelected ;
-var el ;
-
-jQuery().ready(function($) {
-	var elf = $('#elfinder').elfinder({
-		url : 'index.php?option=com_remoteimage&task=manager' ,
-		handlers : {
-			select : function(event, elfinderInstance) {
-				var selected = event.data.selected;
-
-				if (selected.length) {
-					elSelected = [];
-					jQuery.each(selected, function(i, e){
-						elSelected[i] = elfinderInstance.file(e);
-					});
-				}
-
-			}
-		}
-	}).elfinder('instance');
-});
-EL;
-
-$doc->addScriptDeclaration($script) ;
-
-
-// Init some API objects
-// ================================================================================
-$date 	= JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
-$doc 	= JFactory::getDocument() ;
-$uri 	= JFactory::getURI() ;
-$user	= JFactory::getUser() ;
 
 
 
@@ -90,29 +64,39 @@ if($app->isSite()) {
 
 ?>
 <script type="text/javascript">
-	<?php if( $app->isSite() ): ?>
-	WindWalker.fixToolbar(0, 300) ;
-	<?php endif; ?>
-	
-	Joomla.submitbutton = function(task)
-	{
-		if (task == 'manager.cancel' || document.formvalidator.isValid(document.id('manager-form'))) {
-			Joomla.submitform(task, document.getElementById('manager-form'));
+	var insertImageToParent = function(){
+		var imgs 	= elSelected ;
+		
+		if( elSelected.length < 1 ) {
+			return ;
 		}
-		else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
-		}
+		
+		var dW 		= $('rm-width').get('value').toInt() ;
+		//var dH 		= $('rm-height').get('value').toInt() ;
+		var tags	= '';
+		
+		imgs.each( function(e, i){
+			
+			// Create img element
+			var img = new Element('img', {
+				alt : e.name ,
+				src : e.url ,
+				width : dW
+			}) ;
+			
+			tags += '<p>' + img.outerHTML + '</p>';
+		} );
+		
+		
+		if (window.parent) window.parent.insertImage(tags);
 	}
-	
 </script>
 
-<div id="remoteimage-manager-edit" class="<?php echo (JVERSION >= 3) ? 'joomla30' : 'joomla25' ?>">
+<div id="remoteimage-manager" class="<?php echo (JVERSION >= 3) ? 'joomla30' : 'joomla25' ?>">
 
-	<!--<form action="<?php echo JRoute::_( JFactory::getURI()->toString() ); ?>" method="post" name="adminForm" id="manager-form" class="form-validate" enctype="multipart/form-data">	-->
-		
 		<!-- Bodys -->
 		<div class="row-fluid">
-			<div id="elfinder" class="span12">
+			<div id="elfinder" class="span12 rm-finder">
 				
 			</div>
 		</div>
@@ -121,23 +105,24 @@ if($app->isSite()) {
 		<?php if( $this->modal ): ?>
 		<div class="row-fluid">
 			<div class="span12 form-actions">
-				<label for=""></label><?php echo JText::_('COM_REMOTEIMAGE_WIDTH_HEIGHT'); ?>
-				<input type="text" class="input input-small" />
-				<input type="text" class="input input-small" />
-				<button class="btn btn-primary pull-right" onclick="if (window.parent) window.parent.insertImage(elSelected);">
-					<?php echo JText::_('COM_REMOTEIMAGE_INSERT_IMAGES'); ?>
-				</button>
+				<label for="rm-width" class="fltlft pull-left"><?php echo JText::_('COM_REMOTEIMAGE_MAX_WIDTH'); ?></label>
+				<input type="text" id="rm-width" class="input input-mini fltlft pull-left" value="<?php echo $this->params->get('Image_DefaultWidth_Midium', 640); ?>" />
+				<!--<span class="rm-width-height-x">X</span>
+				<input type="text" id="rm-height" class="input input-mini" value="<?php echo $this->params->get('Image_DefaultHeight_Midium', 640); ?>" />
+				-->
+				<div class="btn-toolbar pull-right">
+					
+					<button id="rm-insert-button" class="btn btn-primary" onclick="window.insertImageToParent();">
+						<?php echo JText::_('COM_REMOTEIMAGE_INSERT_IMAGES'); ?>
+					</button>
+					
+					<button id="rm-cancel-button" class="btn">
+						<?php echo JText::_('JLIB_HTML_BEHAVIOR_CLOSE'); ?>
+					</button>
+					
+				</div>
 			</div>
 		</div>
 		<?php endif; ?>
-	<!--	
-
-		<div id="hidden-inputs">
-			<input type="hidden" name="option" value="com_remoteimage" />
-			<input type="hidden" name="task" value="" />
-			<?php echo JHtml::_('form.token'); ?>
-		</div>
-		<div class="clr"></div>
-	</form>-->
 
 </div>

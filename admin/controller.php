@@ -25,9 +25,9 @@ class RemoteimageController extends JControllerLegacy
 	public function display($cachable = false, $urlparams = false)
 	{
 		// Load the submenu.
-		RemoteimageHelper::addSubmenu(JRequest::getCmd('view', 'managers'));
+		RemoteimageHelper::addSubmenu(JRequest::getCmd('view', 'manager'));
 
-		$view = JRequest::getCmd('view', 'managers');
+		$view = JRequest::getCmd('view', 'manager');
         JRequest::setVar('view', $view);
 
 		parent::display();

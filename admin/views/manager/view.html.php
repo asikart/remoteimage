@@ -42,10 +42,7 @@ class RemoteimageViewManager extends AKViewItem
 		$app = JFactory::getApplication() ;
 		
 		$this->state	= $this->get('State');
-		$this->item		= $this->get('Item');
-		$this->form		= $this->get('Form');
-		$this->fields_group = $this->get('FieldsGroup');
-		$this->fields	= $this->get('FieldsName');
+		$this->params	= JComponentHelper::getParams('com_remoteimage') ;
 		$this->canDo	= AKHelper::getActions($this->option);
 
 		// Check for errors.
@@ -56,9 +53,12 @@ class RemoteimageViewManager extends AKViewItem
 		
 		if( JRequest::getVar('tmpl') == 'component' ) {
 			$this->modal = true ;
+		}else{
+			$this->addToolbar();
 		}
+		
 
-		parent::displayWithPanel($tpl) ;
+		parent::display($tpl) ;
 	}
 
 	
@@ -68,7 +68,7 @@ class RemoteimageViewManager extends AKViewItem
 	 */
 	protected function addToolbar()
 	{
-		AKToolBarHelper::title( 'Manager' . ' ' . JText::_('COM_REMOTEIMAGE_TITLE_ITEM_EDIT'), 'article-add.png');
+		AKToolBarHelper::title( JText::_('COM_REMOTEIMAGE_TITLE_MANAGER'), 'article-add.png');
 		$canDo	= RMHelper::getActions($this->option);
 		
 		//parent::addToolbar();
@@ -87,20 +87,6 @@ class RemoteimageViewManager extends AKViewItem
 	
 	public function handleFields()
 	{
-		$form = $this->form ;
-		
-		//parent::handleFields();
-		
-		// for Joomla! 3.0
-		if(JVERSION >= 3) {
-			
-			// $form->removeField('name', 'fields');
-			
-		}else{
-			
-			// $form->removeField('name', 'fields');
-			
-		}
-		
+
 	}
 }

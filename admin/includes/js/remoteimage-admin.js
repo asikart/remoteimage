@@ -10,10 +10,29 @@
 
 var Remoteimage = {
 	
-	insertImage : function(){
-		var imgs = elSelected ;
-		console.log(imgs);
-		SqueezeBox.close();
-	}
-	
 }
+
+
+// Init elFinder
+var elSelected ;
+var el ;
+
+jQuery().ready(function($) {
+	var elf = $('#elfinder').elfinder({
+		url : 'index.php?option=com_remoteimage&task=manager' ,
+		width : '100%' ,
+		handlers : {
+			select : function(event, elfinderInstance) {
+				var selected = event.data.selected;
+
+				if (selected.length) {
+					elSelected = [];
+					jQuery.each(selected, function(i, e){
+						elSelected[i] = elfinderInstance.file(e);
+					});
+				}
+
+			}
+		}
+	}).elfinder('instance');
+});

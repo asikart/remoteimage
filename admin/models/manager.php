@@ -39,7 +39,7 @@ class RemoteimageModelManager extends JModelLegacy
 		$this->params 		= $params = JComponentHelper::getParams('com_remoteimage') ;
 		$this->base_path 	= $params->get('Ftp_Path') ;
 		$this->path 		= trim($this->base_path, '/') . '/' . trim(JRequest::getVar('path'), '/' );
-		$this->ftp 			= RMHelper::getFTP();
+		//$this->ftp 			= RMHelper::getFTP();
 		
 		
 		parent::__construct($config) ;

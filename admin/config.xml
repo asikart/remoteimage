@@ -5,13 +5,39 @@
 		description="COM_REMOTEIMAGE_COMPONENT_DESC"
 		addfieldpath="administrator/components/com_remoteimage/models/fields"
 	>
+		
+		<field
+			name="Connection_Ftp"
+			type="radio"
+			label="COM_REMOTEIMAGE_CONNECTION_FTP"
+			description="COM_REMOTEIMAGE_CONNECTION_FTP_DESC"
+			default="1"
+			class="btn-group"
+		>
+			<option value="0">JDISABLED</option>
+			<option value="1">JENABLED</option>
+		</field>
+		
+		<field
+			name="Connection_Local"
+			type="radio"
+			label="COM_REMOTEIMAGE_CONNECTION_LOCAL"
+			description="COM_REMOTEIMAGE_CONNECTION_LOCAL_DESC"
+			default="1"
+			class="btn-group"
+		>
+			<option value="0">JDISABLED</option>
+			<option value="1">JENABLED</option>
+		</field>
+		
+		<field type="spacer" hr="true" />
 
 		<field
 			name="Ftp_Host"
 			type="text"
 			label="COM_REMOTEIMAGE_FTP_HOST"
 			description="COM_REMOTEIMAGE_FTP_HOST_DESC"
-			deafult=""
+			default=""
 		/>
 		
 		<field
@@ -19,7 +45,7 @@
 			type="text"
 			label="COM_REMOTEIMAGE_FTP_USER"
 			description="COM_REMOTEIMAGE_FTP_USER_DESC"
-			deafult=""
+			default=""
 		/>
 		
 		<field
@@ -27,7 +53,7 @@
 			type="password"
 			label="COM_REMOTEIMAGE_FTP_PASSWORD"
 			description="COM_REMOTEIMAGE_FTP_PASSWORD_DESC"
-			deafult=""
+			default=""
 		/>
 		
 		<field
@@ -35,7 +61,7 @@
 			type="text"
 			label="COM_REMOTEIMAGE_FTP_PORT"
 			description="COM_REMOTEIMAGE_FTP_PORT_DESC"
-			deafult="21"
+			default="21"
 		/>
 		
 		<field
@@ -43,7 +69,7 @@
 			type="text"
 			label="COM_REMOTEIMAGE_FTP_ROOT"
 			description="COM_REMOTEIMAGE_FTP_ROOT_DESC"
-			deafult=""
+			default=""
 			class="input-xlarge"
 			size="50"
 		/>
@@ -53,9 +79,33 @@
 			type="text"
 			label="COM_REMOTEIMAGE_FTP_URL"
 			description="COM_REMOTEIMAGE_FTP_URL_DESC"
-			deafult=""
+			default=""
 			class="input-xlarge"
 			size="50"
+		/>
+		
+		<field type="spacer" hr="true" />
+		
+		<field
+			name="Image_DefaultWidth_Midium"
+			type="text"
+			label="COM_REMOTEIMAGE_DEFAULT_WIDTH_MIDIUM"
+			description="COM_REMOTEIMAGE_DEFAULT_WIDTH_MIDIUM_DESC"
+			default="640"
+			class="input-small"
+			size="10"
+			filter="int"
+		/>
+		
+		<field
+			name="Image_DefaultHeight_Midium"
+			type="text"
+			label="COM_REMOTEIMAGE_DEFAULT_HEIGHT_MIDIUM"
+			description="COM_REMOTEIMAGE_DEFAULT_HEIGHT_MIDIUM_DESC"
+			default="640"
+			class="input-small"
+			size="10"
+			filter="int"
 		/>
 		
 	</fieldset>

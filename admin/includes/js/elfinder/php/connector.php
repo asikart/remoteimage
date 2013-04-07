@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL); // Set E_ALL for debuging
+error_reporting(0); // Set E_ALL for debuging
 
 include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderConnector.class.php';
 include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinder.class.php';
@@ -28,41 +28,49 @@ function access($attr, $path, $data, $volume) {
 }
 
 $params = JComponentHelper::getParams('com_remoteimage') ;
-$host = $params->get('Ftp_Host', '127.0.0.1') ;
-$port = $params->get('Ftp_Port', 21) ;
-$user = $params->get('Ftp_User') ;
-$pass = $params->get('Ftp_Password') ;
-$url = $params->get('Ftp_Url') ;
-$root = $params->get('Ftp_Root', '/') ;
+$host 	= $params->get('Ftp_Host', '127.0.0.1') ;
+$port 	= $params->get('Ftp_Port', 21) ;
+$user 	= $params->get('Ftp_User') ;
+$pass 	= $params->get('Ftp_Password') ;
+$url 	= $params->get('Ftp_Url') ;
+$root 	= $params->get('Ftp_Root', '/') ;
+
+$roots = array();
+if( $params->get('Connection_Ftp', 1) )
+{
+	$roots[] = array(
+		'driver'        => 'FTP',
+		'host'          => $host,
+		'user'          => $user,
+		'pass'          => $pass,
+		'port'          => $port,
+		'mode'          => 'active',
+		'path'          => $root,
+		'timeout'       => 10,
+		'owner'         => true,
+		'tmbPath'       => JPATH_CACHE.'/thumbs/elfinder',
+		'tmbURL'        => JURI::root() . 'cache/thumbs/elfinder',
+		'tmp'			=> JPATH_ROOT . '/tmps',
+		'dirMode'       => 0755,
+		'fileMode'      => 0644,
+		'URL'			=> $url,
+		'debug'			=> true
+	);
+}
+
+if( $params->get('Connection_Local', 1) )
+{
+	$roots[] = array(
+		'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
+		'path'          => JPATH_ROOT.'/images',   // path to files (REQUIRED)
+		'URL'           => JURI::root().'images', // URL to files (REQUIRED)
+		'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
+	);
+}
 
 $opts = array(
 	// 'debug' => true,
-	'roots' => array(
-		array(
-			'driver'        => 'FTP',
-			'host'          => $host,
-			'user'          => $user,
-			'pass'          => $pass,
-			'port'          => $port,
-			'mode'          => 'active',
-			'path'          => $root,
-			'timeout'       => 10,
-			'owner'         => true,
-			'tmbPath'       => JPATH_CACHE.'/thumbs/elfinder',
-			'tmbURL'        => JURI::root() . 'cache/thumbs/elfinder',
-			'tmp'			=> JPATH_ROOT . '/tmps',
-			'dirMode'       => 0755,
-			'fileMode'      => 0644,
-			'URL'			=> $url,
-			'debug'			=> true
-		),
-		array(
-			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
-			'path'          => JPATH_ROOT.'/images',         // path to files (REQUIRED)
-			'URL'           => JURI::root().'images', // URL to files (REQUIRED)
-			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
-		)
-	)
+	'roots' => $roots
 );
 
 // run elFinder
