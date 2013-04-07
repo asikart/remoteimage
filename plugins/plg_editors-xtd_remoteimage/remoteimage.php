@@ -85,7 +85,7 @@ class plgButtonRemoteimage extends JPlugin
 			$button->modal = true;
 			$button->link = $link;
 			$button->text = JText::_('COM_REMOTEIMAGE_IMAGE_BUTTON');
-			$button->name = 'picture';
+			$button->name = JVERSION >= 3 ? 'picture' : 'image';
 			$button->options = "{handler: 'iframe', size: {x: 800, y: 500}}";
 			return $button;
 		}

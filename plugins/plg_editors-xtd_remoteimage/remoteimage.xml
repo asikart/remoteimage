@@ -11,24 +11,6 @@
 	<description>PLG_EDITORS-XTD_REMOTEIMAGE_XML_DESCRIPTION</description>
 	
 	
-	<scriptfile>install.php</scriptfile>
-	
-	<!-- plugin editors-xtd now has no sql file
-	<install>
-    	<sql>
-        	<file driver="mysql" charset="utf8">sql/install.sql</file>
-  		</sql>
-    </install>
-	
-	
-	<uninstall>
-    	<sql>
-        	<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
-  		</sql>
-    </uninstall>
-	-->
-	
-	
 	<files>
 		<filename plugin="remoteimage">remoteimage.php</filename>
 		<filename>index.html</filename>
@@ -37,7 +19,7 @@
 		<folder>lib</folder>
 	</files>
 
-	<config>
+	<!--<config>
 		<fields name="params">
 
 			<fieldset name="basic">
@@ -55,13 +37,7 @@
 			</fieldset>
 
 		</fields>
-	</config>
-	
-	
-	<updateservers>
-		<!--<server type="collection">http://remoteimage.com/list.xml</server>-->
-		<server type="extension" priority="1" name="Asikart Remoteimage Plugin">http://update.asikart.com/plugins/plg_remoteimage.xml</server>
-	</updateservers>
+	</config>-->
 	
 	
 </extension>
