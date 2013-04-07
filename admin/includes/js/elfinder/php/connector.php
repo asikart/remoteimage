@@ -54,7 +54,8 @@ if( $params->get('Connection_Ftp', 1) )
 		'dirMode'       => 0755,
 		'fileMode'      => 0644,
 		'URL'			=> $url,
-		'debug'			=> true
+		'debug'			=> true,
+		'checkSubfolders' => false
 	);
 }
 

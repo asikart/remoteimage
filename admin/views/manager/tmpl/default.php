@@ -23,6 +23,8 @@ $app 	= JFactory::getApplication() ;
 
 // Include elFinder and JS
 // ================================================================================
+JHtml::_('behavior.framework', true);
+
 if( JVERSION >= 3){
 	
 	// jQuery
@@ -68,6 +70,12 @@ if($app->isSite()) {
 
 ?>
 <script type="text/javascript">
+	var elFinder
+	var elSelected ;
+	var el ;
+	var RMinModal ;
+	
+	
 	var insertImageToParent = function(){
 		var imgs 	= elSelected ;
 		
@@ -98,6 +106,36 @@ if($app->isSite()) {
 		
 		if (window.parent) window.parent.insertImage(tags);
 	}
+	
+	
+	// Init elFinder
+	jQuery(document).ready(function($) {
+		elFinder = $('#elfinder').elfinder({
+			url : 'index.php?option=com_remoteimage&task=manager' ,
+			width : '100%' ,
+			handlers : {
+				select : function(event, elfinderInstance) {
+					var selected = event.data.selected;
+	
+					if (selected.length) {
+						elSelected = [];
+						jQuery.each(selected, function(i, e){
+							elSelected[i] = elfinderInstance.file(e);
+						});
+					}
+	
+				}
+			}
+			<?php if( $this->modal ): ?>
+			,
+			getFileCallback : function(file){
+				insertImageToParent();
+			}
+			
+			<?php endif; ?>
+			
+		}).elfinder('instance');
+	});
 </script>
 
 <div id="remoteimage-manager" class="<?php echo (JVERSION >= 3) ? 'joomla30' : 'joomla25' ?>">
