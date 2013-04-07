@@ -28,6 +28,7 @@ class RemoteimageHelper extends AKProxy
 		jimport('joomla.filesystem.file');
 		$app = JFactory::getApplication() ;
 		
+		/*
 		JHtmlSidebar::addEntry(
 			JText::_('COM_REMOTEIMAGE_MANAGER'),
 			'index.php?option=com_remoteimage&view=manager',
@@ -63,7 +64,7 @@ class RemoteimageHelper extends AKProxy
 			}
 			
 		endif;
-		
+		*/
 	}
 	
 	
@@ -122,9 +123,9 @@ class RemoteimageHelper extends AKProxy
 		$user = $user ? $user : $params->get('Ftp_User') ;
 		$pass = $pass ? $pass : $params->get('Ftp_Password') ;
 		
-		include_once AKHelper::_('path.getAdmin', 'com_remoteimage') . '/includes/class/ftp.php';
-		$ftp = RMFTP::getInstance($host, $port, array('pasv' => false), $user, $pass);
-		return $ftp ;
+		//include_once AKHelper::_('path.getAdmin', 'com_remoteimage') . '/includes/class/ftp.php';
+		//$ftp = RMFTP::getInstance($host, $port, array('pasv' => false), $user, $pass);
+		//return $ftp ;
 	}
 }
 
