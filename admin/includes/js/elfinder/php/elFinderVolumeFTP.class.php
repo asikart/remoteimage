@@ -830,6 +830,8 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 **/
 	protected function _copy($source, $targetDir, $name) {
 		$res = false;
+		$source = '/' . trim($source, '/') ;
+		$targetDir = '/' . trim($targetDir, '/') ;
 		
 		if ($this->tmp) {
 			$local  = $this->tmp.DIRECTORY_SEPARATOR.md5($source);

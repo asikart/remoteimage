@@ -50,7 +50,7 @@ if( $params->get('Connection_Ftp', 1) )
 		'owner'         => true,
 		'tmbPath'       => JPATH_CACHE.'/thumbs/elfinder',
 		'tmbURL'        => JURI::root() . 'cache/thumbs/elfinder',
-		'tmp'			=> JPATH_ROOT . '/tmps',
+		'tmp'			=> JPATH_CACHE.'/thumbs/elfinderTmp',
 		'dirMode'       => 0755,
 		'fileMode'      => 0644,
 		'URL'			=> $url,
