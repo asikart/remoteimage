@@ -856,6 +856,9 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _move($source, $targetDir, $name) {
+		$source = '/' . trim($source, '/') ;
+		$targetDir = '/' . trim($targetDir, '/') ;
+		
 		$target = $targetDir.DIRECTORY_SEPARATOR.$name;
 		return ftp_rename($this->connect, $source, $target) ? $target : false;
 	}
@@ -880,6 +883,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _rmdir($path) {
+		$path = '/' . trim($path, '/') ;
 		return ftp_rmdir($this->connect, $path);
 	}
 	
@@ -910,6 +914,8 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _getContents($path) {
+		$path = '/' . trim($path, '/') ;
+		
 		$contents = '';
 		if (($fp = $this->_fopen($path))) {
 			while (!feof($fp)) {
@@ -930,6 +936,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _filePutContents($path, $content) {
+		$path = '/' . trim($path, '/') ;
 		$res = false;
 
 		if ($this->tmp) {
@@ -1016,6 +1023,8 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 **/
 	protected function _extract($path, $arc)
 	{
+		$path = '/' . trim($path, '/') ;
+		
 		// get current directory
 		$cwd = getcwd();
 
