@@ -13,35 +13,21 @@
 	
 	<scriptfile>install.php</scriptfile>
 	
-	<!-- do not re install sql when generator working.
+	<!-- 
 	<install>
     	<sql>
         	<file driver="mysql" charset="utf8">sql/install.sql</file>
   		</sql>
     </install>
-	-->
+	
 	
 	<uninstall>
     	<sql>
         	<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
   		</sql>
     </uninstall>
-	
-	
+	-->
 
-	<files folder="../site">
-		<filename>index.html</filename>
-		<filename>remoteimage.php</filename>
-		<filename>controller.php</filename>
-		<filename>router.php</filename>
-		<folder>views</folder>
-		<folder>sql</folder>
-		<folder>models</folder>
-		<folder>controllers</folder>
-		<folder>images</folder>
-		<folder>includes</folder>
-	</files>
-	
 	
 	
 	<administration>
@@ -49,7 +35,7 @@
 		
 		<!-- Submenu
 			Note that all & must be escaped to &amp; for the file to be valid
-			XML and be parsed by the installer-->
+			XML and be parsed by the installer
 		<submenu>
 				
 			<menu link="option=com_remoteimage&amp;view=managers" view="managers"
@@ -58,7 +44,7 @@
 			<menu link="option=com_categories&amp;extension=com_remoteimage"
 				view="categories" img="class:category" alt="Remoteimage/Categories">jcategories</menu>
 		</submenu>
-		
+		-->
 		
 		
 		<files folder="admin">
@@ -89,7 +75,7 @@
 	
 	
 	<plugins>
-		<!--<plugin>plg_system_remoteimage</plugin>-->
+		<plugin>plg_editors-xtd_remoteimage</plugin>
 	</plugins>
 	
 	
