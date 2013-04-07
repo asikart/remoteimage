@@ -31,7 +31,13 @@
 
 
 /* FORM */
+#rm-width-lbl {
+	m/argin-top: 5px;
+}
 
+.joomla25 #rm-insert-panel {
+	p/adding: 20px 10px;
+}
 
 /* FOOTER */
 

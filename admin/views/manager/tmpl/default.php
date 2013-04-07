@@ -23,10 +23,26 @@ $app 	= JFactory::getApplication() ;
 
 // Include elFinder and JS
 // ================================================================================
+if( JVERSION >= 3){
+	// JHtml::_('formbehavior.chosen', 'select');
+	JHtml::_('jquery.framework', true);
+	if($app->isSite()){
+		//RemoteimageHelper::_('include.fixBootstrapToJoomla');
+	}
+}else{
+	if($this->modal){
+		$doc->addStyleSheet('components/com_remoteimage/includes/bootstrap/css/bootstrap.min.css');
+	}
+	//RemoteimageHelper::_('include.bluestork');
+	// RemoteimageHelper::_('include.fixBootstrapToJoomla');
+	$doc->addScriptDeclaration('jQuery.noConflict();');
+}
+
+
 JHtml::_('behavior.tooltip');
-JHtml::_('jquery.framework', true);
-$doc->addStylesheet( 'components/com_akquickicons/includes/jquery-ui/css/smoothness/jquery-ui-1.8.24.custom.css' );
-$doc->addscript( 'components/com_akquickicons/includes/jquery-ui/js/jquery-ui-1.8.24.custom.min.js' );
+$doc->addStylesheet( 'components/com_remoteimage/includes/js/jquery-ui/css/smoothness/jquery-ui-1.8.24.custom.css' );
+$doc->addScript( 'components/com_remoteimage/includes/js/jquery/jquery.js' );
+$doc->addscript( 'components/com_remoteimage/includes/js/jquery-ui/js/jquery-ui-1.8.24.custom.min.js' );
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/elfinder.min.css' );
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/theme.css' );
 JHtml::script( JURI::base().'components/com_remoteimage/includes/js/elfinder/js/elfinder.min.js' );
@@ -39,18 +55,6 @@ RMHelper::_('include.addJS', 'jstree/_lib/jquery.hotkeys.js');
 RMHelper::_('include.addJS', 'jstree/jquery.jstree.js');
 RMHelper::_('include.addJS', 'folder-tree.js');
 */
-
-
-
-if( JVERSION >= 3){
-	JHtml::_('formbehavior.chosen', 'select');
-	if($app->isSite()){
-		//RemoteimageHelper::_('include.fixBootstrapToJoomla');
-	}
-}else{
-	RemoteimageHelper::_('include.bluestork');
-	// RemoteimageHelper::_('include.fixBootstrapToJoomla');
-}
 
 
 
@@ -71,7 +75,8 @@ if($app->isSite()) {
 			return ;
 		}
 		
-		var dW 		= $('rm-width').get('value').toInt() ;
+		var fixAll	= $('rm-width').checked ;
+		var dW 		= $('rm-setwidth').get('value').toInt() ;
 		//var dH 		= $('rm-height').get('value').toInt() ;
 		var tags	= '';
 		
@@ -80,9 +85,12 @@ if($app->isSite()) {
 			// Create img element
 			var img = new Element('img', {
 				alt : e.name ,
-				src : e.url ,
-				width : dW
+				src : e.url 
 			}) ;
+			
+			if( fixAll ) {
+				img.set('width', dW) ;
+			}
 			
 			tags += '<p>' + img.outerHTML + '</p>';
 		} );
@@ -104,13 +112,23 @@ if($app->isSite()) {
 		
 		<?php if( $this->modal ): ?>
 		<div class="row-fluid">
-			<div class="span12 form-actions">
-				<label for="rm-width" class="fltlft pull-left"><?php echo JText::_('COM_REMOTEIMAGE_MAX_WIDTH'); ?></label>
-				<input type="text" id="rm-width" class="input input-mini fltlft pull-left" value="<?php echo $this->params->get('Image_DefaultWidth_Midium', 640); ?>" />
-				<!--<span class="rm-width-height-x">X</span>
-				<input type="text" id="rm-height" class="input input-mini" value="<?php echo $this->params->get('Image_DefaultHeight_Midium', 640); ?>" />
-				-->
-				<div class="btn-toolbar pull-right">
+			<div id="rm-insert-panel" class="span12 form-actions">
+				<div class="form-inline pull-left">
+					<label for="rm-width" id="rm-width-lbl" class=""><?php echo JText::_('COM_REMOTEIMAGE_MAX_WIDTH'); ?></label>
+					<input type="text" id="rm-width" class="input input-mini" value="<?php echo $this->params->get('Image_DefaultWidth_Midium', 640); ?>" />
+					&nbsp;&nbsp;
+					<!--<span class="rm-width-height-x">X</span>
+					<input type="text" id="rm-height" class="input input-mini" value="<?php echo $this->params->get('Image_DefaultHeight_Midium', 640); ?>" />
+					-->
+					<label for="rm-setwidth">
+						<input type="checkbox" id="rm-setwidth" name="rm-setwidth" value="1" />
+						<?php echo JText::_('COM_REMOTEIMAGE_FIX_ALL_IMAGE_WIDTH'); ?>
+					</label>
+						
+				</div>
+				
+				
+				<div class="btns pull-right fltrt">
 					
 					<button id="rm-insert-button" class="btn btn-primary" onclick="window.insertImageToParent();">
 						<?php echo JText::_('COM_REMOTEIMAGE_INSERT_IMAGES'); ?>

@@ -37,7 +37,7 @@
 			type="text"
 			label="COM_REMOTEIMAGE_FTP_HOST"
 			description="COM_REMOTEIMAGE_FTP_HOST_DESC"
-			default=""
+			default="127.0.0.1"
 		/>
 		
 		<field
