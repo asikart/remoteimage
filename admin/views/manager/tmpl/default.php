@@ -75,8 +75,8 @@ if($app->isSite()) {
 			return ;
 		}
 		
-		var fixAll	= $('rm-width').checked ;
-		var dW 		= $('rm-setwidth').get('value').toInt() ;
+		var fixAll	= $('rm-setwidth').checked ;
+		var dW 		= $('rm-width').get('value').toInt() ;
 		//var dH 		= $('rm-height').get('value').toInt() ;
 		var tags	= '';
 		
