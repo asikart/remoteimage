@@ -339,7 +339,10 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 			}
 			return;
 		}
-		foreach (ftp_rawlist($this->connect, $path) as $raw) {
+		
+		$path_escape = str_replace(' ', '\ ', $path);
+		
+		foreach (ftp_rawlist($this->connect, $path_escape) as $raw) {
 			if (($stat = $this->parseRaw($raw))) {
 				$p    = $path.'/'.$stat['name'];
 				$stat = $this->updateCache($p, $stat);

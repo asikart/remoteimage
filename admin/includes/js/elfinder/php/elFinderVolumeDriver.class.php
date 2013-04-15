@@ -1867,7 +1867,8 @@ abstract class elFinderVolumeDriver {
 			// replace HTML safe base64 to normal
 			$h = base64_decode(strtr($h, '-_.', '+/='));
 			// TODO uncrypt hash and return path
-			$path = $this->uncrypt($h); 
+			$path = $this->uncrypt($h);
+			
 			// append ROOT to path after it was cut in encode
 			return $this->_abspath($path);//$this->root.($path == DIRECTORY_SEPARATOR ? '' : DIRECTORY_SEPARATOR.$path); 
 		}

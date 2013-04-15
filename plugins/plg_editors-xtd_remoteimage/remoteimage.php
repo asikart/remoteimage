@@ -52,10 +52,40 @@ class plgButtonRemoteimage extends JPlugin
 	{
 		
 		$js = "
-		function insertImage(imgs)
+		function insertImage(imgs, elFinder, options)
 		{
-
-			jInsertEditorText(imgs, '".$name."');
+			var tags	= '';
+		
+			imgs.each( function(e, i){
+				
+				if( e.mime.split('/')[0] == 'image' ) {
+					// Create img element
+					var img = new Element('img', {
+						alt : e.name ,
+						src : elFinder.url(e.hash)
+					}) ;
+					
+					// Fix Width
+					if( options.fixAll ) {
+						img.set('width', options.dW) ;
+					}
+					
+					tags += '<p>' + img.outerHTML + '</p>';
+				}else{
+					var a = new Element('a', {
+						href : elFinder.url(e.hash),
+						target : '_blank',
+						text : e.name
+					});
+					
+					tags += '&nbsp; ' + a.outerHTML + '&nbsp; ' ;
+				}
+				
+				
+			} );
+			
+			
+			jInsertEditorText(tags, '".$name."');
 			SqueezeBox.close();
 			
 		}";

@@ -82,39 +82,14 @@ if($app->isSite()) {
 		
 		var fixAll	= $('rm-setwidth').checked ;
 		var dW 		= $('rm-width').get('value').toInt() ;
+		var options = {
+			fixAll : fixAll,
+			dW : dW
+		}
 		//var dH 		= $('rm-height').get('value').toInt() ;
-		var tags	= '';
-		
-		imgs.each( function(e, i){
-			
-			if( e.mime.split('/')[0] == 'image' ) {
-				// Create img element
-				var img = new Element('img', {
-					alt : e.name ,
-					src : e.url 
-				}) ;
-				
-				// Fix Width
-				if( fixAll ) {
-					img.set('width', dW) ;
-				}
-				
-				tags += '<p>' + img.outerHTML + '</p>';
-			}else{
-				var a = new Element('a', {
-					href : e.url,
-					target : '_blank',
-					text : e.name
-				});
-				
-				tags += '&nbsp; ' + a.outerHTML + '&nbsp; ' ;
-			}
-			
-			
-		} );
 		
 		
-		if (window.parent) window.parent.insertImage(tags);
+		if (window.parent) window.parent.insertImage(imgs, window.elFinder, options);
 	}
 	
 	
