@@ -183,7 +183,7 @@ if($app->isSite()) {
 						<?php echo JText::_('COM_REMOTEIMAGE_INSERT_IMAGES'); ?>
 					</button>
 					
-					<button id="rm-cancel-button" class="btn">
+					<button id="rm-cancel-button" class="btn" onclick="window.parent.SqueezeBox.close();">
 						<?php echo JText::_('JLIB_HTML_BEHAVIOR_CLOSE'); ?>
 					</button>
 					

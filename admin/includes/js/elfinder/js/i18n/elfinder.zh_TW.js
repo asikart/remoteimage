@@ -246,7 +246,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'maintainer'      : '維護',
 			'translator'      : '翻譯',
 			'icons'           : '圖示',
-			'dontforget'      : '別忘了帶上你擦汗的毛巾',
+			'dontforget'      : '別忘了帶著你的毛巾',
 			'shortcutsof'     : '快捷鍵已禁用',
 			'dropFiles'       : '把文件拖到這裡',
 			'or'              : '或者',
