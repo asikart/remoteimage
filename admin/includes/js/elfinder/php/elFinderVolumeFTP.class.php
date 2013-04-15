@@ -720,6 +720,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Cem (DiscoFever)
 	 **/
 	protected function _scandir($path) {
+		$path = '/'.trim($path, '/') ;
 		$files = array();
 
 		foreach (ftp_rawlist($this->connect, $path) as $str) {
@@ -741,7 +742,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 **/
 	protected function _fopen($path, $mode='rb') {
 		
-		$path = '/' . trim($path);
+		$path = '/' . trim($path, '/');
 		
 		if ($this->tmp) {
 			$local = $this->tmp.DIRECTORY_SEPARATOR.md5($path);
@@ -762,6 +763,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _fclose($fp, $path='') {
+		$path = '/'.trim($path, '/') ;
 		@fclose($fp);
 		if ($path) {
 			@unlink($this->tmp.DIRECTORY_SEPARATOR.md5($path));
@@ -779,6 +781,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _mkdir($path, $name) {
+		$path = '/'.trim($path, '/') ;
 		$path = $path.'/'.$name;
 		if (ftp_mkdir($this->connect, $path) === false) {
 			return false;
@@ -797,6 +800,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function _mkfile($path, $name) {
+		$path = '/'.trim($path, '/') ;
 		if ($this->tmp) {
 			$path = $path.'/'.$name;
 			$local = $this->tmp.DIRECTORY_SEPARATOR.md5($path);
@@ -1393,6 +1397,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * @return array|bool|false
 	 */
 	public function resize($hash, $width, $height, $x, $y, $mode = 'resize', $bg = '', $degree = 0) {
+		
 		if ($this->commandDisabled('resize')) {
 			return $this->setError(elFinder::ERROR_PERM_DENIED);
 		}
@@ -1406,6 +1411,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 		}
 
 		$path = $this->decode($hash);
+		$path = '/' . trim($path, '/') ;
 
 		$tmpDir = $this->tempDir();
 		if (!$tmpDir) {

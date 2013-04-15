@@ -29,6 +29,7 @@ if( JVERSION >= 3){
 	
 	// jQuery
 	JHtml::_('jquery.framework', true);
+	JHtml::_('bootstrap.framework', true);
 
 }else{
 	if($this->modal){
