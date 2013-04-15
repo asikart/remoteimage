@@ -65,6 +65,18 @@
 		/>
 		
 		<field
+			name="Ftp_Active"
+			type="radio"
+			label="COM_REMOTEIMAGE_FTP_ACTIVE_MODE"
+			description="COM_REMOTEIMAGE_FTP_ACTIVE_MODE_DESC"
+			default="passive"
+			class="btn-group"
+		>
+			<option value="passive">JDISABLED</option>
+			<option value="active">JENABLED</option>
+		</field>
+		
+		<field
 			name="Ftp_Root"
 			type="text"
 			label="COM_REMOTEIMAGE_FTP_ROOT"

@@ -45,6 +45,7 @@ $host 	= $params->get('Ftp_Host', '127.0.0.1') ;
 $port 	= $params->get('Ftp_Port', 21) ;
 $user 	= $params->get('Ftp_User') ;
 $pass 	= $params->get('Ftp_Password') ;
+$active = $params->get('Ftp_Active', 'passive') ;
 $url 	= $params->get('Ftp_Url') ;
 $root 	= $params->get('Ftp_Root', '/') ;
 
@@ -57,7 +58,7 @@ if( $params->get('Connection_Ftp', 1) )
 		'user'          => $user,
 		'pass'          => $pass,
 		'port'          => $port,
-		'mode'          => 'active',
+		'mode'          => $active,
 		'path'          => $root,
 		'timeout'       => 10,
 		'owner'         => true,

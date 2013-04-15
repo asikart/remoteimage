@@ -150,7 +150,19 @@ if($app->isSite()) {
 </script>
 
 <div id="remoteimage-manager" class="<?php echo (JVERSION >= 3) ? 'joomla30' : 'joomla25' ?>">
-
+		
+		<div class="system-info">
+			<?php
+			$upload_max = ini_get('upload_max_filesize') ;
+			$upload_num = ini_get('max_file_uploads') ;
+			?>
+			
+			<?php echo JText::_('COM_REMOTEIMAGE_UPLOAD_MAX'); ?> <?php echo $upload_max; ?>
+			|
+			<?php echo JText::_('COM_REMOTEIMAGE_UPLOAD_NUM'); ?> <?php echo $upload_num; ?>
+			
+		</div>
+		
 		<!-- Bodys -->
 		<div class="row-fluid">
 			<div id="elfinder" class="span12 rm-finder">
