@@ -1,4 +1,14 @@
 <?php
+/**
+ * @package		Asikart.Plugin
+ * @subpackage	editors-xtd.plg_remoteimage
+ * @copyright	Copyright (C) 2012 Asikart.com, Inc. All rights reserved.
+ * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+// no direct access
+defined('_JEXEC') or die;
+
 
 /**
  * elFinder driver for local filesystem.
