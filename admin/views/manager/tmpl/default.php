@@ -19,6 +19,9 @@ $doc 	= JFactory::getDocument() ;
 $uri 	= JFactory::getURI() ;
 $user	= JFactory::getUser() ;
 $app 	= JFactory::getApplication() ;
+$lang	= JFactory::getLanguage();
+$lang_code = $lang->getTag();
+$lang_code = str_replace('-', '_', $lang_code) ;
 
 
 // Include elFinder and JS
@@ -38,26 +41,19 @@ if( JVERSION >= 3){
 	
 	// jQuery
 	$doc->addScript( 'components/com_remoteimage/includes/js/jquery/jquery.js' );
-	
 	$doc->addScriptDeclaration('jQuery.noConflict();');
 }
 
 
-JHtml::_('behavior.tooltip');
+// elFinder includes
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/jquery-ui/css/smoothness/jquery-ui-1.8.24.custom.css' );
-$doc->addscript( 'components/com_remoteimage/includes/js/jquery-ui/js/jquery-ui-1.8.24.custom.min.js' );
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/elfinder.min.css' );
 $doc->addStylesheet( 'components/com_remoteimage/includes/js/elfinder/css/theme.css' );
-JHtml::script( JURI::base().'components/com_remoteimage/includes/js/elfinder/js/elfinder.min.js' );
+
+$doc->addscript( 'components/com_remoteimage/includes/js/jquery-ui/js/jquery-ui-1.8.24.custom.min.js' );
+$doc->addscript( 'components/com_remoteimage/includes/js/elfinder/js/elfinder.min.js' );
+JHtml::script( JURI::base().'components/com_remoteimage/includes/js/elfinder/js/i18n/elfinder.'.$lang_code.'.js' );
 RMHelper::_('include.core');
-
-
-/* jsTree
-RMHelper::_('include.addJS', 'jstree/_lib/jquery.cookie.js');
-RMHelper::_('include.addJS', 'jstree/_lib/jquery.hotkeys.js');
-RMHelper::_('include.addJS', 'jstree/jquery.jstree.js');
-RMHelper::_('include.addJS', 'folder-tree.js');
-*/
 
 
 
@@ -76,7 +72,7 @@ if($app->isSite()) {
 	var el ;
 	var RMinModal ;
 	
-	
+	// Insert Image to Article
 	var insertImageToParent = function(){
 		var imgs 	= elSelected ;
 		
@@ -127,6 +123,7 @@ if($app->isSite()) {
 		elFinder = $('#elfinder').elfinder({
 			url : 'index.php?option=com_remoteimage&task=manager' ,
 			width : '100%' ,
+			lang : '<?php echo $lang_code; ?>',
 			handlers : {
 				select : function(event, elfinderInstance) {
 					var selected = event.data.selected;
