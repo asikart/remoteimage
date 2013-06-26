@@ -80,7 +80,7 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
 ?>
 <script type="text/javascript">
 	var elFinder
-	var elSelected ;
+	var elSelected = [];
 	var el ;
 	var RMinModal ;
 	
@@ -88,20 +88,90 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
 	var insertImageToParent = function(){
 		var imgs 	= elSelected ;
 		
-		if( elSelected.length < 1 ) {
-			return ;
-		}
 		
-		var fixAll	= $('rm-setwidth').checked ;
+		
+        var elFinder = window.elFinder;
+		var urls    = $('insert-from-url').get('value');
+        var fixAll	= $('rm-setwidth').checked ;
 		var dW 		= $('rm-width').get('value').toInt() ;
-		var options = {
-			fixAll : fixAll,
-			dW : dW
-		}
-		//var dH 		= $('rm-height').get('value').toInt() ;
-		
-		
-		if (window.parent) window.parent.insertImage('<?php echo JRequest::getVar('insert_id') ; ?>', imgs, window.elFinder, options);
+        var tags	= '';
+        
+        
+        // Handle From Urls
+        urls = urls.toString().trim();
+        
+        if( urls ) {
+            urls = urls.split("\n");
+            
+            urls.each( function(e, i){
+                var path = e.split('/');
+                var ext = path.getLast().split('.').getLast();
+                var img_ext = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'];
+                
+                if( img_ext.contains(ext) ) {
+                    // Create img element
+                    var img = new Element('img', {
+                        alt : path.getLast() ,
+                        src : e
+                    }) ;
+                    
+                    // Fix Width
+                    if( fixAll ) {
+                        img.set('width', dW) ;
+                    }
+                    
+                    tags += '<p>' + img.outerHTML + '</p>';
+                }else{
+                    var a = new Element('a', {
+                        href : e,
+                        target : '_blank',
+                        text : path.getLast()
+                    });
+                    
+                    tags += '&nbsp; ' + a.outerHTML + '&nbsp; ' ;
+                }
+                
+            });
+        }else{
+            // Insert From Selected
+            if( elSelected.length < 1 ) {
+                return ;
+            }
+            
+            imgs.each( function(e, i){
+            
+                if( e.mime.split('/')[0] == 'image' ) {
+                    // Create img element
+                    var img = new Element('img', {
+                        alt : e.name ,
+                        src : elFinder.url(e.hash)
+                    }) ;
+                    
+                    // Fix Width
+                    if( fixAll ) {
+                        img.set('width', dW) ;
+                    }
+                    
+                    tags += '<p>' + img.outerHTML + '</p>';
+                }else{
+                    var a = new Element('a', {
+                        href : elFinder.url(e.hash),
+                        target : '_blank',
+                        text : e.name
+                    });
+                    
+                    tags += '&nbsp; ' + a.outerHTML + '&nbsp; ' ;
+                }
+                
+            } );
+        }
+        
+        
+        if (window.parent) window.parent.jInsertEditorText(tags, '<?php echo JRequest::getVar('insert_id') ; ?>');
+        
+        setTimeout( function(){
+            if (window.parent) window.parent.SqueezeBox.close();
+        } , 200);
 	}
 	
 	
@@ -191,7 +261,14 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
 						<input type="checkbox" id="rm-setwidth" name="rm-setwidth" value="1" />
 						<?php echo JText::_('COM_REMOTEIMAGE_FIX_ALL_IMAGE_WIDTH'); ?>
 					</label>
-						
+					
+                    <br /><br />
+                    
+                    <label for="insert-from-url">
+                        <?php echo JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL'); ?>
+                    </label>
+                    <br />
+                    <textarea name="insert-from-url" id="insert-from-url" cols="30" class="span12" rows="5"></textarea>
 				</div>
 				
 				
