@@ -69,7 +69,7 @@ $params         = JComponentHelper::getParams('com_remoteimage') ;
 $safemode       = $params->get('Safemode', true) ;
 $onlyimage      = $params->get('Onlyimage', false) ;
 $tabs           = $this->modal ? true : false ;
-$height         = JRequest::getVar('height', 380) ;
+$height         = $this->modal ? JRequest::getVar('height', 380) : 520 ;
 
 // System Info
 $upload_max = ini_get('upload_max_filesize') ;

@@ -145,7 +145,7 @@
 			default="&lt;p&gt;{%CONTENT%}&lt;/p&gt;"
 			class="input-lxlarge"
 			rows="3"
-            cols="20"
+            cols="30"
 			filter="safehtml"
 		/>
         
@@ -157,7 +157,7 @@
 			default="{%CONTENT%}"
 			class="input-lxlarge"
 			rows="3"
-            cols="20"
+            cols="30"
 			filter="safehtml"
 		/>
         
