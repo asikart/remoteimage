@@ -1,7 +1,7 @@
 <?php
 /**
  * @package		Asikart.Plugin
- * @subpackage	editors-xtd.plg_remoteimage
+ * @subpackage	system.plg_remoteimage
  * @copyright	Copyright (C) 2012 Asikart.com, Inc. All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */
@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 /**
  * Script file of Remoteimage Module
  */
-class plgEditors_xtdRemoteimageInstallerScript
+class plgSystemRemoteimageInstallerScript
 {
 	/**
 	 * method to install the component

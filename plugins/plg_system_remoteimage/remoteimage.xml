@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="editors-xtd" method="upgrade">
-	<name>plg_editors-xtd_remoteimage</name>
+<extension version="2.5" type="plugin" group="system" method="upgrade">
+	<name>plg_system_remoteimage</name>
 	<author>Asika</author>
 	<creationDate>2012-11-12</creationDate>
 	<copyright>Copyright (C) 2012 Asikart.com</copyright>
@@ -8,7 +8,25 @@
 	<authorEmail>asika@asikart.com</authorEmail>
 	<authorUrl>http://asikart.com</authorUrl>
 	<version>1.0</version>
-	<description>PLG_EDITORS-XTD_REMOTEIMAGE_XML_DESCRIPTION</description>
+	<description>PLG_SYSTEM_REMOTEIMAGE_XML_DESCRIPTION</description>
+	
+	
+	<scriptfile>install.php</scriptfile>
+	
+	<!-- plugin system now has no sql file
+	<install>
+    	<sql>
+        	<file driver="mysql" charset="utf8">sql/install.sql</file>
+  		</sql>
+    </install>
+	
+	
+	<uninstall>
+    	<sql>
+        	<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+  		</sql>
+    </uninstall>
+	-->
 	
 	
 	<files>
@@ -19,7 +37,7 @@
 		<folder>lib</folder>
 	</files>
 
-	<!--<config>
+	<config>
 		<fields name="params">
 
 			<fieldset name="basic">
@@ -31,13 +49,19 @@
 
 			<fieldset name="advanced">
 				<field name="include_path" type="text"
-					label="PLG_EDITORS-XTD_REMOTEIMAGE_INCLUDE_PATH"
+					label="PLG_SYSTEM_REMOTEIMAGE_INCLUDE_PATH"
 					default="easyset"
 				/>
 			</fieldset>
 
 		</fields>
-	</config>-->
+	</config>
+	
+	
+	<updateservers>
+		<!--<server type="collection">http://remoteimage.com/list.xml</server>-->
+		<server type="extension" priority="1" name="Asikart Remoteimage Plugin">http://update.asikart.com/plugins/plg_remoteimage.xml</server>
+	</updateservers>
 	
 	
 </extension>
