@@ -64,11 +64,12 @@ if($app->isSite()) {
 }
 
 
-// Safe Mode
+// PARAMS
 $params         = JComponentHelper::getParams('com_remoteimage') ;
 $safemode       = $params->get('Safemode', true) ;
 $onlyimage      = $params->get('Onlyimage', false) ;
-
+$tabs           = $this->modal ? true : false ;
+$height         = JRequest::getVar('height', 380) ;
 
 // System Info
 $upload_max = ini_get('upload_max_filesize') ;
@@ -77,19 +78,23 @@ $sysinfo = JText::_('COM_REMOTEIMAGE_UPLOAD_MAX') . ' ' . $upload_max;
 $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num; 
 
 
+// Is FormField
+$fieldid = JRequest::getVar('fieldid') ;
+
+
 ?>
 <script type="text/javascript">
-	var elFinder
+	var elFinder ;
 	var elSelected = [];
 	var el ;
 	var RMinModal ;
+    var root_uri = '<?php echo JURI::root(); ?>';
+    var insert_template_image   = '<?php echo str_replace(",", "\,", $params->get('Integrate_InsertTemplateImage', '<p>{%CONTENT%}</p>')); ?>';
+    var insert_template_link    = '<?php echo str_replace(",", "\,", $params->get('Integrate_InsertTemplateLink', '{%CONTENT%}')); ?>';
 	
 	// Insert Image to Article
 	var insertImageToParent = function(){
 		var imgs 	= elSelected ;
-		
-		
-		
         var elFinder = window.elFinder;
 		var urls    = $('insert-from-url').get('value');
         var fixAll	= $('rm-setwidth').checked ;
@@ -108,6 +113,10 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
                 var ext = path.getLast().split('.').getLast();
                 var img_ext = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'];
                 
+                if(!e.trim()) {
+                    return;
+                }
+                
                 if( img_ext.contains(ext) ) {
                     // Create img element
                     var img = new Element('img', {
@@ -120,7 +129,7 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
                         img.set('width', dW) ;
                     }
                     
-                    tags += '<p>' + img.outerHTML + '</p>';
+                    tags += insert_template_image.replace( '{%CONTENT%}' ,img.outerHTML);
                 }else{
                     var a = new Element('a', {
                         href : e,
@@ -128,7 +137,7 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
                         text : path.getLast()
                     });
                     
-                    tags += '&nbsp; ' + a.outerHTML + '&nbsp; ' ;
+                    tags += '&nbsp; ' + insert_template_link.replace( '{%CONTENT%}' ,a.outerHTML) + '&nbsp; ' ;
                 }
                 
             });
@@ -152,7 +161,7 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
                         img.set('width', dW) ;
                     }
                     
-                    tags += '<p>' + img.outerHTML + '</p>';
+                    tags += insert_template_image.replace( '{%CONTENT%}' ,img.outerHTML);
                 }else{
                     var a = new Element('a', {
                         href : elFinder.url(e.hash),
@@ -160,7 +169,7 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
                         text : e.name
                     });
                     
-                    tags += '&nbsp; ' + a.outerHTML + '&nbsp; ' ;
+                    tags += '&nbsp; ' + insert_template_link.replace( '{%CONTENT%}' ,a.outerHTML) + '&nbsp; ' ;
                 }
                 
             } );
@@ -174,6 +183,37 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
         } , 200);
 	}
 	
+    
+    var insertFormField = function(){
+        var imgs 	= elSelected ;
+        var elFinder = window.elFinder;
+        var urls    = $('insert-from-url').get('value');        
+        
+        // Handle From Urls
+        urls = urls.toString().trim();
+        
+        if( urls ) {
+            url = urls.split("\n")[0];
+            
+        }else{
+            // Insert From Selected
+            if( elSelected.length < 1 ) {
+                return ;
+            }
+            
+            var img = imgs[0];
+            url = elFinder.url(img.hash);
+            
+        }
+        
+        url = url.replace( root_uri, '');
+        console.log(url);
+        window.parent.jInsertFieldValue(url,'<?php echo $fieldid; ?>');
+        
+        setTimeout( function(){
+            if (window.parent) window.parent.SqueezeBox.close();
+        } , 50);
+    }
 	
 	// Init elFinder
 	jQuery(document).ready(function($) {
@@ -181,7 +221,7 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
         var elConfig = {
 			url : 'index.php?option=com_remoteimage&task=manager' ,
 			width : '100%' ,
-            height : '420px' ,
+            height : '<?php echo $height; ?>' ,
 			lang : '<?php echo $lang_code; ?>',
             requestType : 'post',
 			handlers : {
@@ -220,7 +260,7 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
 			<?php if( $this->modal ): ?>
 			,
 			getFileCallback : function(file){
-				insertImageToParent();
+				<?php echo $fieldid ? 'insertFormField();' : 'insertImageToParent();'; ?>
 			}
 			
 			<?php endif; ?>
@@ -239,12 +279,25 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
 
 <div id="remoteimage-manager" class="<?php echo (JVERSION >= 3) ? 'joomla30' : 'joomla25' ?>">
 		
+    <?php echo $tabs ? AKHelper::_('panel.startTabs', 'RMTabs', array( 'active' => 'panel-elfinder' )) : null ; ?>
+        
+        <?php echo $tabs ? AKHelper::_('panel.addPanel' , 'RMTabs', JText::_('COM_REMOTEIMAGE_MANAGER'), 'panel-elfinder') : null ; ?>
 		<!-- Bodys -->
 		<div class="row-fluid">
 			<div id="elfinder" class="span12 rm-finder">
 				
 			</div>
 		</div>
+        <?php echo $tabs ? AKHelper::_('panel.endPanel') : null ; ?>
+        
+        <?php if( $this->modal ): ?>
+            <?php echo $tabs ? AKHelper::_('panel.addPanel' , 'RMTabs', JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL'), 'panel-url') : null ; ?>
+                <?php echo JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL_DESC'); ?>
+                <br /><br />
+                <textarea name="insert-from-url" id="insert-from-url" cols="30" class="span10" rows="10"></textarea>
+            <?php echo $tabs ? AKHelper::_('panel.endPanel') : null ; ?>
+        <?php endif; ?>
+    <?php echo $tabs ? AKHelper::_('panel.endTabs') : null ; ?>    
 		
 		
 		<?php if( $this->modal || AKDEBUG ): ?>
@@ -261,20 +314,12 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num;
 						<input type="checkbox" id="rm-setwidth" name="rm-setwidth" value="1" />
 						<?php echo JText::_('COM_REMOTEIMAGE_FIX_ALL_IMAGE_WIDTH'); ?>
 					</label>
-					
-                    <br /><br />
-                    
-                    <label for="insert-from-url">
-                        <?php echo JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL'); ?>
-                    </label>
-                    <br />
-                    <textarea name="insert-from-url" id="insert-from-url" cols="30" class="span12" rows="5"></textarea>
 				</div>
 				
 				
 				<div class="btns pull-right fltrt">
 					
-					<button id="rm-insert-button" class="btn btn-primary" onclick="window.insertImageToParent();">
+					<button id="rm-insert-button" class="btn btn-primary" onclick="<?php echo $fieldid ? 'insertFormField();' : 'insertImageToParent();'; ?>">
 						<?php echo JText::_('COM_REMOTEIMAGE_INSERT_IMAGES'); ?>
 					</button>
 					

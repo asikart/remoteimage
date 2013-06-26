@@ -78,15 +78,37 @@ class plgSystemRemoteimage extends JPlugin
         $option = JRequest::getVar('option') ;
         $view   = JRequest::getVar('view') ;
         $app    = JFactory::getApplication() ;
+        $tmpl   = JRequest::getVar('tmpl') ;
+        $fieldid= JRequest::getVar('fieldid') ;
         $params = JComponentHelper::getParams('com_remoteimage') ;
         
-        if( $app->isAdmin() && $option == 'com_media' && $view == 'images' && $params->get('Integrate_OverrideMediaManager')) {
+        if( $app->isAdmin() && $option == 'com_media' && $view == 'images' && !$fieldid && $tmpl == 'component' && $params->get('Integrate_Override_InsertImageArticle', 1)) {
             
             $this->_addScript();
             
             $uri->setVar('option', 'com_remoteimage');
             $uri->delVar('view');
             $uri->setVar('insert_id', JRequest::getVar('e_name') );
+            
+            $app->redirect((string) $uri);
+        }
+        
+        if( $app->isAdmin() && $option == 'com_media' && $view == 'images' && $fieldid && $tmpl == 'component' && $params->get('Integrate_Override_MediaFormField', 1)) {
+            
+            $this->_addScript();
+            
+            $uri->setVar('option', 'com_remoteimage');
+            $uri->delVar('view');
+            
+            $app->redirect((string) $uri);
+        }
+        
+        if( $app->isAdmin() && $option == 'com_media' && ($view == 'image' || !$view) && $params->get('Integrate_Override_MediaManager', 1)) {
+            
+            $this->_addScript();
+            
+            $uri->setVar('option', 'com_remoteimage');
+            $uri->delVar('view');
             
             $app->redirect((string) $uri);
         }

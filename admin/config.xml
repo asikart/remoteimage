@@ -158,12 +158,59 @@
 	</fieldset>
     
     <fieldset name="integrate">
+        
         <field
-			name="Integrate_OverrideMediaManager"
+			name="Integrate_InsertTemplateImage"
+			type="textarea"
+			label="COM_REMOTEIMAGE_INTEGRATE_INSERT_TEMPLATE_IMAGE"
+			description="COM_REMOTEIMAGE_INTEGRATE_INSERT_TEMPLATE_IMAGE_DESC"
+			default="&lt;p&gt;{%CONTENT%}&lt;/p&gt;"
+			class="input-small"
+			size="10"
+			filter="safehtml"
+		/>
+        
+        <field
+			name="Integrate_InsertTemplateLink"
+			type="textarea"
+			label="COM_REMOTEIMAGE_INTEGRATE_INSERT_TEMPLATE_LINK"
+			description="COM_REMOTEIMAGE_INTEGRATE_INSERT_TEMPLATE_LINK_DESC"
+			default="{%CONTENT%}"
+			class="input-small"
+			size="10"
+			filter="safehtml"
+		/>
+        
+        <field
+			name="Integrate_Override_MediaManager"
 			type="radio"
 			label="COM_REMOTEIMAGE_INTEGRATE_OVERRIDE_MEDIA_MANAGER"
 			description="COM_REMOTEIMAGE_INTEGRATE_OVERRIDE_MEDIA_MANAGER_DESC"
-			default="0"
+			default="1"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+        
+        <field
+			name="Integrate_Override_MediaFormField"
+			type="radio"
+			label="COM_REMOTEIMAGE_INTEGRATE_OVERRIDE_MEDIA_FORMFIELD"
+			description="COM_REMOTEIMAGE_INTEGRATE_OVERRIDE_MEDIA_FORMFIELD_DESC"
+			default="1"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+        
+        <field
+			name="Integrate_Override_InsertImageArticle"
+			type="radio"
+			label="COM_REMOTEIMAGE_INTEGRATE_OVERRIDE_INSERT_IMAGE_ARTICLE"
+			description="COM_REMOTEIMAGE_INTEGRATE_OVERRIDE_INSERT_IMAGE_ARTICLE_DESC"
+			default="1"
 			class="btn-group"
 		>
 			<option value="0">JNO</option>

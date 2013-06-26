@@ -66,14 +66,14 @@ class plgButtonRemoteimage extends JPlugin
 			||	(count($user->getAuthorisedCategories($extension, 'core.edit.own')) > 0 && $author == $user->id)
 		)
 		{
-			$link = 'index.php?option=com_remoteimage&view=manager&tmpl=component&insert_id='.$name;
+			$link = 'index.php?option=com_remoteimage&view=manager&tmpl=component&height=420&insert_id='.$name;
 			JHtml::_('behavior.modal');
 			$button = new JObject;
 			$button->modal = true;
 			$button->link = $link;
 			$button->text = JText::_('COM_REMOTEIMAGE_IMAGE_BUTTON');
 			$button->name = JVERSION >= 3 ? 'picture' : 'image';
-			$button->options = "{handler: 'iframe', size: {x: 950, y: 500}}";
+			$button->options = "{handler: 'iframe', size: {x: 950, y: 550}}";
 			return $button;
 		}
 		else

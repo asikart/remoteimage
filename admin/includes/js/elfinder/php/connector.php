@@ -52,6 +52,19 @@ $root 	= $params->get('Ftp_Root', '/') ;
 $local_root = $params->get('Local_Root', 'images') ;
 
 $roots = array();
+
+if( $params->get('Connection_Local', 1) )
+{
+	$roots[] = array(
+		'driver'        => 'LocalFileSystem',
+        'alias'         => 'Local Files: '.$local_root,
+		'path'          => JPATH_ROOT.'/'.trim($local_root, '/'),
+		'URL'           => JURI::root().trim($local_root, '/'),
+		'accessControl' => 'access',
+        'uploadDeny'    => array('text/x-php')
+	);
+}
+
 if( $params->get('Connection_Ftp', 1) )
 {
 	$roots[] = array(
@@ -72,18 +85,6 @@ if( $params->get('Connection_Ftp', 1) )
 		'fileMode'      => 0644,
 		'URL'			=> $url,
 		'checkSubfolders' => false,
-        'uploadDeny'    => array('text/x-php')
-	);
-}
-
-if( $params->get('Connection_Local', 1) )
-{
-	$roots[] = array(
-		'driver'        => 'LocalFileSystem',
-        'alias'         => 'Local Files: '.$local_root,
-		'path'          => JPATH_ROOT.'/'.trim($local_root, '/'),
-		'URL'           => JURI::root().trim($local_root, '/'),
-		'accessControl' => 'access',
         'uploadDeny'    => array('text/x-php')
 	);
 }
