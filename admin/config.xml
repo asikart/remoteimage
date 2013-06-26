@@ -2,27 +2,27 @@
 <config>
 	<fieldset name="component"
 		label="COM_REMOTEIMAGE_COMPONENT_LABEL"
-		description="COM_REMOTEIMAGE_COMPONENT_DESC"
+		
 		addfieldpath="administrator/components/com_remoteimage/models/fields"
 	>
 		
-		<field
-			name="Connection_Ftp"
+        <field
+			name="Connection_Local"
 			type="radio"
-			label="COM_REMOTEIMAGE_CONNECTION_FTP"
-			description="COM_REMOTEIMAGE_CONNECTION_FTP_DESC"
+			label="COM_REMOTEIMAGE_CONNECTION_LOCAL"
+			description="COM_REMOTEIMAGE_CONNECTION_LOCAL_DESC"
 			default="1"
 			class="btn-group"
 		>
 			<option value="0">JDISABLED</option>
 			<option value="1">JENABLED</option>
 		</field>
-		
+        
 		<field
-			name="Connection_Local"
+			name="Connection_Ftp"
 			type="radio"
-			label="COM_REMOTEIMAGE_CONNECTION_LOCAL"
-			description="COM_REMOTEIMAGE_CONNECTION_LOCAL_DESC"
+			label="COM_REMOTEIMAGE_CONNECTION_FTP"
+			description="COM_REMOTEIMAGE_CONNECTION_FTP_DESC"
 			default="1"
 			class="btn-group"
 		>
@@ -108,28 +108,6 @@
 		/>
 		
 		<field type="spacer" hr="true" />
-		
-		<field
-			name="Image_DefaultWidth_Midium"
-			type="text"
-			label="COM_REMOTEIMAGE_DEFAULT_WIDTH_MIDIUM"
-			description="COM_REMOTEIMAGE_DEFAULT_WIDTH_MIDIUM_DESC"
-			default="640"
-			class="input-small"
-			size="10"
-			filter="int"
-		/>
-		
-		<field
-			name="Image_DefaultHeight_Midium"
-			type="text"
-			label="COM_REMOTEIMAGE_DEFAULT_HEIGHT_MIDIUM"
-			description="COM_REMOTEIMAGE_DEFAULT_HEIGHT_MIDIUM_DESC"
-			default="640"
-			class="input-small"
-			size="10"
-			filter="int"
-		/>
         
         <field
 			name="Onlyimage"
@@ -182,6 +160,30 @@
             cols="20"
 			filter="safehtml"
 		/>
+        
+        <field
+			name="Image_DefaultWidth_Midium"
+			type="text"
+			label="COM_REMOTEIMAGE_DEFAULT_WIDTH_MIDIUM"
+			description="COM_REMOTEIMAGE_DEFAULT_WIDTH_MIDIUM_DESC"
+			default="640"
+			class="input-small"
+			size="10"
+			filter="int"
+		/>
+		
+		<field
+			name="Image_DefaultHeight_Midium"
+			type="text"
+			label="COM_REMOTEIMAGE_DEFAULT_HEIGHT_MIDIUM"
+			description="COM_REMOTEIMAGE_DEFAULT_HEIGHT_MIDIUM_DESC"
+			default="640"
+			class="input-small"
+			size="10"
+			filter="int"
+		/>
+        
+        <field type="spacer" hr="true" />
         
         <field
 			name="Integrate_Override_MediaManager"
