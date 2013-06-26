@@ -1,7 +1,6 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,21 +10,21 @@
 // no direct access
 defined('_JEXEC') or die;
 
-define('AKPATH_ROOT'	, dirname(__FILE__)) ;
-define('AKPATH_ADMIN'	, AKPATH_ROOT.'/admin') ;
-define('AKPATH_BASE'	, AKPATH_ROOT.'/base') ;
-define('AKPATH_HELPERS'	, AKPATH_ROOT.'/helpers') ;
-define('AKPATH_COMPONENT'	, AKPATH_ROOT.'/component') ;
-define('AKPATH_FORM'	, AKPATH_ROOT.'/form') ;
-define('AKPATH_HTML'	, AKPATH_ROOT.'/html') ;
-define('AKPATH_LANGUAGE', AKPATH_ROOT.'/language') ;
-define('AKPATH_LAYOUTS'	, AKPATH_ROOT.'/layouts') ;
+define('AKPATH_ROOT'        , dirname(__FILE__)) ;
+define('AKPATH_ADMIN'       , AKPATH_ROOT.'/admin') ;
+define('AKPATH_BASE'        , AKPATH_ROOT.'/base') ;
+define('AKPATH_HELPERS'     , AKPATH_ROOT.'/helpers') ;
+define('AKPATH_COMPONENT'   , AKPATH_ROOT.'/component') ;
+define('AKPATH_FORM'        , AKPATH_ROOT.'/form') ;
+define('AKPATH_HTML'        , AKPATH_ROOT.'/html') ;
+define('AKPATH_LANGUAGE'    , AKPATH_ROOT.'/language') ;
+define('AKPATH_LAYOUTS'     , AKPATH_ROOT.'/layouts') ;
 
-define('AKPATH_ASSETS'	, AKPATH_ROOT.'/assets') ;
-define('AKPATH_TABLES'	, AKPATH_ROOT.'/tables') ;
+define('AKPATH_ASSETS'      , AKPATH_ROOT.'/assets') ;
+define('AKPATH_TABLES'      , AKPATH_COMPONENT.'/tables') ;
 
 if(!defined('DS')){
-	define('DS', DIRECTORY_SEPARATOR) ;
+    define('DS', DIRECTORY_SEPARATOR) ;
 }
 
 // Include joomla api
@@ -43,7 +42,7 @@ AKHelper::setPrefix('AKHelper') ;
 AKHelper::addIncludePath(AKPATH_HELPERS) ;
 
 function akLoader($uri, $option = null){
-	return AKHelper::_('loader.import', $uri, $option) ;
+    return AKHelper::_('loader.import', $uri, $option) ;
 }
 
 include_once JPath::clean( AKPATH_ADMIN."/toolbar.php" ) ;

@@ -1,7 +1,7 @@
 <?php
 /**
- * @package     Joomla.Administrator
- * @subpackage  com_akquickicons
+ * @package     Windwalker.Framework
+ * @subpackage  Tables
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -14,7 +14,12 @@ defined('_JEXEC') or die;
 jimport('joomla.database.tablenested');
 
 /**
- * icon Table class
+ * A base Table class for Item.
+ *
+ * Not real use in component now.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Tables
  */
 class AKTable extends JTable
 {
@@ -23,50 +28,41 @@ class AKTable extends JTable
      * Method to return the title to use for the asset table.
      *
      * @return  string 
-     *
-     * @since   11.1
      */
     protected function _getAssetTitle()
     {
         if( property_exists($this , 'title') && $this->title)
-			return $this->title ;
-		else
-			return $this->_getAssetName() ;
+            return $this->title ;
+        else
+            return $this->_getAssetName() ;
     }
-	
-	/**
-	 * Overloaded bind function to pre-process the params.
-	 *
-	 * @param	array		Named array
-	 * @return	null|string	null is operation was satisfactory, otherwise returns an error
-	 * @see		JTable:bind
-	 * @since	1.5
-	 */
-	public function bind($array, $ignore = '')
-	{
-		// for Fields group
+    
+    /**
+     * Overloaded bind function to pre-process the params.
+     *
+     * @param    array        Named array
+     * @return   null|string  null is operation was satisfactory, otherwise returns an error
+     * @see      JTable:bind
+     */
+    public function bind($array, $ignore = '')
+    {
+        // for Fields group
 		// Convert jform[fields_group][field] to jform[field] or JTable cannot bind data.
 		// ==========================================================================================
-		$data = array() ;
-		foreach( $array as $val ):
-			if(is_array($val)) {
-				foreach( $val as $key => $val2 ):
-					$array[$key] = $val2 ;
-				endforeach;
-			}
-		endforeach;
+		$data 	= array() ;
+		$array 	= AKHelper::_('array.pivotFromTwoDimension', $array);
 		
 		
 		
 		// Set field['param_xxx'] to params
 		// ==========================================================================================
 		if(empty($array['params'])){
-			$array['params'] = (array)AKHelper::_('array.pivotFromPrefix', 'param_', $array, $array['params']) ;
+			$array['params'] = AKHelper::_('array.pivotFromPrefix', 'param_', $array, JArrayHelper::getValue($array, 'params', array())) ;
 		}
 		
 		
 		
-		// set params
+		// set params to JRegistry
 		// ==========================================================================================
 		if (isset($array['params']) && is_array($array['params'])) {
 			$registry = new JRegistry();
@@ -85,5 +81,5 @@ class AKTable extends JTable
         }
 		
 		return parent::bind($array, $ignore);
-	}
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Windwalker.Framework
- * @subpackage  class
+ * @subpackage  Component
  *
  * @copyright   Copyright (C) 2012 Asikart. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,19 +11,39 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
 jimport('joomla.application.component.controllerform');
 
-
+/**
+ * Controller tailored to suit most form-based admin operations.
+ *
+ * @package     Windwalker.Framework
+ * @subpackage  Component 
+ */
 class AKControllerForm extends JControllerForm
 {
-	
-	public $view_list ;
-	public $view_item ;
-	public $component ;
-	
-	
-	/**
+    /**
+     * The URL view list variable.
+     *
+     * @var    string 
+     */
+    public $view_list = '';
+    
+    /**
+     * The URL view item variable.
+     *
+     * @var    string 
+     */
+    public $view_item = '';
+    
+    /**
+     * Component name.
+     *
+     * @var string 
+     */
+    public $component = '';
+    
+    
+    /**
      * Method to get a model object, loading it if required.
      *
      * @param   string  $name    The model name. Optional.
@@ -31,90 +51,103 @@ class AKControllerForm extends JControllerForm
      * @param   array   $config  Configuration array for model. Optional.
      *
      * @return  object  The model.
+     */
+    public function getModel($name = null, $prefix = null, $config = array('ignore_request' => true))
+    {
+        $name = $name ? $name : ucfirst($this->view_item) ;
+        $prefix = $prefix ? $prefix : ucfirst($this->component).'Model' ;
+        return parent::getModel($name, $prefix, $config);
+    }
+    
+    /**
+     * Method to save a record.
+     *
+     * @param   string  $key     The name of the primary key of the URL variable.
+     * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+     *
+     * @return  boolean  True if successful, false otherwise.
      *
      * @since   11.1
      */
-	public function getModel($name = null, $prefix = null, $config = array('ignore_request' => true))
-	{
-		$name = $name ? $name : ucfirst($this->view_item) ;
-		$prefix = $prefix ? $prefix : ucfirst($this->component).'Model' ;
-		return parent::getModel($name, $prefix, $config);
-	}
-	
-	
-	/**
+    public function save($key = null, $urlVar = null)
+    {
+        $app    = JFactory::getApplication() ;
+        $input  = $app->input ;
+        $data   = $input->post->get('jform', array(), 'array') ;
+        
+        // for Fields group
+		// Convert jform[fields_group][field] to jform[field] or JTable cannot bind data.
+		// ==========================================================================================
+		$data = AKHelper::_('array.pivotFromTwoDimension', $data);
+        
+        $input->post->set('jform', $data) ;
+        $input->set('jform', $data) ;
+        JRequest::setVar('jform', $data) ;
+        
+        return parent::save($key, $urlVar) ;
+    }
+    
+    /**
      * Method to run batch operations.
      *
      * @param   object  $model  The model of the component being processed.
      *
-     * @return    boolean     True if successful, false otherwise and internal error is set.
-     *
-     * @since    11.1
+     * @return  boolean     True if successful, false otherwise and internal error is set.
      */
-	
-	public function batch($model = null)
-	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+    
+    public function batch($model = null)
+    {
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		// Set the model
-		$model = $this->getModel();
+        // Set the model
+        $model = $this->getModel();
 
-		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list . $this->getRedirectToListAppend(), false));
+        // Preset the redirect
+        $this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($model);
-	}
-	
-	
-	/**
+        return parent::batch($model);
+    }
+    
+    /**
      * Gets the URL arguments to append to an item redirect.
      *
      * @param   integer  $recordId  The primary key id for the item.
      * @param   string   $urlVar    The name of the URL variable for the id.
      *
      * @return  string  The arguments to append to the redirect URL.
-     *
-     * @since   11.1
      */
-	
-	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
-	{
-		$append = parent::getRedirectToItemAppend($recordId , $urlVar );
-		
-		foreach( $this->allow_url_params as $param ):
-			if(JRequest::getVar($param)){
-				$append .= "&{$param}=" . JRequest::getVar($param) ;
-			}
-		endforeach;
-		
-		return $append ;
-	}
-	
-	
-	/**
+    protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
+    {
+        $append = parent::getRedirectToItemAppend($recordId , $urlVar );
+        
+        foreach( $this->allow_url_params as $param ):
+            if(JRequest::getVar($param)){
+                $append .= "&{$param}=" . JRequest::getVar($param) ;
+            }
+        endforeach;
+        
+        return $append ;
+    }
+    
+    /**
      * Gets the URL arguments to append to a list redirect.
      *
      * @return  string  The arguments to append to the redirect URL.
-     *
-     * @since   11.1
      */
-	
-	protected function getRedirectToListAppend()
-	{
-		$append = parent::getRedirectToListAppend();
-		
-		foreach( $this->allow_url_params as $param ):
-			if(JRequest::getVar($param)){
-				$append .= "&{$param}=" . JRequest::getVar($param) ;
-			}
-		endforeach;
-		
-		return $append ;
-	}
-	
-	
-	
-	/**
+    protected function getRedirectToListAppend()
+    {
+        $append = parent::getRedirectToListAppend();
+        
+        foreach( $this->allow_url_params as $param ):
+            if(JRequest::getVar($param)){
+                $append .= "&{$param}=" . JRequest::getVar($param) ;
+            }
+        endforeach;
+        
+        return $append ;
+    }
+    
+    /**
      * Set a URL for browser redirection.
      *
      * @param   string  $url   URL to redirect to.
@@ -122,28 +155,24 @@ class AKControllerForm extends JControllerForm
      * @param   string  $type  Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
      *
      * @return  JController  This object to support chaining.
-     *
-     * @since   11.1
      */
-	
-	public function setRedirect($url, $msg = null, $type = null)
+    public function setRedirect($url, $msg = null, $type = null)
     {
-		$task  = $this->getTask() ;
-		$redirect_tasks = $this->redirect_tasks ;
-		
-		if(!$this->redirect){
-			$this->redirect = AKHelper::_('uri.base64', 'decode', JRequest::getVar('return')) ;
-		}
-		
+        $task  = $this->getTask() ;
+        $redirect_tasks = $this->redirect_tasks ;
+        
+        if(!$this->redirect){
+            $this->redirect = AKHelper::_('uri.base64', 'decode', JRequest::getVar('return')) ;
+        }
+        
         if ($this->redirect && in_array($task, $redirect_tasks)){
             return parent::setRedirect($this->redirect, $msg, $type) ;
         }else{
-			return parent::setRedirect($url, $msg, $type) ;
-		}
+            return parent::setRedirect($url, $msg, $type) ;
+        }
     }
-	
-	
-	/**
+    
+    /**
      * Method to check if you can add a new record.
      *
      * Extended classes can override this if necessary.
@@ -151,18 +180,15 @@ class AKControllerForm extends JControllerForm
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key; default is id.
      *
-     * @return  boolean 
-     *
-     * @since   12.2
+     * @return  boolean
      */
     protected function allowEdit($data = array(), $key = 'id')
     {
-		$user = JFactory::getUser() ;
-		
+        $user = JFactory::getUser() ;
+        
         $allowOwn = $user->authorise('core.edit.own', $this->option) && (JArrayHelper::getValue($data, 'created_by') == $user->id) ;
-		$allowEdit = $user->authorise('core.edit', $this->option.'.'.$this->view_item.'.'.$data[$key]) ;
-		
-		return ($allowEdit || $allowOwn) ;
+        $allowEdit = $user->authorise('core.edit', $this->option.'.'.$this->view_item.'.'.$data[$key]) ;
+        
+        return ($allowEdit || $allowOwn) ;
     }
-	
 }
