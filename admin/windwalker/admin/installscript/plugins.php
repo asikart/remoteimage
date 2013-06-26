@@ -16,14 +16,11 @@ defined('_JEXEC') or die;
 $plugins     = $manifest->plugins ;
 
 if(!empty($plugins)){
-    foreach( (array)$plugins as $plugin ):
-        
-        if(!trim($plugin)) continue ;
-        
-        $plugin = is_array($plugin) ? $plugin : array($plugin) ;
+    foreach( $plugins as $plugin ):
         
         // Install per plugin
         foreach( $plugin as $var ):
+            $var = (string) $var ;
             $install_path = $path.'/../plugins/'.$var ;
             
             // Get plugin name
