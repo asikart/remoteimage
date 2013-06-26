@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 
 
-error_reporting(E_ALL); // Set E_ALL for debuging
+error_reporting(0); // Set E_ALL for debuging
 
 
 include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderConnector.class.php';
@@ -41,6 +41,7 @@ function access($attr, $path, $data, $volume) {
 }
 
 $params = JComponentHelper::getParams('com_remoteimage') ;
+$safemode = $params->get('Safemode', true) ;
 $host 	= $params->get('Ftp_Host', '127.0.0.1') ;
 $port 	= $params->get('Ftp_Port', 21) ;
 $user 	= $params->get('Ftp_User') ;
@@ -48,12 +49,14 @@ $pass 	= $params->get('Ftp_Password') ;
 $active = $params->get('Ftp_Active', 'passive') ;
 $url 	= $params->get('Ftp_Url') ;
 $root 	= $params->get('Ftp_Root', '/') ;
+$local_root = $params->get('Local_Root', 'images') ;
 
 $roots = array();
 if( $params->get('Connection_Ftp', 1) )
 {
 	$roots[] = array(
 		'driver'        => 'FTP',
+        'alias'         => 'FTP: '.$host,
 		'host'          => $host,
 		'user'          => $user,
 		'pass'          => $pass,
@@ -62,26 +65,37 @@ if( $params->get('Connection_Ftp', 1) )
 		'path'          => $root,
 		'timeout'       => 10,
 		'owner'         => true,
-		'tmbPath'       => JPATH_CACHE.'/thumbs/elfinder',
-		'tmbURL'        => JURI::root() . 'cache/thumbs/elfinder',
-		'tmp'			=> JPATH_CACHE.'/thumbs/elfinderTmp',
+		'tmbPath'       => JPATH_CACHE.'/elfinderThumbs',
+		'tmbURL'        => JURI::root() . 'cache/elfinderThumbs',
+		'tmp'			=> JPATH_CACHE.'/elfinderTemps',
 		'dirMode'       => 0755,
 		'fileMode'      => 0644,
 		'URL'			=> $url,
-		'debug'			=> false,
-		'checkSubfolders' => false
+		'checkSubfolders' => false,
+        'uploadDeny'    => array('text/x-php')
 	);
 }
 
 if( $params->get('Connection_Local', 1) )
 {
 	$roots[] = array(
-		'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
-		'path'          => JPATH_ROOT.'/images',   // path to files (REQUIRED)
-		'URL'           => JURI::root().'images', // URL to files (REQUIRED)
-		'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
+		'driver'        => 'LocalFileSystem',
+        'alias'         => 'Local Files: '.$local_root,
+		'path'          => JPATH_ROOT.'/'.trim($local_root, '/'),
+		'URL'           => JURI::root().trim($local_root, '/'),
+		'accessControl' => 'access',
+        'uploadDeny'    => array('text/x-php')
 	);
 }
+
+// Safe Mode
+if($safemode) {
+    foreach( $roots as &$root ):
+        $root['disabled'] = array('archive', 'extract', 'rename', 'mkfile');
+    endforeach;
+}
+
+
 
 $opts = array(
 	// 'debug' => true,

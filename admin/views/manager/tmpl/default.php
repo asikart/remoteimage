@@ -64,6 +64,18 @@ if($app->isSite()) {
 }
 
 
+// Safe Mode
+$params         = JComponentHelper::getParams('com_remoteimage') ;
+$safemode       = $params->get('Safemode', true) ;
+$onlyimage      = $params->get('Onlyimage', false) ;
+
+
+// System Info
+$upload_max = ini_get('upload_max_filesize') ;
+$upload_num = ini_get('max_file_uploads') ;
+$sysinfo = JText::_('COM_REMOTEIMAGE_UPLOAD_MAX') . ' ' . $upload_max; 
+$sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $upload_num; 
+
 
 ?>
 <script type="text/javascript">
@@ -89,16 +101,19 @@ if($app->isSite()) {
 		//var dH 		= $('rm-height').get('value').toInt() ;
 		
 		
-		if (window.parent) window.parent.insertImage(imgs, window.elFinder, options);
+		if (window.parent) window.parent.insertImage('<?php echo JRequest::getVar('insert_id') ; ?>', imgs, window.elFinder, options);
 	}
 	
 	
 	// Init elFinder
 	jQuery(document).ready(function($) {
-		elFinder = $('#elfinder').elfinder({
+        
+        var elConfig = {
 			url : 'index.php?option=com_remoteimage&task=manager' ,
 			width : '100%' ,
+            height : '420px' ,
 			lang : '<?php echo $lang_code; ?>',
+            requestType : 'post',
 			handlers : {
 				select : function(event, elfinderInstance) {
 					var selected = event.data.selected;
@@ -112,6 +127,26 @@ if($app->isSite()) {
 	
 				}
 			}
+            ,
+            uiOptions : {
+                // toolbar configuration
+                toolbar : [
+                    ['back', 'forward'],
+                    ['reload'],
+                    ['home', 'up'],
+                    ['mkdir', 'mkfile', 'upload'],
+                    ['open', 'download', 'getfile'],
+                    //['info'],
+                    ['quicklook'],
+                    ['copy', 'cut', 'paste'],
+                    ['rm'],
+                    ['duplicate', 'rename', 'edit', 'resize'],
+                    ['extract', 'archive'],
+                    ['search'],
+                    ['view'],
+                    ['help']
+                ]
+            }
 			<?php if( $this->modal ): ?>
 			,
 			getFileCallback : function(file){
@@ -120,23 +155,19 @@ if($app->isSite()) {
 			
 			<?php endif; ?>
 			
-		}).elfinder('instance');
+		}
+        
+        <?php if( $onlyimage ): ?>
+        elConfig.onlyMimes = ['image'] ;
+        <?php endif; ?>
+        
+		elFinder = $('#elfinder').elfinder(elConfig).elfinder('instance');
+        
+        elFinder.ui.statusbar.append( '<?php echo $sysinfo; ?>' );
 	});
 </script>
 
 <div id="remoteimage-manager" class="<?php echo (JVERSION >= 3) ? 'joomla30' : 'joomla25' ?>">
-		
-		<div class="system-info">
-			<?php
-			$upload_max = ini_get('upload_max_filesize') ;
-			$upload_num = ini_get('max_file_uploads') ;
-			?>
-			
-			<?php echo JText::_('COM_REMOTEIMAGE_UPLOAD_MAX'); ?> <?php echo $upload_max; ?>
-			|
-			<?php echo JText::_('COM_REMOTEIMAGE_UPLOAD_NUM'); ?> <?php echo $upload_num; ?>
-			
-		</div>
 		
 		<!-- Bodys -->
 		<div class="row-fluid">

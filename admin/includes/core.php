@@ -11,6 +11,11 @@
 // no direct access
 defined('_JEXEC') or die;
 
+// Define
+// ========================================================================
+define('REMOTEIMAGE_SITE' , JPATH_COMPONENT_SITE );
+define('REMOTEIMAGE_ADMIN', JPATH_COMPONENT_ADMINISTRATOR);
+define('REMOTEIMAGE_SELF' , JPATH_COMPONENT);
 
 // Detect is AKHelper exists
 // ===============================================================
@@ -57,10 +62,6 @@ if( !defined('AKPATH_ROOT') ) {
 
 include_once JPath::clean( JPATH_ADMINISTRATOR . "/components/com_remoteimage/helpers/remoteimage.php" ) ;
 include_once JPath::clean( JPATH_ADMINISTRATOR . "/components/com_remoteimage/includes/loader.php" ) ;
-
-
-// Set default option to path helper, then AKHelperPath will helpe us get admin path.
-AKHelper::_('path.setOption', 'com_remoteimage') ;
 
 
 // Set Component helper prefix, and AKProxy can use component helper first.

@@ -29,7 +29,18 @@
 			<option value="0">JDISABLED</option>
 			<option value="1">JENABLED</option>
 		</field>
+        
+        <field type="spacer" hr="true" />
 		
+        <field
+			name="Local_Root"
+			type="text"
+			label="COM_REMOTEIMAGE_LOCAL_ROOT"
+			description="COM_REMOTEIMAGE_LOCAL_ROOT_DESC"
+			class=""
+            default="images"
+		/>
+        
 		<field type="spacer" hr="true" />
 
 		<field
@@ -119,6 +130,18 @@
 			size="10"
 			filter="int"
 		/>
+        
+        <field
+			name="Safemode"
+			type="radio"
+			label="COM_REMOTEIMAGE_SAFEMODE"
+			description="COM_REMOTEIMAGE_SAFEMODE_DESC"
+			default="1"
+			class="btn-group"
+		>
+			<option value="0">JDISABLED</option>
+			<option value="1">JENABLED</option>
+		</field>
 		
 	</fieldset>
 

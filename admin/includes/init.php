@@ -17,20 +17,14 @@ $lang 	= JFactory::getLanguage();
 
 
 
-// Define
-// ========================================================================
-define('REMOTEIMAGE_SITE' , JPATH_COMPONENT_SITE );
-define('REMOTEIMAGE_ADMIN', JPATH_COMPONENT_ADMINISTRATOR);
-define('REMOTEIMAGE_SELF' , JPATH_COMPONENT);
-
-
-
 // Include Helpers
 // ========================================================================
 
 // Core init, it can use by module, plugin or other component.
 include_once JPath::clean( JPATH_ADMINISTRATOR . "/components/com_remoteimage/includes/core.php" ) ;
 
+// Set default option to path helper, then AKHelperPath will helpe us get admin path.
+AKHelper::_('path.setOption', 'com_remoteimage') ;
 
 // Some useful settings
 if( $app->isSite() ){
