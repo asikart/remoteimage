@@ -40,19 +40,7 @@
 	<config>
 		<fields name="params">
 
-			<fieldset name="basic">
-				<field name="field1" type="text"
-					description="Remoteimage field 1"
-					label="Remoteimage field 1"
-				/>
-			</fieldset>
-
-			<fieldset name="advanced">
-				<field name="include_path" type="text"
-					label="PLG_SYSTEM_REMOTEIMAGE_INCLUDE_PATH"
-					default="easyset"
-				/>
-			</fieldset>
+			
 
 		</fields>
 	</config>
