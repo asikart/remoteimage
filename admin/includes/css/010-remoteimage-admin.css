@@ -57,6 +57,19 @@
 	max-width: none;
 }
 
+#remoteimage-manager .elfinder-button-search input {
+    padding-left: 25px;
+}
+
+#remoteimage-manager .elfinder .ui-icon-search {
+    top: 40%;
+}
+
+#remoteimage-manager .elfinder .ui-icon-close {
+    top: 40%;
+    right: 10px;
+}
+
 /* FOOTER */
 
 
