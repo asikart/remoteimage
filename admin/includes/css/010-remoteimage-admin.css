@@ -12,22 +12,12 @@
 /* GLOBAL */
 
 
-/* BODY */
+/* FINDER */
 
-
-/* TYPO */
-
-
-/* LAYOUT */
-
-
-/* CONTENT */
-
-
-/* FILTER */
-
-
-/* TABLE */
+#remoteimage-manager .ui-state-hover,
+#remoteimage-manager .ui-widget-content .ui-state-hover {
+    border: none;
+}
 
 
 /* FORM */
