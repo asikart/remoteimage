@@ -165,8 +165,9 @@
 			label="COM_REMOTEIMAGE_INTEGRATE_INSERT_TEMPLATE_IMAGE"
 			description="COM_REMOTEIMAGE_INTEGRATE_INSERT_TEMPLATE_IMAGE_DESC"
 			default="&lt;p&gt;{%CONTENT%}&lt;/p&gt;"
-			class="input-small"
-			size="10"
+			class="input-lxlarge"
+			rows="3"
+            cols="20"
 			filter="safehtml"
 		/>
         
@@ -176,8 +177,9 @@
 			label="COM_REMOTEIMAGE_INTEGRATE_INSERT_TEMPLATE_LINK"
 			description="COM_REMOTEIMAGE_INTEGRATE_INSERT_TEMPLATE_LINK_DESC"
 			default="{%CONTENT%}"
-			class="input-small"
-			size="10"
+			class="input-lxlarge"
+			rows="3"
+            cols="20"
 			filter="safehtml"
 		/>
         

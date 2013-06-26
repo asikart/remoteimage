@@ -282,7 +282,7 @@ $fieldid = JRequest::getVar('fieldid') ;
     <?php echo $tabs ? AKHelper::_('panel.startTabs', 'RMTabs', array( 'active' => 'panel-elfinder' )) : null ; ?>
         
         <?php echo $tabs ? AKHelper::_('panel.addPanel' , 'RMTabs', JText::_('COM_REMOTEIMAGE_MANAGER'), 'panel-elfinder') : null ; ?>
-		<!-- Bodys -->
+		<!-- elFinder Body -->
 		<div class="row-fluid">
 			<div id="elfinder" class="span12 rm-finder">
 				
@@ -291,6 +291,7 @@ $fieldid = JRequest::getVar('fieldid') ;
         <?php echo $tabs ? AKHelper::_('panel.endPanel') : null ; ?>
         
         <?php if( $this->modal ): ?>
+        <!--Insert From URL-->
             <?php echo $tabs ? AKHelper::_('panel.addPanel' , 'RMTabs', JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL'), 'panel-url') : null ; ?>
                 <?php echo JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL_DESC'); ?>
                 <br /><br />

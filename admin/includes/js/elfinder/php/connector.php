@@ -57,11 +57,12 @@ if( $params->get('Connection_Local', 1) )
 {
 	$roots[] = array(
 		'driver'        => 'LocalFileSystem',
-        'alias'         => 'Local Files: '.$local_root,
+        //'alias'         => $local_root,
 		'path'          => JPATH_ROOT.'/'.trim($local_root, '/'),
 		'URL'           => JURI::root().trim($local_root, '/'),
 		'accessControl' => 'access',
-        'uploadDeny'    => array('text/x-php')
+        'uploadDeny'    => array('text/x-php'),
+        'icon'          => JURI::root().'administrator/components/com_remoteimage/includes/js/elfinder/img/volume_icon_local.png'
 	);
 }
 
@@ -69,7 +70,7 @@ if( $params->get('Connection_Ftp', 1) )
 {
 	$roots[] = array(
 		'driver'        => 'FTP',
-        'alias'         => 'FTP: '.$host,
+        'alias'         => $host,
 		'host'          => $host,
 		'user'          => $user,
 		'pass'          => $pass,
@@ -85,7 +86,8 @@ if( $params->get('Connection_Ftp', 1) )
 		'fileMode'      => 0644,
 		'URL'			=> $url,
 		'checkSubfolders' => false,
-        'uploadDeny'    => array('text/x-php')
+        'uploadDeny'    => array('text/x-php'),
+        'icon'          => JURI::root().'administrator/components/com_remoteimage/includes/js/elfinder/img/volume_icon_ftp.png'
 	);
 }
 
