@@ -24,8 +24,8 @@ if(!empty($plugins)){
             $install_path = $path.'/../plugins/'.$var ;
             
             // Get plugin name
-            $path         = explode('/', $var) ;
-            $plg_name     = array_pop($path) ;
+            $path2         = explode('/', $var) ;
+            $plg_name     = array_pop($path2) ;
                 
             if( substr( $plg_name,0 ,4 ) == 'plg_' ){
                 $plg_name = substr( $plg_name, 4 ) ;
