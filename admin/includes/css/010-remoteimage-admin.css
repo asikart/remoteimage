@@ -19,6 +19,26 @@
     border: none;
 }
 
+.joomla25 dt.tabs a {
+    line-height: 200%;
+}
+
+.joomla25 #rm-insert-panel {
+    margin: 0;
+}
+
+#remoteimage-manager.joomla25 div.current {
+    p/adding: 3px;
+}
+
+.joomla25 div.current textarea {
+    float: none;
+    margin-bottom: 5px;
+}
+
+.joomla25 dl.tabs {
+    margin-top: 0;
+}
 
 /* FORM */
 #rm-width-lbl {

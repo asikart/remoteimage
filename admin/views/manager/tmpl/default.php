@@ -277,6 +277,14 @@ $fieldid = JRequest::getVar('fieldid') ;
 	});
 </script>
 
+<style type="text/css">
+    <?php if( JVERSION < 3 && $this->modal ): ?>
+    body {
+        margin: 0 !important;
+    }
+    <?php endif; ?>
+</style>
+
 <div id="remoteimage-manager" class="<?php echo (JVERSION >= 3) ? 'joomla30' : 'joomla25' ?>">
 		
     <?php echo $tabs ? AKHelper::_('panel.startTabs', 'RMTabs', array( 'active' => 'panel-elfinder' )) : null ; ?>
@@ -295,7 +303,7 @@ $fieldid = JRequest::getVar('fieldid') ;
             <?php echo $tabs ? AKHelper::_('panel.addPanel' , 'RMTabs', JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL'), 'panel-url') : null ; ?>
                 <?php echo JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL_DESC'); ?>
                 <br /><br />
-                <textarea name="insert-from-url" id="insert-from-url" cols="30" class="span10" rows="10"></textarea>
+                <textarea name="insert-from-url" id="insert-from-url" cols="30" class="span9" rows="10"></textarea>
             <?php echo $tabs ? AKHelper::_('panel.endPanel') : null ; ?>
         <?php endif; ?>
     <?php echo $tabs ? AKHelper::_('panel.endTabs') : null ; ?>    
