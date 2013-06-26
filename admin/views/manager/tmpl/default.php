@@ -278,9 +278,10 @@ $fieldid = JRequest::getVar('fieldid') ;
 </script>
 
 <style type="text/css">
-    <?php if( JVERSION < 3 && $this->modal ): ?>
+    <?php if( $this->modal ): ?>
     body {
         margin: 0 !important;
+        padding: 0 !important;
     }
     <?php endif; ?>
 </style>
