@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="search">
+		<field name="field"
+			type="list"
+			default="title"
+			label="JSEARCH_FILTER_LABEL"
+			labelclass="pull-left"
+			class="input-small" 
+		>
+			<!--<option value="0">Select Column</option>-->
+			<option value="a.title">JGLOBAL_TITLE</option>
+			<option value="b.title">JCATEGORY</option>
+		</field>
+		
+		<field name="index"
+			type="text"
+			placeholder="JSEARCH_FILTER_LABEL"
+			label=""
+		/>
+	</fieldset>
+</form>

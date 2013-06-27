@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="basic">
+		<fieldset name="information" align="left" horz="true">
+		
+			<field name="title"
+				type="text"
+				label="JGLOBAL_TITLE"
+				description="JFIELD_TITLE_DESC"
+				required="true"
+				size="50"
+				labelclass="control-label"
+				class="input-xlarge"
+			/>
+			
+			<field name="alias"
+				type="text"
+				label="JFIELD_ALIAS_LABEL"
+				description="JFIELD_ALIAS_DESC"
+				size="50"
+				labelclass="control-label"
+			/>
+			
+			<field name="parent_id"
+				type="manager_modal"
+				label="COM_REMOTEIMAGE_PARENT_ITEM"
+				description="COM_REMOTEIMAGE_PARENT_ITEM_DESC"
+				labelclass="control-label"
+				show_root="true"
+				class="input-xlarge"
+				access="true"
+			/>
+			
+			<field name="catid"
+				type="category"
+				label="JCATEGORY"
+				description="JFIELD_CATEGORY_DESC"
+				extension="com_remoteimage"
+				labelclass="control-label"
+			>
+				<option value="0">COM_REMOTEIMAGE_TITLE_UNCATEGORISED</option>
+			</field>
+			
+			<field name="images"
+				type="media"
+				label="COM_REMOTEIMAGE_IMAGES"
+				description="COM_REMOTEIMAGE_IMAGES_DESC"
+				labelclass="control-label"
+			/>
+			
+			<field name="url"
+				type="text"
+				label="COM_REMOTEIMAGE_URL"
+				description="COM_REMOTEIMAGE_URL_DESC"
+				size="60"
+				labelclass="control-label"
+			/>
+		</fieldset>
+		
+		<fieldset name="publish" align="right" horz="true">
+			<field name="published"
+				type="list"
+				label="JSTATUS"
+				description="JFIELD_PUBLISHED_DESC"
+				class="inputbox"
+				size="1"
+				default="1"
+				labelclass="control-label"
+			>
+				<option value="1">JPUBLISHED</option>
+				<option value="0">JUNPUBLISHED</option>
+			</field>
+			
+			<field name="id" 
+				type="text" 
+				default="0" 
+				label="JGLOBAL_FIELD_ID_LABEL"
+				readonly="true" 
+				class="readonly"
+				description="JGLOBAL_FIELD_ID_DESC"
+				labelclass="control-label"
+			/>
+			
+			<field name="created_by"
+				type="user"
+				label="COM_REMOTEIMAGE_CREATED_BY"
+				description="COM_REMOTEIMAGE_CREATED_BY_DESC"
+				labelclass="control-label"
+			/>
+			
+			<field name="created"
+				type="calendar"
+				label="COM_REMOTEIMAGE_CREATED"
+				description="COM_REMOTEIMAGE_CREATED_DESC"
+				labelclass="control-label"
+			/>
+			
+			<field name="publish_up"
+				type="calendar"
+				label="COM_REMOTEIMAGE_PUBLISH_UP"
+				description="COM_REMOTEIMAGE_PUBLISH_UP_DESC"
+				labelclass="control-label"
+			/>
+			
+			<field name="publish_down"
+				type="calendar"
+				label="COM_REMOTEIMAGE_PUBLISHED_DOWN"
+				description="COM_REMOTEIMAGE_PUBLISH_DOWN_DESC"
+				labelclass="control-label"
+			/>
+			
+			
+		</fieldset>
+		
+		<fieldset name="text" align="left">
+			<field name="introtext"
+				type="editor"
+				label="COM_REMOTEIMAGE_INTROTEXT"
+				description="COM_REMOTEIMAGE_INTROTEXT_DESC"
+				filter="raw"
+				buttons="true"
+				hide="readmore,pagebreak,article"
+				labelclass="control-label"
+			/>
+			
+			<field name="fulltext"
+				type="editor"
+				label="COM_REMOTEIMAGE_FULLTEXT"
+				description="COM_REMOTEIMAGE_FULLTEXT_DESC"
+				filter="raw"
+				buttons="true"
+				hide="readmore,pagebreak,article"
+				labelclass="control-label"
+			/>
+	
+			<field name="checked_out" type="hidden" filter="unset" />
+			<field name="checked_out_time" type="hidden" filter="unset" />
+			
+		</fieldset>	
+	</fields>
+	
+	<fields name="advanced">
+		<fieldset name="created">
+			<field name="access"
+				type="accesslevel"
+				label="JFIELD_ACCESS_LABEL"
+				description="JFIELD_ACCESS_DESC"
+				labelclass="control-label"
+			/>
+			
+			<field name="language"
+				type="language"
+				label="JGRID_HEADING_LANGUAGE"
+				description="JGRID_HEADING_LANGUAGE"
+				labelclass="control-label"
+			>
+				<option value="*">JALL</option>
+			</field>
+		</fieldset>
+	</fields>
+	
+	
+	<!-- Need this field br child of root node for access setting. -->
+	<field name="asset_id" type="hidden" filter="unset" />
+	
+	<fields name="rules">
+		<fieldset name="rules">
+			<field name="rules"
+				type="rules"
+				label=""
+				translate_label="false"
+				class="inputbox"
+				filter="rules"
+				component="com_remoteimage"
+				section="manager"
+				validate="rules"
+			/>
+		</fieldset>
+	</fields>
+	
+</form>
