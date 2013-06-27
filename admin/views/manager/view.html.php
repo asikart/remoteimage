@@ -41,7 +41,6 @@ class RemoteimageViewManager extends AKViewItem
 	{
 		$app = JFactory::getApplication() ;
 		
-		$this->state	= $this->get('State');
 		$this->params	= JComponentHelper::getParams('com_remoteimage') ;
 		$this->canDo	= AKHelper::getActions($this->option);
 
@@ -57,6 +56,9 @@ class RemoteimageViewManager extends AKViewItem
 			$this->addToolbar();
 		}
 		
+        
+        $this->notice();
+        
 
 		parent::display($tpl) ;
 	}
@@ -77,6 +79,33 @@ class RemoteimageViewManager extends AKViewItem
 			AKToolBarHelper::preferences($this->option);
 		}
 	}
+    
+    
+    /**
+     * function notice
+     * @param 
+     */
+    public function notice()
+    {
+        $params = $this->params ;
+        $redirect = false ;
+        
+        if( $params->get('Integrate_Override_InsertImageArticle', 1)
+            || $params->get('Integrate_Override_MediaFormField', 1)
+            || $params->get('Integrate_Override_MediaManager', 1)
+          ) {
+            $redirect = true ;
+        }
+        
+        $enabled = JPluginHelper::isEnabled('system', 'remoteimage');
+        
+        if( $redirect && !$enabled ) {
+            $msg = JText::_('COM_REMOTEIMAGE_SYSTEM_PLUGIN_NEED_ENABLED') . '<br />';
+            $msg .= JHtml::link( JRoute::_('index.php?option=com_plugins&filter_search=remoteimage'), JText::_('COM_REMOTEIMAGE_GO_TO_PLUGINS') , array('target' => '_blank'));
+            $app = JFactory::getApplication() ;
+            $app->enqueueMessage($msg, 'warning');
+        }
+    }
 	
 	
 	

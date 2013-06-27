@@ -27,7 +27,7 @@ var Remoteimage = {
                     return;
                 }
                 
-                if( img_ext.contains(ext) ) {
+                if( img_ext.contains(ext.toLowerCase()) ) {
                     // Create img element
                     var img = new Element('img', {
                         alt : path.getLast() ,
