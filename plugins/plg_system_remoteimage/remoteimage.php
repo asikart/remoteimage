@@ -63,6 +63,8 @@ class plgSystemRemoteimage extends JPlugin
 	
 	public function onAfterRoute()
 	{
+        AKHelper::_('include.addJS', 'remoteimage-admin.js', 'admin', 'com_remoteimage');
+        
 		$uri = JFactory::getURI() ;
         $option = JRequest::getVar('option') ;
         $view   = JRequest::getVar('view') ;

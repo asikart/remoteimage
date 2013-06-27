@@ -32,6 +32,9 @@ class AKHelperElfinder
         $user   = JFactory::getUser() ;
         $app    = JFactory::getApplication() ;
         $doc    = JFactory::getDocument() ;
+        $lang       = JFactory::getLanguage();
+        $lang_code  = $lang->getTag();
+        $lang_code  = str_replace('-', '_', $lang_code) ; 
         
         // Script
         self::_displayScript($com_option, $option);
@@ -88,10 +91,11 @@ class AKHelperElfinder
         
         $script = <<<SCRIPT
 		var AKFinderSelected ;
+        var elFinder ;
 		
 		// Init elFinder
         jQuery(document).ready(function($) {
-            var elFinder = $('#elfinder').elfinder({
+            elFinder = $('#elfinder').elfinder({
                 url         : 'index.php?option={$com_option}&task=elFinderConnector&root={$root}&start_path={$start_path}' ,
                 width       : '100%' ,
                 height      : 445 ,
@@ -193,11 +197,10 @@ SCRIPT;
 		 * @return bool|null
 		 **/
 		function access($attr, $path, $data, $volume) {
-            $r = array();
-			$r[] = strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
-				? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
-				:  null;                                    // else elFinder decide it itself
-		}
+            return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
+                ? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
+                :  null;                                    // else elFinder decide it itself
+        }
 		
         
         // Get Some Request
@@ -218,9 +221,9 @@ SCRIPT;
                     //'tmbSize'       => 128,
                     'tmp'			=> JPath::clean(JPATH_CACHE.'/AKFinderTemp'),
 					'accessControl' => 'access',             // disable and hide dot starting files (OPTIONAL)
-                    //'uploadDeny'    =>  array('text/x-php')
-                    'uploadAllow' => array('image'),
-                    'dotFiles'     => false,  
+                    'uploadDeny'    => array('text/x-php'),
+                    //'uploadAllow'   => array('image'),
+                    'disabled'      => array('archive', 'extract', 'rename', 'mkfile')
 				)
 			)
 		);

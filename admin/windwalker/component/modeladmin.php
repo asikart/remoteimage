@@ -26,35 +26,35 @@ class AKModelAdmin extends JModelAdmin
      *
      * @var string 
      */
-    public $component = '';
+    protected $component = '';
     
     /**
      * The URL view item variable.
      *
      * @var    string 
      */
-    public $item_name = '';
+    protected $item_name = '';
     
     /**
      * The URL view list variable.
      *
      * @var    string 
      */
-    public $list_name = '';
+    protected $list_name = '';
     
     /**
      * Item cache.
      *
      * @var object 
      */
-    public $item      = null;
+    protected $item      = null;
     
     /**
      * Category cache.
      *
      * @var object 
      */
-    public $category  = null;
+    protected $category  = null;
     
     
     /**
@@ -581,6 +581,31 @@ class AKModelAdmin extends JModelAdmin
         $this->cleanCache();
 
         return true;
+    }
+    
+    /**
+     * Method to validate the form data.
+     *
+     * @param   object  $form   The form to validate against.
+     * @param   array   $data   The data to validate.
+     * @param   string  $group  The name of the field group to validate.
+     *
+     * @return  mixed  Array of filtered data if valid, false otherwise.
+     *
+     * @see     JFormRule
+     * @see     JFilterInput
+     * @since   11.1
+     */
+    public function validate($form, $data, $group = null)
+    {
+        if( $result = parent::validate($form, $data, $group) ) {
+            // for Fields group
+            // Convert jform[fields_group][field] to jform[field] or JTable cannot bind data.
+            // ==========================================================================================
+            $result = AKHelper::_('array.pivotFromTwoDimension', $result);
+        }
+        
+        return $result ;
     }
 
     /**

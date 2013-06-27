@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 
 // Install modules
 // ========================================================================
-$modules     = $manifest->modules->module ;
+$modules     = $manifest->modules ;
 
 if(!empty($modules)){
     foreach( $modules as $module ):

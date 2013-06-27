@@ -97,90 +97,19 @@ $fieldid = JRequest::getVar('fieldid') ;
 		var imgs 	= elSelected ;
         var elFinder = window.elFinder;
 		var urls    = $('insert-from-url').get('value');
-        var fixAll	= $('rm-setwidth').checked ;
-		var dW 		= $('rm-width').get('value').toInt() ;
+        
         var tags	= '';
         
+        var option = {
+            fixAll	: $('rm-setwidth').checked ,
+            dW 		: $('rm-width').get('value').toInt() ,
+            insert_template_image   : insert_template_image ,
+            insert_template_link    : insert_template_link ,
+            root_uri : root_uri
+        };
         
-        // Handle From Urls
-        urls = urls.toString().trim();
+        window.parent.Remoteimage.insertImages('<?php echo JRequest::getVar('insert_id') ; ?>', imgs, urls, elFinder, option);
         
-        if( urls ) {
-            urls = urls.split("\n");
-            
-            urls.each( function(e, i){
-                var path = e.split('/');
-                var ext = path.getLast().split('.').getLast();
-                var img_ext = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'];
-                
-                if(!e.trim()) {
-                    return;
-                }
-                
-                if( img_ext.contains(ext) ) {
-                    // Create img element
-                    var img = new Element('img', {
-                        alt : path.getLast() ,
-                        src : e
-                    }) ;
-                    
-                    // Fix Width
-                    if( fixAll ) {
-                        img.set('width', dW) ;
-                    }
-                    
-                    tags += insert_template_image.replace( '{%CONTENT%}' ,img.outerHTML);
-                }else{
-                    var a = new Element('a', {
-                        href : e,
-                        target : '_blank',
-                        text : path.getLast()
-                    });
-                    
-                    tags += '&nbsp; ' + insert_template_link.replace( '{%CONTENT%}' ,a.outerHTML) + '&nbsp; ' ;
-                }
-                
-            });
-        }else{
-            // Insert From Selected
-            if( elSelected.length < 1 ) {
-                return ;
-            }
-            
-            imgs.each( function(e, i){
-            
-                if( e.mime.split('/')[0] == 'image' ) {
-                    // Create img element
-                    var img = new Element('img', {
-                        alt : e.name ,
-                        src : elFinder.url(e.hash)
-                    }) ;
-                    
-                    // Fix Width
-                    if( fixAll ) {
-                        img.set('width', dW) ;
-                    }
-                    
-                    tags += insert_template_image.replace( '{%CONTENT%}' ,img.outerHTML);
-                }else{
-                    var a = new Element('a', {
-                        href : elFinder.url(e.hash),
-                        target : '_blank',
-                        text : e.name
-                    });
-                    
-                    tags += '&nbsp; ' + insert_template_link.replace( '{%CONTENT%}' ,a.outerHTML) + '&nbsp; ' ;
-                }
-                
-            } );
-        }
-        
-        
-        if (window.parent) window.parent.jInsertEditorText(tags, '<?php echo JRequest::getVar('insert_id') ; ?>');
-        
-        setTimeout( function(){
-            if (window.parent) window.parent.SqueezeBox.close();
-        } , 200);
 	}
 	
     
