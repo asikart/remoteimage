@@ -63,6 +63,10 @@ class plgSystemRemoteimage extends JPlugin
 	
 	public function onAfterRoute()
 	{
+		if(!JComponentHelper::isEnabled('com_remoteimage')) {
+			return true;
+		}
+		
         $doc = JFactory::getDocument();
 		$doc->addScript(JURI::root(true).'/administrator/components/com_remoteimage/includes/js/remoteimage-admin.js');
         
