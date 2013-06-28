@@ -50,10 +50,6 @@ class plgButtonRemoteimage extends JPlugin
 	 */
 	public function onDisplay($name, $asset, $author)
 	{
-		if(!JComponentHelper::isEnabled('com_remoteimage')) {
-			return true;
-		}
-		
         $doc = JFactory::getDocument();
 		$doc->addScript(JURI::root(true).'/administrator/components/com_remoteimage/includes/js/remoteimage-admin.js');
 		
