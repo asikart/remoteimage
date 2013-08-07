@@ -45,11 +45,4 @@
 		</fields>
 	</config>
 	
-	
-	<updateservers>
-		<!--<server type="collection">http://remoteimage.com/list.xml</server>-->
-		<server type="extension" priority="1" name="Asikart Remoteimage Plugin">http://update.asikart.com/plugins/plg_remoteimage.xml</server>
-	</updateservers>
-	
-	
 </extension>
