@@ -11,6 +11,10 @@
 // no direct access
 defined('_JEXEC') or die;
 
+// Include Filesystem
+jimport('joomla.filesystem.folder');
+jimport('joomla.filesystem.file');
+
 // Define
 // ========================================================================
 define('REMOTEIMAGE_SITE' , JPATH_COMPONENT_SITE );
