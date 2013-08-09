@@ -78,6 +78,7 @@ class plgButtonRemoteimage extends JPlugin
 			$link = 'index.php?option=com_remoteimage&view=manager&tmpl=component&height=420&insert_id='.$name;
 			JHtml::_('behavior.modal');
 			$button = new JObject;
+            $button->class = 'btn';
 			$button->modal = true;
 			$button->link = $link;
 			$button->text = JText::_('COM_REMOTEIMAGE_IMAGE_BUTTON');
