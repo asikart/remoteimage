@@ -50,14 +50,17 @@ class plgButtonRemoteimage extends JPlugin
 	 */
 	public function onDisplay($name, $asset, $author)
 	{
+
 		$app = JFactory::getApplication();
 		if($app->isSite()) {
 			return false ;
 		}
 		
-        AKHelper::_('include.addJS', 'remoteimage-admin.js', 'admin', 'com_remoteimage');
+        // Add Script
+        $doc = JFactory::getDocument();
+		$doc->addScript(JURI::root(true).'/administrator/components/com_remoteimage/includes/js/remoteimage-admin.js');
 		
-		
+		// Add Button
 		$user = JFactory::getUser();
 		$extension = $app->input->get('option');
 		if ($asset == '')
