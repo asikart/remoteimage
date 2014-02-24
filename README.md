@@ -15,7 +15,7 @@ RemoteImage Powered by elFinder, you can batch upload, create folders, resize & 
 
 [DEMO][7] Account: demo / demo
 
-## Donate Us ![![Donate](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif)](http://goo.gl/RklRQV)
+## Donate Us [![Donate](http://f.cl.ly/items/201r3g370r0r461l3x2b/btn_donate_LG.gif)](http://goo.gl/RklRQV)
 
 Encurage us makeing our extension more perfectly.
 
