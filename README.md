@@ -17,7 +17,7 @@ RemoteImage Powered by elFinder, you can batch upload, create folders, resize & 
 
 ## Donate Us [![Donate](http://f.cl.ly/items/201r3g370r0r461l3x2b/btn_donate_LG.gif)](http://goo.gl/RklRQV)
 
-Encurage us makeing our extension more perfectly.
+Encurage us making our extension more perfectly.
 
 ### [$20](http://goo.gl/4FkQMG) / [$30](http://goo.gl/0NYmUT) / [$40](http://goo.gl/i11fiJ) / [$50](http://goo.gl/pOZwLe) / [Enter my amount](http://goo.gl/RklRQV)
 
