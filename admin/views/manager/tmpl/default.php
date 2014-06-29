@@ -97,7 +97,7 @@ $fieldid = JRequest::getVar('fieldid') ;
 		var imgs 	= elSelected ;
         var elFinder = window.elFinder;
 		var urls    = $('insert-from-url').get('value');
-        
+
         var tags	= '';
         
         var option = {
@@ -107,7 +107,7 @@ $fieldid = JRequest::getVar('fieldid') ;
             insert_template_link    : insert_template_link ,
             root_uri : root_uri
         };
-        
+
         window.parent.Remoteimage.insertImages('<?php echo JRequest::getVar('insert_id') ; ?>', imgs, urls, elFinder, option);
         
 	}

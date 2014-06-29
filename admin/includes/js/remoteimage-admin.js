@@ -14,7 +14,7 @@ var Remoteimage = {
         
         // Handle From Urls
         urls = urls.toString().trim();
-        
+
         if( urls ) {
             urls = urls.split("\n");
             
@@ -58,12 +58,21 @@ var Remoteimage = {
             }
             
             imgs.each( function(e, i){
-            
+
+	            var url = elFinder.url(e.hash);
+
+	            if (url.indexOf(option.root_uri) == 0)
+	            {
+		            url = url.substr(option.root_uri.length);
+	            }
+
+	            console.log(url, option);
+
                 if( e.mime.split('/')[0] == 'image' ) {
                     // Create img element
                     var img = new Element('img', {
                         alt : e.name ,
-                        src : elFinder.url(e.hash)
+                        src : url
                     }) ;
                     
                     // Fix Width
@@ -73,8 +82,9 @@ var Remoteimage = {
                     
                     tags += option.insert_template_image.replace( '{%CONTENT%}' ,img.outerHTML);
                 }else{
+
                     var a = new Element('a', {
-                        href : elFinder.url(e.hash),
+                        href : url,
                         target : '_blank',
                         text : e.name
                     });
