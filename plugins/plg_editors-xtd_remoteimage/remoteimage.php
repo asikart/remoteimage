@@ -55,15 +55,16 @@ class PlgButtonRemoteimage extends JPlugin
 	public function onDisplay($name, $asset, $author)
 	{
 		$app = JFactory::getApplication();
+		$user = JFactory::getUser();
 
-		if ($app->isSite())
+		if ($app->isSite() && !$user->authorise('frontend.access'))
 		{
-			return false;
+			return array();
 		}
 
 		// Add Script
 		$doc = JFactory::getDocument();
-		$doc->addScript(JURI::root(true) . '/administrator/components/com_remoteimage/includes/js/remoteimage-admin.js');
+		$doc->addScript(JURI::root(true) . '/components/com_remoteimage/includes/js/remoteimage-admin.js');
 
 		// Add Button
 		$user      = JFactory::getUser();
@@ -88,7 +89,7 @@ class PlgButtonRemoteimage extends JPlugin
 			$button->modal   = true;
 			$button->link    = $link;
 			$button->text    = JText::_('COM_REMOTEIMAGE_IMAGE_BUTTON');
-			$button->name    = JVERSION >= 3 ? 'picture' : 'image';
+			$button->name    = 'picture';
 			$button->options = "{handler: 'iframe', size: {x: 950, y: 550}}";
 
 			return $button;
