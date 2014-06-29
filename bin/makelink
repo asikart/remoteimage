@@ -1,0 +1,73 @@
+#!/bin/sh php
+<?php
+/**
+ * Asikart Joomla! Extensions extension link script.
+ * 
+ * @copyright (c) 2014 Asikart.com. All rights reserved.
+ */
+
+// Dirs config
+// -------------------------------------------------------------------------
+$dirs = array(
+    'components/com_remoteimage' => 'site',
+    'administrator/components/com_remoteimage' => 'admin',
+    'plugins/editors-xtd/userxtd' => 'plugins/plg_editors-xtd_remoteimage',
+    'plugins/system/remoteimage' => 'plugins/plg_system_remoteimage'
+);
+
+// Main Logic
+// -------------------------------------------------------------------------
+
+// Check Arguments
+if (! isset($argv[1]))
+{
+    fwrite(STDOUT, "Please give me Joomla path.\n");
+
+    return;
+}
+
+// Check Joomla dir
+if (! is_dir($argv[1] . '/libraries/joomla'))
+{
+    fwrite(STDOUT, sprintf("% is not a Joomla dir.\n", $argv[1]));
+
+    return;
+}
+
+// Prepare some variables
+$windows = defined('PHP_WINDOWS_VERSION_MAJOR');
+$jpath = $argv[1];
+$root  = realpath(__DIR__ . '/..');
+
+// Do bakup and create link
+foreach ($dirs as $dir => $target)
+{
+	$dir    = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $dir);
+	$target = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $target);
+
+	if ($windows)
+	{
+		if (is_dir("{$jpath}\\{$dir}"))
+		{
+			exec("powershell.exe mv {$jpath}\\{$dir} {$jpath}\\{$dir}.bak");
+		}
+
+		exec("mklink /D {$jpath}\\{$dir} {$root}\\{$target}");
+
+		fwrite(STDOUT, "Make link {$jpath}\\{$dir} to {$root}\\{$target}\n");
+	}
+	else
+	{
+		if (is_dir("{$jpath}/{$dir}"))
+		{
+			exec("mv {$jpath}/{$dir} {$jpath}/{$dir}.bak");
+		}
+
+		exec("sudo ln -s {$root}/{$target} {$jpath}/{$dir}");
+
+		fwrite(STDOUT, "Make link {$root}/{$target} to {$jpath}/{$dir}\n");
+	}
+}
+
+// Exit for success.
+return 0;
