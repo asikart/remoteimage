@@ -1,0 +1,25 @@
+{
+	"name"             : "asika/php-code-generator",
+	"description"      : "PHP Code generator",
+	"require"          : {
+	},
+	"require-dev" : {
+		"asika/joomla-console": "1.1.*"
+	},
+	"suggest": {
+        "asika/joomla-console": "If you want to use PHP Code Generator self not integrate to other system."
+    },
+	"license"          : "GNU Lesser General Public License",
+	"authors"          : [
+		{
+			"name" : "Simon Asika",
+			"email": "asika32764@gmail.com"
+		}
+	],
+	"autoload"         : {
+		"psr-0": {
+			"": "src/"
+		}
+	},
+	"minimum-stability": "beta"
+}

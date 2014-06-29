@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component"
-	version="3.2"
+	version="3.3"
 	method="upgrade">
 	<name>com_remoteimage</name>
 	<creationDate>2014-1-11</creationDate>
@@ -29,13 +29,13 @@
 		<menu img="components/com_remoteimage/images/admin-icons/menu-remoteimage.png">COM_REMOTEIMAGE</menu>
 
 		<files folder="admin">
-			<folders>asset</folders>
-			<folders>etc</folders>
-			<folders>helper</folders>
-			<folders>images</folders>
-			<folders>language</folders>
-			<folders>src</folders>
-			<folders>view</folders>
+			<folder>asset</folder>
+			<folder>etc</folder>
+			<folder>helper</folder>
+			<folder>images</folder>
+			<folder>language</folder>
+			<folder>src</folder>
+			<folder>view</folder>
 			<file>access.xml</file>
 			<file>component.php</file>
 			<file>composer.json</file>

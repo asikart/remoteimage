@@ -30,7 +30,7 @@ final class RemoteimageComponent extends \Remoteimage\Component\RemoteimageCompo
 	 *
 	 * @return void
 	 */
-	protected function prepare()
+	public function prepare()
 	{
 		parent::prepare();
 	}

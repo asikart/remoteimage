@@ -32,7 +32,7 @@ abstract class RemoteimageComponent extends Component
 	 *
 	 * @return void
 	 */
-	protected function prepare()
+	public function prepare()
 	{
 		if (JDEBUG)
 		{
