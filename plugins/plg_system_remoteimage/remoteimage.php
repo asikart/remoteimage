@@ -66,9 +66,10 @@ class PlgSystemRemoteimage extends JPlugin
 		$doc = JFactory::getDocument();
 		$doc->addScript(JURI::root(true) . '/administrator/components/com_remoteimage/asset/js/remoteimage-admin.js');
 
+		$user  = JFactory::getUser();
 		$app   = JFactory::getApplication();
 		$input = $app->input;
-		
+
 		$uri     = JUri::getInstance();
 		$option  = $input->get('option');
 		$view    = $input->get('view');
@@ -76,8 +77,13 @@ class PlgSystemRemoteimage extends JPlugin
 		$fieldid = $input->get('fieldid');
 		$params  = JComponentHelper::getParams('com_remoteimage');
 
+		if ($app->isSite() && !$user->authorise('frontend.access'))
+		{
+			throw new \Exception(JText::_('JGLOBAL_RESOURCE_NOT_FOUND'), 404);
+		}
+
 		// Replace Insert to Article
-		if ($app->isAdmin() && $option == 'com_media' && $view == 'images' && !$fieldid && $tmpl == 'component' && $params->get('Integrate_Override_InsertImageArticle', 1))
+		if ($option == 'com_media' && $view == 'images' && !$fieldid && $tmpl == 'component' && $params->get('Integrate_Override_InsertImageArticle', 1))
 		{
 			$uri->setVar('option', 'com_remoteimage');
 			$uri->delVar('view');
@@ -87,7 +93,7 @@ class PlgSystemRemoteimage extends JPlugin
 		}
 
 		// Replace FormField
-		if ($app->isAdmin() && $option == 'com_media' && $view == 'images' && $fieldid && $tmpl == 'component' && $params->get('Integrate_Override_MediaFormField', 1))
+		if ($option == 'com_media' && $view == 'images' && $fieldid && $tmpl == 'component' && $params->get('Integrate_Override_MediaFormField', 1))
 		{
 			$uri->setVar('option', 'com_remoteimage');
 			$uri->delVar('view');
@@ -96,7 +102,7 @@ class PlgSystemRemoteimage extends JPlugin
 		}
 
 		// Replace Media Manager
-		if ($app->isAdmin() && $option == 'com_media' && ($view == 'image' || !$view) && $params->get('Integrate_Override_MediaManager', 1))
+		if ($option == 'com_media' && ($view == 'image' || !$view) && $params->get('Integrate_Override_MediaManager', 1))
 		{
 			$uri->setVar('option', 'com_remoteimage');
 			$uri->delVar('view');

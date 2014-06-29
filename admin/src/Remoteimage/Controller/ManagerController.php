@@ -72,7 +72,7 @@ class ManagerController extends Controller
 				'URL'           => \JURI::root() . trim($local_root, '/'),
 				'accessControl' => 'access',
 				'uploadDeny'    => array('text/x-php'),
-				'icon'          => \JURI::root() . 'administrator/components/com_remoteimage/includes/js/elfinder/img/volume_icon_local.png'
+				'icon'          => \JURI::root() . 'administrator/components/com_remoteimage/asset/js/elfinder/img/volume_icon_local.png'
 			);
 		}
 
@@ -97,7 +97,7 @@ class ManagerController extends Controller
 				'URL'             => $url,
 				'checkSubfolders' => false,
 				'uploadDeny'      => array('text/x-php'),
-				'icon'            => \JURI::root() . 'administrator/components/com_remoteimage/includes/js/elfinder/img/volume_icon_ftp.png'
+				'icon'            => \JURI::root() . 'administrator/components/com_remoteimage/asset/js/elfinder/img/volume_icon_ftp.png'
 			);
 		}
 

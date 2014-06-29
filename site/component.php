@@ -21,7 +21,7 @@ final class RemoteimageComponent extends \Remoteimage\Component\RemoteimageCompo
 	 *
 	 * @var string
 	 */
-	protected $defaultController = 'managers.display';
+	protected $defaultController = 'manager.display';
 
 	/**
 	 * Prepare hook of this component.
