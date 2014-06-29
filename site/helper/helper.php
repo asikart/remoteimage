@@ -9,4 +9,11 @@
 // No direct access
 defined('_JEXEC') or die;
 
-include_once dirname(__DIR__) . '/helper/helper.php';
+/**
+ * Remoteimage helper.
+ *
+ * @since 1.0
+ */
+class RemoteimageHelper
+{
+}

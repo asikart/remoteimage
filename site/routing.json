@@ -1,0 +1,11 @@
+{
+	"managers": {
+		"pattern": "managers/:id",
+		"view" : "managers"
+	},
+
+	"manager": {
+		"pattern": "manager/:id/:alias",
+		"view" : "manager"
+	}
+}

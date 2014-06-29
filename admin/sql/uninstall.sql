@@ -1,1 +1,1 @@
-DROP TABLE  `#__remoteimage_managers`
+DROP TABLE  `#__remoteimage_managers`;

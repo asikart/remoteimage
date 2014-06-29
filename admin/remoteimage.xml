@@ -1,52 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.1" method="upgrade">
+<extension type="component"
+	version="3.2"
+	method="upgrade">
 	<name>com_remoteimage</name>
-	<creationDate>2012-11-12</creationDate>
-	<copyright>Copyright (C) 2012. All rights reserved.</copyright>
+	<creationDate>2014-1-11</creationDate>
+	<copyright>Copyright (C) 2014. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <author>Asika</author>
+	<author>Asika</author>
 	<authorEmail>asika32764@gmail.com</authorEmail>
 	<authorUrl>http://asikart.com</authorUrl>
-	<version>1.1.6</version>
+	<version>2.0.0</version>
 	<description>COM_REMOTEIMAGE_XML_DESCRIPTION</description>
-	
-	
-	<scriptfile>install.php</scriptfile>
-	
-	<!-- 
-	<install>
-    	<sql>
-        	<file driver="mysql" charset="utf8">sql/install.sql</file>
-  		</sql>
-    </install>
-	
-	
-	<uninstall>
-    	<sql>
-        	<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
-  		</sql>
-    </uninstall>
-	-->
 
-	
-	
+	<scriptfile>install.php</scriptfile>
+
 	<administration>
 		<menu img="components/com_remoteimage/images/admin-icons/menu-remoteimage.png">COM_REMOTEIMAGE</menu>
-		
-		<!-- Submenu
-			Note that all & must be escaped to &amp; for the file to be valid
-			XML and be parsed by the installer
-		<submenu>
-				
-			<menu link="option=com_remoteimage&amp;view=managers" view="managers"
-				img="components/com_remoteimage/images/admin-icons/menu-managers.png"
-				alt="Weblinks/Links">com_remoteimage_managers</menu>
-			<menu link="option=com_categories&amp;extension=com_remoteimage"
-				view="categories" img="class:category" alt="Remoteimage/Categories">jcategories</menu>
-		</submenu>
-		-->
-		
-		
+
 		<files folder="admin">
 			<filename>index.html</filename>
 			<filename>controller.php</filename>
@@ -66,24 +36,19 @@
 			<folder>views</folder>
 		</files>
 	</administration>
-	
-	
-	
+
 	<modules>
 		<!--<module>mod_remoteimage</module>-->
 	</modules>
-	
-	
+
 	<plugins>
 		<plugin>plg_editors-xtd_remoteimage</plugin>
-        <plugin>plg_system_remoteimage</plugin>
+		<plugin>plg_system_remoteimage</plugin>
 	</plugins>
-	
-	
+
 	<updateservers>
-        <server type="extension" priority="1" name="Asikart Remoteimage Component">http://update.asikart.com/component/com_remoteimage.xml</server>
-    </updateservers>
-	
-	
+		<server type="extension" priority="1" name="Asikart Remoteimage Component">http://update.asikart.com/component/com_remoteimage.xml</server>
+	</updateservers>
+
 </extension>
 
