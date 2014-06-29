@@ -134,6 +134,7 @@ class RemoteimageViewManagerHtml extends HtmlView
 		$asset = $this->container->get('helper.asset');
 
 		// JQuery
+		$asset->mootools();
 		$asset->jquery();
 		$asset->bootstrap();
 
@@ -145,6 +146,10 @@ class RemoteimageViewManagerHtml extends HtmlView
 
 		$asset->addJs('js/jquery-ui/js/jquery-ui.min.js');
 		$asset->addJs('js/elfinder/js/elfinder.full.js');
-		$asset->addJs('js/elfinder/js/i18n/elfinder.' . $lang_code . '.js');
+
+		if (is_file(REMOTEIMAGE_ADMIN . '/asset/js/elfinder/js/i18n/elfinder.' . $lang_code . '.js'))
+		{
+			$asset->addJs('js/elfinder/js/i18n/elfinder.' . $lang_code . '.js');
+		}
 	}
 }

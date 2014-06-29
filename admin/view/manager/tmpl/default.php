@@ -187,26 +187,26 @@ $fieldid = $params->get('fieldId');
 
 <div id="remoteimage-manager" class="remoteimage">
 
-	<?php echo $tabs ? AKHelper::_('panel.startTabs', 'RMTabs', array('active' => 'panel-elfinder')) : null; ?>
+	<?php echo $tabs ? JHtmlBootstrap::startTabSet('RMTabs', array('active' => 'panel-elfinder')) : ''; ?>
 
-	<?php echo $tabs ? AKHelper::_('panel.addPanel', 'RMTabs', JText::_('COM_REMOTEIMAGE_MANAGER'), 'panel-elfinder') : null; ?>
+	<?php echo $tabs ? JHtmlBootstrap::addTab('RMTabs', 'panel-elfinder', JText::_('COM_REMOTEIMAGE_MANAGER')) : ''; ?>
 	<!-- elFinder Body -->
 	<div class="row-fluid">
 		<div id="elfinder" class="span12 rm-finder">
 
 		</div>
 	</div>
-	<?php echo $tabs ? AKHelper::_('panel.endPanel') : null; ?>
+	<?php echo $tabs ? JHtmlBootstrap::endTab() : null; ?>
 
 	<?php if ($data->modal): ?>
 		<!--Insert From URL-->
-		<?php echo $tabs ? AKHelper::_('panel.addPanel', 'RMTabs', JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL'), 'panel-url') : null; ?>
+		<?php echo $tabs ? JHtmlBootstrap::addTab('RMTabs', 'panel-url', JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL')) : ''; ?>
 		<?php echo JText::_('COM_REMOTEIMAGE_INSERT_FROM_URL_DESC'); ?>
 		<br /><br />
 		<textarea name="insert-from-url" id="insert-from-url" cols="30" class="span9" rows="10"></textarea>
-		<?php echo $tabs ? AKHelper::_('panel.endPanel') : null; ?>
+		<?php echo $tabs ? JHtmlBootstrap::endTab() : null; ?>
 	<?php endif; ?>
-	<?php echo $tabs ? AKHelper::_('panel.endTabs') : null; ?>
+	<?php echo $tabs ? JHtmlBootstrap::endTabSet() : null; ?>
 
 
 	<?php if ($data->modal): ?>
@@ -214,10 +214,10 @@ $fieldid = $params->get('fieldId');
 			<div id="rm-insert-panel" class="span12 form-actions">
 				<div class="form-inline pull-left">
 					<label for="rm-width" id="rm-width-lbl" class=""><?php echo JText::_('COM_REMOTEIMAGE_MAX_WIDTH'); ?></label>
-					<input type="text" id="rm-width" class="input input-mini" value="<?php echo $this->params->get('Image_DefaultWidth_Midium', 640); ?>" />
+					<input type="text" id="rm-width" class="input input-mini" value="<?php echo $data->params->get('Image_DefaultWidth_Midium', 640); ?>" />
 					&nbsp;&nbsp;
 					<!--<span class="rm-width-height-x">X</span>
-					<input type="text" id="rm-height" class="input input-mini" value="<?php echo $this->params->get('Image_DefaultHeight_Midium', 640); ?>" />
+					<input type="text" id="rm-height" class="input input-mini" value="<?php echo $data->params->get('Image_DefaultHeight_Midium', 640); ?>" />
 					-->
 					<label for="rm-setwidth">
 						<input type="checkbox" id="rm-setwidth" name="rm-setwidth" value="1" />
