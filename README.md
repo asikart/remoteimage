@@ -20,6 +20,24 @@ RemoteImage Powered by elFinder, you can batch upload, create folders, resize & 
 Help us making our extensions more perfectly.
 
 
+## Contribution
+
+If you want to modify RemoteImage, you can follow these step to create project.
+
+- Install Joomla and this editor
+
+- Clone this repo to some folder, e.g: /var/myrepo/remoteimage
+
+- Run this command:
+
+``` bash
+$ cd /var/myrepo/remoteimage
+$ ./bin/makelink /your/joomla/root/path
+```
+
+- Now this script will auto create symbol link from your joomla to git project, just use your IDE open joomla dir and edit RemoteImage, all modify will sync to git project.
+
+
 ## SCREEN SHOTS
 
 ![130415-0002.jpg][8]
