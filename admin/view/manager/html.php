@@ -114,19 +114,9 @@ class RemoteimageViewManagerHtml extends HtmlView
 
 		$data->uploadMax = ini_get('upload_max_filesize');
 		$data->uploadNum = ini_get('max_file_uploads');
-	}
 
-	/**
-	 * setTitle
-	 *
-	 * @param string $title
-	 * @param string $icons
-	 *
-	 * @return  void
-	 */
-	protected function setTitle($title = null, $icons = 'article')
-	{
-		parent::setTitle(JText::_('COM_REMOTEIMAGE_TITLE_MANAGER'), $icons);
+		$this->setTitle(JText::_('COM_REMOTEIMAGE_TITLE_MANAGER'));
+		JToolbarHelper::preferences('com_remoteimage');
 	}
 
 	/**
@@ -151,9 +141,10 @@ class RemoteimageViewManagerHtml extends HtmlView
 		$asset->addCss('js/jquery-ui/css/smoothness/jquery-ui-1.8.24.custom.css');
 		$asset->addCss('js/elfinder/css/elfinder.min.css');
 		$asset->addCss('js/elfinder/css/theme.css');
+		$asset->addCss('remoteimage.css');
 
 		$asset->addJs('js/jquery-ui/js/jquery-ui.min.js');
-		$asset->addJs('js/elfinder/js/elfinder.min.js');
+		$asset->addJs('js/elfinder/js/elfinder.full.js');
 		$asset->addJs('js/elfinder/js/i18n/elfinder.' . $lang_code . '.js');
 	}
 }

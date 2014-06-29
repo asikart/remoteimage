@@ -114,7 +114,8 @@ $fieldid = $params->get('fieldId');
 	{
 
 		var elConfig = {
-			url: 'index.php?option=com_remoteimage&task=manager',
+			url: 'index.php?option=com_remoteimage&task=manager.connect',
+			// url: 'components/com_remoteimage/src/Remoteimage/Controller/test.json',
 			width: '100%',
 			height: '<?php echo $height; ?>',
 			lang: '<?php echo $data->langCode; ?>',

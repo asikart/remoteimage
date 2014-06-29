@@ -1,0 +1,48 @@
+/*!
+ * com_remoteimage
+ *
+ * Copyright 2012 - 2014 SMS Taiwan
+ * License GNU General Public License version 2 or later;
+ */
+
+/* GLOBAL */
+
+
+/* FINDER */
+
+#remoteimage-manager .ui-state-hover,
+#remoteimage-manager .ui-widget-content .ui-state-hover {
+	border: none;
+}
+
+/* FORM */
+#elfinder .elfinder-dialog-resize input {
+	max-width: 50px;
+}
+
+#elfinder .elfinder-dialog-resize img {
+	max-width: none;
+}
+
+#remoteimage-manager .elfinder-button-search input {
+	padding-left: 25px;
+}
+
+#remoteimage-manager .elfinder .ui-icon-search {
+	top: 40%;
+}
+
+#remoteimage-manager .elfinder .ui-icon-close {
+	top: 40%;
+	right: 10px;
+}
+
+/* FOOTER */
+
+
+/* TREE */
+#remote-folder-wrap {
+	height: 500px;
+	overflow: auto ;
+}
+

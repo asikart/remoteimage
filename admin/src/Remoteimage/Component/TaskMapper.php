@@ -26,5 +26,6 @@ class TaskMapper
 	 */
 	public static function register(Component $component)
 	{
+		$component->registerTask('manager.connect', '\\Remoteimage\\Controller\\ManagerController');
 	}
 }
