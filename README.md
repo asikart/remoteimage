@@ -24,9 +24,9 @@ Help us making our extensions more perfectly.
 
 If you want to modify RemoteImage, you can follow these step to create project.
 
-- Install Joomla and this editor
+- Install Joomla and this extension.
 
-- Clone this repo to some folder, e.g: /var/myrepo/remoteimage
+- Clone this repo to some folder, e.g: `/var/myrepo/remoteimage`
 
 - Run this command:
 
