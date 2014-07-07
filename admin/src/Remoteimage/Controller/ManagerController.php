@@ -34,24 +34,6 @@ class ManagerController extends Controller
 		// \JLoader::register('elFinderVolumeMySQL', REMOTEIMAGE_ADMIN . '/src/Elfinder/elFinderVolumeMySQL.class.php');
 		// \JLoader::register('elFinderVolumeS3', REMOTEIMAGE_ADMIN . '/src/Elfinder/elFinderVolumeS3.class.php');
 
-		/**
-		 * Simple function to demonstrate how to control file access using "accessControl" callback.
-		 * This method will disable accessing files/folders starting from  '.' (dot)
-		 *
-		 * @param  string $attr   attribute name (read|write|locked|hidden)
-		 * @param  string $path   file path relative to volume root directory started with directory separator
-		 * @param  array  $data   The data.
-		 * @param  string $volume Volume.
-		 *
-		 * @return bool|null
-		 */
-		function access($attr, $path, $data, $volume)
-		{
-			return strpos(basename($path), '.') === 0 // if file/folder begins with '.' (dot)
-				? !($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
-				: null; // else elFinder decide it itself
-		}
-
 		$params     = \JComponentHelper::getParams('com_remoteimage');
 		$safemode   = $params->get('Safemode', true);
 		$host       = $params->get('Ftp_Host', '127.0.0.1');
@@ -72,12 +54,13 @@ class ManagerController extends Controller
 				//'alias'         => $local_root,
 				'path'          => JPATH_ROOT . '/' . trim($local_root, '/'),
 				'URL'           => \JURI::root() . trim($local_root, '/'),
-				'accessControl' => 'access',
+				'accessControl' => array(__CLASS__, 'access'),
 				'uploadDeny'    => array('text/x-php'),
 				'icon'          => \JURI::root() . 'administrator/components/com_remoteimage/asset/js/elfinder/img/volume_icon_local.png',
-				'tmbPath'         => JPATH_ROOT . '/cache/elfinderThumbs',
-				'tmbURL'          => \JURI::root() . '/cache/elfinderThumbs',
-				'tmp'             => JPATH_ROOT . '/cache/elfinderTemps'
+				'tmbPath'       => JPATH_ROOT . '/cache/elfinderThumbs',
+				'tmbURL'        => \JURI::root() . '/cache/elfinderThumbs',
+				'tmbPathMode'   => 0755,
+				'tmp'           => JPATH_ROOT . '/cache/elfinderTemps'
 			);
 		}
 
@@ -97,6 +80,7 @@ class ManagerController extends Controller
 				'tmbPath'         => JPATH_ROOT . '/cache/elfinderThumbs',
 				'tmbURL'          => \JURI::root() . '/cache/elfinderThumbs',
 				'tmp'             => JPATH_ROOT . '/cache/elfinderTemps',
+				'tmbPathMode'     => 0755,
 				'dirMode'         => 0755,
 				'fileMode'        => 0644,
 				'URL'             => $url,
@@ -124,5 +108,23 @@ class ManagerController extends Controller
 		$connector->run();
 
 		exit();
+	}
+
+	/**
+	 * Simple function to demonstrate how to control file access using "accessControl" callback.
+	 * This method will disable accessing files/folders starting from  '.' (dot)
+	 *
+	 * @param  string $attr   attribute name (read|write|locked|hidden)
+	 * @param  string $path   file path relative to volume root directory started with directory separator
+	 * @param  array  $data   The data.
+	 * @param  string $volume Volume.
+	 *
+	 * @return bool|null
+	 */
+	public static function access($attr, $path, $data, $volume)
+	{
+		return strpos(basename($path), '.') === 0 // if file/folder begins with '.' (dot)
+			? !($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
+			: null; // else elFinder decide it itself
 	}
 }
