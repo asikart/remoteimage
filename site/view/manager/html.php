@@ -19,13 +19,14 @@ class RemoteimageViewManagerHtml extends \Remoteimage\View\ManagerView
 	/**
 	 * prepareRender
 	 *
-	 * @throws  Exception
 	 * @return  void
+	 *
+	 * @throws Exception
 	 */
 	protected function prepareRender()
 	{
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
+		$app  = $this->container->get('app');
+		$user = $this->container->get('user');
 
 		if ($app->isSite() && !$user->authorise('frontend.access'))
 		{
