@@ -38,11 +38,13 @@ class ManagerController extends Controller
 		 * Simple function to demonstrate how to control file access using "accessControl" callback.
 		 * This method will disable accessing files/folders starting from  '.' (dot)
 		 *
-		 * @param  string $attr attribute name (read|write|locked|hidden)
-		 * @param  string $path file path relative to volume root directory started with directory separator
+		 * @param  string $attr   attribute name (read|write|locked|hidden)
+		 * @param  string $path   file path relative to volume root directory started with directory separator
+		 * @param  array  $data   The data.
+		 * @param  string $volume Volume.
 		 *
 		 * @return bool|null
-		 **/
+		 */
 		function access($attr, $path, $data, $volume)
 		{
 			return strpos(basename($path), '.') === 0 // if file/folder begins with '.' (dot)
@@ -72,7 +74,10 @@ class ManagerController extends Controller
 				'URL'           => \JURI::root() . trim($local_root, '/'),
 				'accessControl' => 'access',
 				'uploadDeny'    => array('text/x-php'),
-				'icon'          => \JURI::root() . 'administrator/components/com_remoteimage/asset/js/elfinder/img/volume_icon_local.png'
+				'icon'          => \JURI::root() . 'administrator/components/com_remoteimage/asset/js/elfinder/img/volume_icon_local.png',
+				'tmbPath'         => JPATH_ROOT . '/cache/elfinderThumbs',
+				'tmbURL'          => \JURI::root() . '/cache/elfinderThumbs',
+				'tmp'             => JPATH_ROOT . '/cache/elfinderTemps'
 			);
 		}
 
