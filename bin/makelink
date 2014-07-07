@@ -11,7 +11,7 @@
 $dirs = array(
     'components/com_remoteimage' => 'site',
     'administrator/components/com_remoteimage' => 'admin',
-    'plugins/editors-xtd/userxtd' => 'plugins/plg_editors-xtd_remoteimage',
+    'plugins/editors-xtd/remoteimage' => 'plugins/plg_editors-xtd_remoteimage',
     'plugins/system/remoteimage' => 'plugins/plg_system_remoteimage'
 );
 
