@@ -56,7 +56,7 @@
 	</plugins>
 
 	<updateservers>
-		<server type="extension" priority="1" name="Asikart Remoteimage Component">http://update.asikart.com/component/com_remoteimage.xml</server>
+		<server type="extension" priority="1" name="Asikart Remoteimage Component">https://raw.githubusercontent.com/asikart/remoteimage/staging/update.xml</server>
 	</updateservers>
 
 </extension>
