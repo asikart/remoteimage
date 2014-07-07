@@ -59,6 +59,7 @@ class PlgSystemRemoteimage extends JPlugin
 	/**
 	 * onAfterRoute
 	 *
+	 * @throws  Exception
 	 * @return  void
 	 */
 	public function onAfterRoute()
@@ -76,11 +77,6 @@ class PlgSystemRemoteimage extends JPlugin
 		$tmpl    = $input->get('tmpl');
 		$fieldid = $input->get('fieldid');
 		$params  = JComponentHelper::getParams('com_remoteimage');
-
-		if ($app->isSite() && !$user->authorise('frontend.access'))
-		{
-			throw new \Exception(JText::_('JGLOBAL_RESOURCE_NOT_FOUND'), 404);
-		}
 
 		// Replace Insert to Article
 		if ($option == 'com_media' && $view == 'images' && !$fieldid && $tmpl == 'component' && $params->get('Integrate_Override_InsertImageArticle', 1))

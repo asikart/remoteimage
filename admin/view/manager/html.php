@@ -16,4 +16,23 @@ defined('_JEXEC') or die;
  */
 class RemoteimageViewManagerHtml extends \Remoteimage\View\ManagerView
 {
+	/**
+	 * prepareRender
+	 *
+	 * @return  void
+	 *
+	 * @throws Exception
+	 */
+	protected function prepareRender()
+	{
+		$app  = $this->container->get('app');
+		$user = $this->container->get('user');
+
+		if ($app->isSite() && !$user->authorise('frontend.access'))
+		{
+			throw new \Exception(JText::_('JGLOBAL_RESOURCE_NOT_FOUND'), 404);
+		}
+
+		parent::prepareRender();
+	}
 }
