@@ -27,6 +27,7 @@ $app = JFactory::getApplication();
  * @var $params Joomla\Registry\Registry
  */
 $lang      = $data->langCode;
+$lang      = substr($data->langCode, 0, 2);
 $params    = $data->params;
 $safemode  = $params->get('Safemode', true);
 $onlyimage = $params->get('Onlyimage', false);
@@ -118,7 +119,7 @@ $fieldid = $params->get('fieldId');
 			// url: 'components/com_remoteimage/src/Remoteimage/Controller/test.json',
 			width: '100%',
 			height: '<?php echo $height; ?>',
-			lang: '<?php echo $data->langCode; ?>',
+			lang: '<?php echo $lang; ?>',
 			requestType: 'post',
 			handlers: {
 				select: function(event, elfinderInstance)
