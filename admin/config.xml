@@ -133,6 +133,43 @@
 			<option value="1">JENABLED</option>
 		</field>
 
+		<field type="spacer" hr="true" />
+
+		<field
+			name="Image_Resize_Enabled"
+			type="radio"
+			label="COM_REMOTEIMAGE_IMAGE_RESIZE_ENABLED"
+			description="COM_REMOTEIMAGE_IMAGE_RESIZE_ENABLED_DESC"
+			default="1"
+			class="btn-group"
+			>
+			<option value="0">JDISABLED</option>
+			<option value="1">JENABLED</option>
+		</field>
+
+		<field
+			name="Image_Max_Width"
+			type="text"
+			label="COM_REMOTEIMAGE_IMAGE_MAX_WIDTH"
+			description="COM_REMOTEIMAGE_IMAGE_MAX_WIDTH_DESC"
+			default="1024"
+			/>
+
+		<field
+			name="Image_Max_Height"
+			type="text"
+			label="COM_REMOTEIMAGE_IMAGE_MAX_HEIGHT"
+			description="COM_REMOTEIMAGE_IMAGE_MAX_HEIGHT_DESC"
+			default="1024"
+			/>
+
+		<field
+			name="Image_JPEG_Quality"
+			type="text"
+			label="COM_REMOTEIMAGE_IMAGE_JPEG_QUALITY"
+			description="COM_REMOTEIMAGE_IMAGE_JPEG_QUALITY_DESC"
+			default="95"
+			/>
 	</fieldset>
 
 	<fieldset name="integrate">

@@ -44,7 +44,13 @@ class ManagerController extends Controller
 		$url        = $params->get('Ftp_Url');
 		$root       = $params->get('Ftp_Root', '/');
 		$local_root = $params->get('Local_Root', 'images');
-
+		//Patch
+		$image_resize_enabled = $params->get('Image_Resize_Enabled', true);
+		$image_max_width = $params->get('Image_Max_Width', 1024);
+		$image_max_height = $params->get('Image_Max_Height', 1024);
+		$image_jpeg_quality = $params->get('Image_JPEG_Quality', 95); 
+		// End patch
+		
 		$roots = array();
 
 		if ($params->get('Connection_Local', 1))
@@ -60,7 +66,7 @@ class ManagerController extends Controller
 				'tmbPath'       => JPATH_ROOT . '/cache/elfinderThumbs',
 				'tmbURL'        => \JURI::root() . '/cache/elfinderThumbs',
 				'tmbPathMode'   => 0755,
-				'tmp'           => JPATH_ROOT . '/cache/elfinderTemps'
+				'tmp'           => JPATH_ROOT . '/cache/elfinderTemps',
 			);
 		}
 
@@ -97,8 +103,33 @@ class ManagerController extends Controller
 				$root['disabled'] = array('archive', 'extract', 'rename', 'mkfile');
 			endforeach;
 		}
+//Patch
+		$lResizePluginOption = array();
+		
+		$lResizePluginOption['enable'] = $image_resize_enabled;
 
+		if 	($image_max_width > 0) { 
+			$lResizePluginOption['maxWidth'] = $image_max_width;
+		}
+
+		if	($image_max_height > 0) {
+			$lResizePluginOption['maxHeight'] = $image_max_height;
+		}
+		
+		if	($image_jpeg_quality > 0) {
+			$lResizePluginOption['quality'] = $image_jpeg_quality;
+		}
+		
+		
 		$opts = array(
+			'plugin' => array(
+				'AutoResize' => $lResizePluginOption
+			),
+			'bind' => array(
+					'upload.presave' => array(
+						'Plugin.AutoResize.onUpLoadPreSave'
+					)
+				),			
 			// 'debug' => true,
 			'roots' => $roots
 		);
@@ -109,7 +140,7 @@ class ManagerController extends Controller
 
 		exit();
 	}
-
+// End patch
 	/**
 	 * Simple function to demonstrate how to control file access using "accessControl" callback.
 	 * This method will disable accessing files/folders starting from  '.' (dot)
