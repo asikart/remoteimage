@@ -64,6 +64,18 @@ class PlgSystemRemoteimage extends JPlugin
 	 */
 	public function onAfterRoute()
 	{
+		$params  = JComponentHelper::getParams('com_remoteimage');
+
+		if ($params->get('Integrate_Override_InsertImageArticle', 1)
+			|| $params->get('Integrate_Override_MediaFormField', 1)
+			|| $params->get('Integrate_Override_MediaManager', 1))
+		{
+			$this->redirectNativeMedia();
+		}
+	}
+
+	protected function redirectNativeMedia()
+	{
 		$doc = JFactory::getDocument();
 		$doc->addScript(JURI::root(true) . '/administrator/components/com_remoteimage/asset/js/remoteimage-admin.js');
 

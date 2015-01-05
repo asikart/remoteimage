@@ -11,7 +11,7 @@
 var Remoteimage = {
 
 	/**
-	 * Insert images.
+	 * Insert images, this js file will load in every pages if you enabled the com_media replacement.
 	 *
 	 * @param id
 	 * @param imgs
@@ -86,8 +86,6 @@ var Remoteimage = {
 				{
 					url = url.substr(option.root_uri.length);
 				}
-
-				console.log(url, option);
 
 				if (e.mime.split('/')[0] == 'image')
 				{
