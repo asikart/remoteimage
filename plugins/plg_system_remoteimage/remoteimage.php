@@ -66,6 +66,10 @@ class PlgSystemRemoteimage extends JPlugin
 	{
 		$params  = JComponentHelper::getParams('com_remoteimage');
 
+		$user = JFactory::getUser();
+
+		$auth = ($user->authorise('core.manage', 'com_remoteimage'));
+
 		if ($params->get('Integrate_Override_InsertImageArticle', 1)
 			|| $params->get('Integrate_Override_MediaFormField', 1)
 			|| $params->get('Integrate_Override_MediaManager', 1))
@@ -74,12 +78,15 @@ class PlgSystemRemoteimage extends JPlugin
 		}
 	}
 
+	/**
+	 * redirectNativeMedia
+	 *
+	 * @return  void
+	 *
+	 * @throws Exception
+	 */
 	protected function redirectNativeMedia()
 	{
-		$doc = JFactory::getDocument();
-		$doc->addScript(JURI::root(true) . '/administrator/components/com_remoteimage/asset/js/remoteimage-admin.js');
-
-		$user  = JFactory::getUser();
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 
@@ -89,6 +96,9 @@ class PlgSystemRemoteimage extends JPlugin
 		$tmpl    = $input->get('tmpl');
 		$fieldid = $input->get('fieldid');
 		$params  = JComponentHelper::getParams('com_remoteimage');
+
+		$doc = JFactory::getDocument();
+		$doc->addScript(JURI::root(true) . '/administrator/components/com_remoteimage/asset/js/remoteimage-admin.js');
 
 		// Replace Insert to Article
 		if ($option == 'com_media' && $view == 'images' && !$fieldid && $tmpl == 'component' && $params->get('Integrate_Override_InsertImageArticle', 1))

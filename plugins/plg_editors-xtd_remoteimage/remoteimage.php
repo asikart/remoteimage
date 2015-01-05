@@ -64,7 +64,7 @@ class PlgButtonRemoteimage extends JPlugin
 
 		// Add Script
 		$doc = JFactory::getDocument();
-		$doc->addScript(JURI::root(true) . '/components/com_remoteimage/includes/js/remoteimage-admin.js');
+		$doc->addScript(JURI::root(true) . '/components/com_remoteimage/asset/js/remoteimage-admin.js');
 
 		// Add Button
 		$user      = JFactory::getUser();
