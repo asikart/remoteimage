@@ -28,7 +28,7 @@ class RemoteimageViewManagerHtml extends \Remoteimage\View\ManagerView
 		$app  = $this->container->get('app');
 		$user = $this->container->get('user');
 
-		if ($app->isSite() && !$user->authorise('frontend.access'))
+		if ($app->isSite() && !$user->authorise('frontend.access', 'com_remoteimage'))
 		{
 			throw new \Exception(JText::_('JGLOBAL_RESOURCE_NOT_FOUND'), 404);
 		}

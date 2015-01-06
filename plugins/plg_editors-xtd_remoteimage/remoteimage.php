@@ -57,14 +57,14 @@ class PlgButtonRemoteimage extends JPlugin
 		$app = JFactory::getApplication();
 		$user = JFactory::getUser();
 
-		if ($app->isSite() && !$user->authorise('frontend.access'))
+		if ($app->isSite() && !$user->authorise('frontend.access', 'com_remoteimage'))
 		{
 			return array();
 		}
 
 		// Add Script
 		$doc = JFactory::getDocument();
-		$doc->addScript(JURI::root(true) . '/components/com_remoteimage/asset/js/remoteimage-admin.js');
+		$doc->addScript(JURI::root(true) . '/administrator/components/com_remoteimage/asset/js/remoteimage-admin.js');
 
 		// Add Button
 		$user      = JFactory::getUser();

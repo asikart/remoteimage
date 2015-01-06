@@ -87,6 +87,14 @@ class PlgSystemRemoteimage extends JPlugin
 	 */
 	protected function redirectNativeMedia()
 	{
+		$app = JFactory::getApplication();
+		$user = JFactory::getUser();
+
+		if ($app->isSite() && !$user->authorise('frontend.access', 'com_remoteimage'))
+		{
+			return;
+		}
+
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 
