@@ -50,6 +50,12 @@ $ ./bin/makelink /your/joomla/root/path
 
 ![130415-0007.jpg][12]
 
+## Powerd by Windwalker RAD
+
+![Windwalker](http://rad.windwalker.io/media/images/logo/windwalker-logo.png)
+
+http://rad.windwalker.io/
+
    [1]: http://ext.asikart.com/images/extensions/remoteimage/Asikart-RemoteImage-LOGO-SQ-300-white.png
    [2]: http://ext.asikart.com/images/global/extension/compat_25.png
    [3]: http://ext.asikart.com/images/global/extension/compat_30.png
