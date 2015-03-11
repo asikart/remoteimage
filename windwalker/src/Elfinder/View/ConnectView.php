@@ -38,14 +38,14 @@ class ConnectView extends AbstractJsonView
 	{
 		// Init some API objects
 		// ================================================================================
-		$container  = $this->getContainer();
-		$input      = $container->get('input');
-		$config     = new Registry($this->config);
+		$container = $this->getContainer();
+		$input     = $container->get('input');
+		$config    = new Registry($this->config);
 
-		// Set E_ALL for debuging
+		// Set E_ALL for debugging
 		error_reporting($config->get('error_reporting', 0));
 
-		$elfinder_path = WINDWALKER . '/assets/js/elfinder/php/';
+		$elfinder_path = WINDWALKER . '/src/Elfinder/Connect/';
 
 		include_once $elfinder_path . 'elFinderConnector.class.php';
 		include_once $elfinder_path . 'elFinder.class.php';
@@ -75,8 +75,11 @@ class ConnectView extends AbstractJsonView
 		}
 
 		// Get Some Request
-		$root       = $input->get('root', '/');
-		$start_path = $input->get('start_path', '/');
+		$root       = $input->getPath('root', '/');
+		$start_path = $input->getPath('start_path', '/');
+
+		$this->createFolder($root);
+		$this->createFolder($root . '/' . $start_path);
 
 		$opts = array(
 			// 'debug' => true,
@@ -103,7 +106,7 @@ class ConnectView extends AbstractJsonView
 			)
 		);
 
-		$opts = array_merge($opts, $config->toArray());
+		$opts = (array) $config->get('option') ? : $opts;
 
 		foreach ($opts['roots'] as $driver)
 		{
@@ -115,6 +118,25 @@ class ConnectView extends AbstractJsonView
 		$connector->run();
 
 		exit();
+	}
+
+	/**
+	 * Create Folder.
+	 *
+	 * @param string $path The path to create.
+	 *
+	 * @return  void
+	 */
+	protected function createFolder($path)
+	{
+		$path = JPATH_ROOT . '/' . $path;
+
+		if (! is_dir($path))
+		{
+			\JFolder::create($path);
+
+			file_put_contents($path . '/index.html', '<!DOCTYPE html><title></title>');
+		}
 	}
 
 	/**

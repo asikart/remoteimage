@@ -109,14 +109,14 @@ class GridView extends ListHtmlView
 	 *
 	 * @return  void
 	 */
-	protected function setTitle($title = null, $icons = 'stack')
+	protected function setTitle($title = null, $icons = 'stack article')
 	{
 		if (!$title)
 		{
 			$title = \JText::_(sprintf('COM_%s_%s_TITLE_LIST', strtoupper($this->prefix), strtoupper($this->getName())));
 		}
 
-		parent::setTitle($title, 'stack article');
+		parent::setTitle($title, $icons);
 	}
 
 	/**
@@ -189,16 +189,20 @@ class GridView extends ListHtmlView
 
 			'checkin' => array(
 				'handler'  => 'checkin',
-				'args'     => array($this->viewList . '.state.checkin'),
+				'args'     => array($this->viewList . '.check.checkin'),
 				'access'   => 'core.create',
 				'priority' => 500
 			),
 
 			'delete' => array(
 				'handler' => 'deleteList',
-				'args'     => array($this->viewList . '.state.delete'),
+				'args'     => array(
+					$this->viewList . '.state.delete',
+					'JTOOLBAR_DELETE',
+					'LIB_WINDWALKER_TOOLBAR_CONFIRM_DELETE'
+				),
 				'access'  => (
-					ArrayHelper::getValue($filterState, $grid->config->get('field.state', 'state'))
+					ArrayHelper::getValue($filterState, $this->viewItem . '.' . $grid->config->get('field.state', 'state')) == -2
 					&& $canDo->get('core.delete')
 				),
 				'priority' => 400
@@ -208,7 +212,7 @@ class GridView extends ListHtmlView
 				'handler' => 'trash',
 				'args'     => array($this->viewList . '.state.trash'),
 				'access'  => (
-					!ArrayHelper::getValue($filterState, $grid->config->get('field.state', 'state'))
+					ArrayHelper::getValue($filterState, $this->viewItem . '.' . $grid->config->get('field.state', 'state')) != -2
 					&& $canDo->get('core.edit.state')
 				),
 				'priority' => 300

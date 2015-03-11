@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -157,5 +157,23 @@ array:
     nestedarray: { test1: value1 }
 ';
 		$this->assertEquals($object, $this->fixture->stringToObject($yaml));
+	}
+
+	/**
+	 * Test input and output data equality.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.3.0
+	 */
+	public function testDataEquality()
+	{
+		$input = "foo: bar\nquoted: '\"stringwithquotes\"'\nbooleantrue: true\nbooleanfalse: false\nnumericint: 42\nnumericfloat: 3.1415\n" .
+				"section:\n    key: value\narray:\n    nestedarray: { test1: value1 }\n";
+
+		$object = $this->fixture->stringToObject($input);
+		$output = $this->fixture->objectToString($object);
+
+		$this->assertEquals($input, $output, 'Line:' . __LINE__ . ' Input and output data must be equal.');
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -186,6 +186,24 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the behavior of the \Countable interface implementation
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::count
+	 * @since   1.3.0
+	 */
+	public function testCountable()
+	{
+		$a = new Registry;
+		$a->set('foo1', 'testtoarray1');
+		$a->set('foo2', 'testtoarray2');
+		$a->set('config.foo3', 'testtoarray3');
+
+		$this->assertEquals(3, count($a), 'count() should correctly count the number of data elements.');
+	}
+
+	/**
 	 * Test the Joomla\Registry\Registry::exists method.
 	 *
 	 * @return  void
@@ -245,6 +263,15 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		$a->set('foo', 'bar');
 		$this->assertEquals('bar', $a->get('foo'), 'Line: ' . __LINE__ . ' get method should work.');
 		$this->assertNull($a->get('xxx.yyy'), 'Line: ' . __LINE__ . ' get should return null when not found.');
+
+		// Test for when value is 0 - see https://github.com/joomla/jissues/issues/629
+		$a = new Registry;
+		$a->set('foo', 0);
+		$this->assertSame(0, $a->get('foo'));
+
+		$a = new Registry;
+		$a->set('foo.bar', 0);
+		$this->assertSame(0, $a->get('foo.bar'));
 	}
 
 	/**
@@ -285,6 +312,20 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the Joomla\Registry\Registry::getIterator method.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::getIterator
+	 * @since   1.3.0
+	 */
+	public function testGetIterator()
+	{
+		$a = new Registry;
+		$this->assertInstanceOf('ArrayIterator', $a->getIterator());
+	}
+
+	/**
 	 * Test the Joomla\Registry\Registry::loadArray method.
 	 *
 	 * @return  void
@@ -307,6 +348,43 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		$this->assertThat(
 			$registry->get('foo'),
 			$this->equalTo('bar'),
+			'Line: ' . __LINE__ . '.'
+		);
+	}
+
+	/**
+	 * Test the Joomla\Registry\Registry::loadArray method with flattened arrays
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::loadArray
+	 * @since   1.0
+	 */
+	public function testLoadFlattenedArray()
+	{
+		$array = array(
+			'foo.bar'  => 1,
+			'foo.test' => 2,
+			'bar'      => 3
+		);
+		$registry = new Registry;
+		$registry->loadArray($array, true);
+
+		$this->assertThat(
+			$registry->get('foo.bar'),
+			$this->equalTo(1),
+			'Line: ' . __LINE__ . '.'
+		);
+
+		$this->assertThat(
+			$registry->get('foo.test'),
+			$this->equalTo(2),
+			'Line: ' . __LINE__ . '.'
+		);
+
+		$this->assertThat(
+			$registry->get('bar'),
+			$this->equalTo(3),
 			'Line: ' . __LINE__ . '.'
 		);
 	}
@@ -574,6 +652,45 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test the Joomla\Registry\Registry::extract method
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::extract
+	 * @since   1.2.0
+	 */
+	public function testExtract()
+	{
+		$a = new Registry(
+			array(
+				'foo'    => 'bar',
+				'subset' => array(
+					'data1' => 'test1',
+					'data2' => 'test2',
+					'data3' => array(1, 2, 3)
+				)
+			)
+		);
+
+		$b = $a->extract('subset');
+		$c = $a->extract('subset.data3');
+
+		$this->assertInstanceOf(
+			'\\Joomla\\Registry\\Registry',
+			$b,
+			'Line ' . __LINE__ . ' - Object $b should be an instance of Registry.'
+		);
+
+		$this->assertInstanceOf(
+			'\\Joomla\\Registry\\Registry',
+			$c,
+			'Line ' . __LINE__ . ' - Object $c should be an instance of Registry.'
+		);
+
+		$this->assertEquals('test2', $b->get('data2'), 'Test sub-registry path');
+	}
+
+	/**
 	 * Test the Joomla\Registry\Registry::offsetExists method.
 	 *
 	 * @return  void
@@ -655,12 +772,86 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	{
 		$a = new Registry;
 		$a->set('foo', 'testsetvalue1');
+		$a->set('bar/foo', 'testsetvalue3', '/');
 
 		$this->assertThat(
 			$a->set('foo', 'testsetvalue2'),
 			$this->equalTo('testsetvalue2'),
 			'Line: ' . __LINE__ . '.'
 		);
+
+		$this->assertThat(
+			$a->set('bar/foo', 'testsetvalue4'),
+			$this->equalTo('testsetvalue4'),
+			'Line: ' . __LINE__ . '.'
+		);
+	}
+
+	/**
+	 * Test the Joomla\Registry\Registry::append method.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::append
+	 * @since   1.0
+	 */
+	public function testAppend()
+	{
+		$a = new Registry;
+		$a->set('foo', array('var1', 'var2', 'var3'));
+		$a->append('foo', 'var4');
+
+		$this->assertThat(
+			$a->get('foo.3'),
+			$this->equalTo('var4'),
+			'Line: ' . __LINE__ . '.'
+		);
+
+		$b = $a->get('foo');
+		$this->assertTrue(is_array($b));
+
+		$b[] = 'var5';
+		$this->assertNull($a->get('foo.4'));
+	}
+
+	/**
+	 * Test the registry set for unassociative arrays
+	 *
+	 * @return  void
+	 *
+	 * @since   1.4.0
+	 */
+	public function testUnassocArrays()
+	{
+		$a = new Registry;
+		$a->loadArray(
+			array(
+				'assoc' => array(
+					'foo' => 'bar'
+				),
+				'unassoc' => array(
+					'baz', 'baz2', 'baz3'
+				),
+				'mixed' => array(
+					'var', 'var2', 'key' => 'var3'
+				)
+			)
+		);
+
+		$a->set('assoc.foo2', 'bar2');
+		$this->assertEquals('bar2', $a->get('assoc.foo2'));
+
+		$a->set('mixed.key2', 'var4');
+		$this->assertEquals('var4', $a->get('mixed.key2'));
+
+		$a->set('mixed.2', 'var5');
+		$this->assertEquals('var5', $a->get('mixed.2'));
+		$this->assertEquals('var2', $a->get('mixed.1'));
+
+		$a->set('unassoc.3', 'baz4');
+		$this->assertEquals('baz4', $a->get('unassoc.3'));
+
+		$this->assertTrue(is_array($a->get('unassoc')), 'Un-associative array should remain after write');
 	}
 
 	/**
@@ -749,5 +940,47 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 			),
 			'Line: ' . __LINE__ . '.'
 		);
+	}
+
+	/**
+	 * Test flatten.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::flatten
+	 * @since   1.3.0
+	 */
+	public function testFlatten()
+	{
+		$a = new Registry;
+		$a->set('flower.sunflower', 'light');
+		$a->set('flower.sakura', 'samurai');
+
+		$flatted = $a->flatten();
+
+		$this->assertEquals($flatted['flower.sunflower'], 'light');
+
+		$flatted = $a->flatten('/');
+
+		$this->assertEquals($flatted['flower/sakura'], 'samurai');
+	}
+
+	/**
+	 * Test separator operations
+	 *
+	 * @return  void
+	 *
+	 * @since  1.4.0
+	 */
+	public function testSeparator()
+	{
+		$a = new Registry;
+		$a->separator = '\\';
+		$a->set('Foo\\Bar', 'test1');
+		$a->separator = '/';
+		$a->set('Foo/Baz', 'test2');
+
+		$this->assertEquals($a->get('Foo/Bar'), 'test1');
+		$this->assertEquals($a->get('Foo/Baz'), 'test2');
 	}
 }

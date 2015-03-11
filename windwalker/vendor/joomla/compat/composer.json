@@ -9,6 +9,9 @@
         "php": ">=5.3.10"
     },
     "autoload": {
-     	"classmap": ["src/JsonSerializable.php"]
+     	"classmap": [
+            "src/JsonSerializable.php",
+            "src/CallbackFilterIterator.php"
+        ]
     }
 }

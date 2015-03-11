@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -117,5 +117,23 @@ class JRegistryFormatJSONTest extends \PHPUnit_Framework_TestCase
 			$class->stringToObject('{key:\'value\''),
 			$this->equalTo(false)
 		);
+	}
+
+	/**
+	 * Test input and output data equality.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.3.0
+	 */
+	public function testDataEquality()
+	{
+		$class = AbstractRegistryFormat::getInstance('JSON');
+
+		$input = '{"title":"Joomla Framework","author":"Me","params":{"show_title":1,"show_abstract":0,"show_author":1,"categories":[1,2]}}';
+		$object = $class->stringToObject($input);
+		$output = $class->objectToString($object);
+
+		$this->assertEquals($input, $output, 'Line:' . __LINE__ . ' Input and output data must be equal.');
 	}
 }

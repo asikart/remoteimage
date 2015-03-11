@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -107,5 +107,41 @@ class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 			$class->stringToObject($string),
 			$this->equalTo($object)
 		);
+	}
+
+	/**
+	 * Test input and output data equality.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.3.0
+	 */
+	public function testDataEquality()
+	{
+		$class = AbstractRegistryFormat::getInstance('XML');
+
+		// Check for different PHP behavior of displaying boolean false in XML.
+		$checkFalse = '<check/>' == simplexml_load_string('<test/>')->addChild('check', false)->asXML()
+			? '/>'
+			: '></node>';
+
+		$input = "<?xml version=\"1.0\"?>\n<registry>" .
+			"<node name=\"foo\" type=\"string\">bar</node>" .
+			"<node name=\"booleantrue\" type=\"boolean\">1</node>" .
+			"<node name=\"booleanfalse\" type=\"boolean\"" . $checkFalse .
+			"<node name=\"numericint\" type=\"integer\">42</node>" .
+			"<node name=\"numericfloat\" type=\"double\">3.1415</node>" .
+			"<node name=\"section\" type=\"object\">" .
+			"<node name=\"key\" type=\"string\">value</node>" .
+			"</node>" .
+			"<node name=\"array\" type=\"array\">" .
+			"<node name=\"test1\" type=\"string\">value1</node>" .
+			"</node>" .
+			"</registry>\n";
+
+		$object = $class->stringToObject($input);
+		$output = $class->objectToString($object);
+
+		$this->assertEquals($input, $output, 'Line:' . __LINE__ . ' Input and output data must be equal.');
 	}
 }

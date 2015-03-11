@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Registry Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -45,7 +45,15 @@ class Php extends AbstractRegistryFormat
 			}
 		}
 
-		$str = "<?php\nclass " . $params['class'] . " {\n";
+		$str = "<?php\n";
+
+		// If supplied, add a namespace to the class object
+		if (isset($params['namespace']) && $params['namespace'] != '')
+		{
+			$str .= "namespace " . $params['namespace'] . ";\n\n";
+		}
+
+		$str .= "class " . $params['class'] . " {\n";
 		$str .= $vars;
 		$str .= "}";
 

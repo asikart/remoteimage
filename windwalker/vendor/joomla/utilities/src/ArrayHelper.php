@@ -62,20 +62,21 @@ final class ArrayHelper
 	/**
 	 * Utility function to map an array to a stdClass object.
 	 *
-	 * @param   array   $array  The array to map.
-	 * @param   string  $class  Name of the class to create
+	 * @param   array    $array      The array to map.
+	 * @param   string   $class      Name of the class to create
+	 * @param   boolean  $recursive  Convert also any array inside the main array
 	 *
 	 * @return  object   The object mapped from the given array
 	 *
 	 * @since   1.0
 	 */
-	public static function toObject(array $array, $class = 'stdClass')
+	public static function toObject(array $array, $class = 'stdClass', $recursive = true)
 	{
 		$obj = new $class;
 
 		foreach ($array as $k => $v)
 		{
-			if (is_array($v))
+			if ($recursive && is_array($v))
 			{
 				$obj->$k = self::toObject($v, $class);
 			}
@@ -229,17 +230,24 @@ final class ArrayHelper
 	/**
 	 * Utility function to return a value from a named array or a specified default
 	 *
-	 * @param   array   $array    A named array
-	 * @param   string  $name     The key to search for
-	 * @param   mixed   $default  The default value to give if no key found
-	 * @param   string  $type     Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
+	 * @param   array|\ArrayAccess  $array    A named array or object that implements ArrayAccess
+	 * @param   string              $name     The key to search for
+	 * @param   mixed               $default  The default value to give if no key found
+	 * @param   string              $type     Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
 	 *
 	 * @return  mixed  The value from the source array
 	 *
+	 * @throws  InvalidArgumentException
+	 *
 	 * @since   1.0
 	 */
-	public static function getValue(array $array, $name, $default = null, $type = '')
+	public static function getValue($array, $name, $default = null, $type = '')
 	{
+		if (!is_array($array) && !($array instanceof \ArrayAccess))
+		{
+			throw new \InvalidArgumentException('The object must be an array or a object that implements ArrayAccess');
+		}
+
 		$result = null;
 
 		if (isset($array[$name]))
@@ -573,5 +581,44 @@ final class ArrayHelper
 		}
 
 		return false;
+	}
+
+	/**
+	 * Method to recursively convert data to a one dimension array.
+	 *
+	 * @param   array|object  $array      The array or object to convert.
+	 * @param   string        $separator  The key separator.
+	 * @param   string        $prefix     Last level key prefix.
+	 *
+	 * @return  array
+	 *
+	 * @since   1.3.0
+	 */
+	public static function flatten($array, $separator = '.', $prefix = '')
+	{
+		if ($array instanceof \Traversable)
+		{
+			$array = iterator_to_array($array);
+		}
+		elseif (is_object($array))
+		{
+			$array = get_object_vars($array);
+		}
+
+		foreach ($array as $k => $v)
+		{
+			$key = $prefix ? $prefix . $separator . $k : $k;
+
+			if (is_object($v) || is_array($v))
+			{
+				$array = array_merge($array, static::flatten($v, $separator, $key));
+			}
+			else
+			{
+				$array[$key] = $v;
+			}
+		}
+
+		return $array;
 	}
 }

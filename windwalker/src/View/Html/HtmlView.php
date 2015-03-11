@@ -47,7 +47,7 @@ class HtmlView extends AbstractHtmlView
 	{
 		parent::__construct($model, $container, $config, $paths);
 
-		$this->buttons = $this->buttons ? : \JArrayHelper::getValue($config, 'buttons', null);
+		$this->buttons = $this->buttons ? : \JArrayHelper::getValue($config, 'buttons', array());
 
 		$this->toolbarConfig = $this->toolbarConfig ? : \JArrayHelper::getValue($config, 'toolbar', array());
 	}
@@ -69,8 +69,6 @@ class HtmlView extends AbstractHtmlView
 		{
 			\JToolbarHelper::title($title, $icons);
 		}
-
-		$toolbar = $this->getToolbarHelper();
 	}
 
 	/**

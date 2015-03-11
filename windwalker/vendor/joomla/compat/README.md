@@ -10,6 +10,8 @@ This is a simple package that contains forward compatibility classes and interfa
 
 Since this is a PHP 5.4 interface, the `jsonSerialize()` method does not get called automatically when `json_encode`-ing an instance of the class when used in 5.3. To work around this, simply call the `jsonSerialize()` method directly when passing it to `json_encode`. This is forward-compatible with PHP 5.4.
 
+Note in some instances of PHP 5.5 from Debian the interface is also missing (see http://stackoverflow.com/questions/18239405/php-fatal-error-call-to-undefined-function-json-decode) which will also require this interface to be included.
+
 ```php
 class MyClass implements \JsonSerializable
 {
@@ -20,7 +22,7 @@ class MyClass implements \JsonSerializable
 
 	public function __construct(array $data)
 	{
-		$this->data = $dasta;
+		$this->data = $data;
 	}
 
 	public function jsonSerialize()
