@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<!-- Joomla!3.3 -->
+	<!-- Joomla!3.4 -->
 	<update>
 		<name>Remote & Local Image Manager</name>
 		<version>2.0.4</version>
@@ -8,7 +8,7 @@
 		<downloads>
 			<downloadurl type="upgrade" format="zip">https://github.com/asikart/remoteimage/archive/master.zip</downloadurl>
 		</downloads>
-		<targetplatform name="joomla" version="3.3" />
+		<targetplatform name="joomla" version="3.4" />
 		<element>com_remoteimage</element>
 		<type>component</type>
 	</update>
