@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Joomla\Database;
@@ -13,6 +13,8 @@ use Windwalker\DI\Container;
 
 /**
  * Class DatabaseFactory
+ *
+ * @deprecated  3.0
  */
 abstract class DatabaseFactory
 {
@@ -37,6 +39,8 @@ abstract class DatabaseFactory
 	 * @param bool  $forceNew
 	 *
 	 * @return  DatabaseDriver
+	 *
+	 * @deprecated  3.0
 	 */
 	public static function getDbo($option = array(), $forceNew = false)
 	{
@@ -49,6 +53,8 @@ abstract class DatabaseFactory
 	 * @param   DatabaseDriver $db
 	 *
 	 * @return  void
+	 *
+	 * @deprecated  3.0
 	 */
 	public static function setDbo(DatabaseDriver $db)
 	{
@@ -61,6 +67,8 @@ abstract class DatabaseFactory
 	 * @param bool $forceNew
 	 *
 	 * @return  DatabaseCommand
+	 *
+	 * @deprecated  3.0
 	 */
 	public static function getCommand($forceNew = false)
 	{
@@ -77,7 +85,9 @@ abstract class DatabaseFactory
 	 *
 	 * @param   DatabaseCommand $command
 	 *
-	 * @return  DatabaseFactory  Return self to support chaining.
+	 * @return  void
+	 *
+	 * @deprectaed  3.0
 	 */
 	public static function setCommand(DatabaseCommand $command)
 	{

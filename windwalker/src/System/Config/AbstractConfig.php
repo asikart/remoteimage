@@ -2,14 +2,14 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\System\Config;
 
-use Joomla\Filesystem\File;
-use Joomla\Registry\Registry;
+use Windwalker\Filesystem\File;
+use Windwalker\Registry\Registry;
 
 /**
  * The config class.
@@ -89,12 +89,17 @@ abstract class AbstractConfig implements ConfigInterface
 	/**
 	 * Set config object into this class.
 	 *
-	 * @param   \Joomla\Registry\Registry $config The config object.
+	 * @param   Registry $config The config object.
 	 *
 	 * @return  void
 	 */
-	public static function setConfig(Registry $config)
+	public static function setConfig($config)
 	{
+		if ($config instanceof \Joomla\Registry\Registry)
+		{
+			$config = new Registry($config->toArray());
+		}
+
 		self::$config = $config;
 	}
 }

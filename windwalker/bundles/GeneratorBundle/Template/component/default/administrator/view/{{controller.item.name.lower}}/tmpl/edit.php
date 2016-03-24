@@ -2,8 +2,8 @@
 /**
  * Part of Component {{extension.name.cap}} files.
  *
- * @copyright   Copyright (C) 2014 Asikart. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @copyright   Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @license     GNU General Public License version 2 or later.
  */
 
 // No direct access
@@ -11,13 +11,14 @@ defined('_JEXEC') or die;
 
 JHtmlBootstrap::tooltip();
 JHtmlFormbehavior::chosen('select');
-JHtmlBehavior::formvalidation();
+JHtmlBehavior::formvalidator();
 
 /**
  * Prepare data for this template.
  *
- * @var $container Windwalker\DI\Container
- * @var $data      Windwalker\Data\Data
+ * @var $this      \Windwalker\View\Engine\PhpEngine
+ * @var $container \Windwalker\DI\Container
+ * @var $data      \Windwalker\Data\Data
  * @var $item      \stdClass
  */
 $container = $this->getContainer();
@@ -29,7 +30,7 @@ $tabs = array(
 	'tab_basic',
 	'tab_advanced',
 	'tab_rules'
-)
+);
 ?>
 <!-- Validate Script -->
 <script type="text/javascript">
@@ -65,4 +66,3 @@ $tabs = array(
 		</div>
 	</form>
 </div>
-

@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Api\Authentication;
@@ -22,9 +22,9 @@ abstract class Authentication
 	 * So we get session key from request, then we use this key to find session data in DB, if found, means user has logged in.
 	 * We can use get this session data and restore into php session that Joomla will know this user has logged in.
 	 *
-	 * @param string $sessionKey
+	 * @param   string  $sessionKey
 	 *
-	 * @throws \Exception
+	 * @throws  \Exception
 	 *
 	 * @return  boolean
 	 */

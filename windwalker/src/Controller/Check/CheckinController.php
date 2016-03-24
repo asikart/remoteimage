@@ -2,12 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\Check;
 
+use Windwalker\Bootstrap\Message;
 use Windwalker\Controller\Admin\AbstractListController;
 
 /**
@@ -27,7 +28,9 @@ class CheckinController extends AbstractListController
 	{
 		if (empty($this->cid))
 		{
-			throw new \InvalidArgumentException(\JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 500);
+			$this->setRedirect($this->getFailRedirect(), \JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), Message::ERROR_RED);
+
+			return false;
 		}
 
 		$pks = $this->cid;
@@ -45,7 +48,7 @@ class CheckinController extends AbstractListController
 
 			if (!$this->allowEdit($data))
 			{
-				$this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
+				$this->addMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
 
 				continue;
 			}
@@ -56,13 +59,13 @@ class CheckinController extends AbstractListController
 			}
 			catch (\Exception $e)
 			{
-				$this->setMessage($this->table->getError());
+				$this->addMessage($this->table->getError());
 			}
 		}
 
 		$message = \JText::plural($this->textPrefix . '_N_ITEMS_CHECKED_IN', count($pks));
 
-		$this->redirectToList($message);
+		$this->setRedirect($this->getSuccessRedirect(), $message, Message::MESSAGE_GREEN);
 
 		return true;
 	}

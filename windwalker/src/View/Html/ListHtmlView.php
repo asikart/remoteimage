@@ -2,12 +2,13 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\View\Html;
 
+use Windwalker\String\StringInflector as Inflector;;
 use Windwalker\Model\Model;
 use Windwalker\DI\Container;
 
@@ -39,7 +40,7 @@ class ListHtmlView extends HtmlView
 		// Guess the list view as the plural of the item view.
 		if (empty($this->viewItem))
 		{
-			$inflector = \JStringInflector::getInstance();
+			$inflector = Inflector::getInstance();
 
 			$this->viewItem = $inflector->toSingular($this->viewList);
 		}
@@ -54,14 +55,19 @@ class ListHtmlView extends HtmlView
 	{
 		parent::prepareRender();
 
-		$data             = $this->getData();
-		$data->items      = $this->get('Items');
-		$data->pagination = $this->get('Pagination');
-		$data->state      = $this->get('State');
+		$this['items']      = $this['items'] ? : $this->get('Items');
+		$this['pagination'] = $this['pagination'] ? : $this->get('Pagination');
 
-		if ($errors = $data->state->get('errors'))
+		if ($errors = $this['state']->get('errors'))
 		{
-			$this->flash($errors);
+			$this->addMessage($errors);
+		}
+
+		// B/C for old templates
+		foreach ($this['items'] as $item)
+		{
+			$pkName = strtolower($this->viewItem) . '_id';
+			$item->$pkName = isset($item->id) ? $item->id : null;
 		}
 	}
 }

@@ -2,21 +2,21 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace GeneratorBundle\Controller\Component\Add;
 
 use GeneratorBundle\Action\Component\Subsystem;
-use GeneratorBundle\Controller\Component\ComponentController;
+use GeneratorBundle\Controller\Component\AbstractComponentController;
 
 /**
  * Class SubsystemController
  *
  * @since 1.0
  */
-class ItemController extends ComponentController
+class ItemController extends AbstractComponentController
 {
 	/**
 	 * Do Execute.

@@ -2,13 +2,14 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\View\Html;
 
 use Windwalker\DI\Container;
+use Windwalker\Helper\ContextHelper;
 use Windwalker\Model\Model;
 use Windwalker\View\AbstractView;
 use Windwalker\View\Engine\EngineInterface;
@@ -57,6 +58,13 @@ abstract class AbstractHtmlView extends AbstractView
 	protected $engine = null;
 
 	/**
+	 * Property context.
+	 *
+	 * @var  string
+	 */
+	protected $context;
+
+	/**
 	 * Method to instantiate the view.
 	 *
 	 * @param Model             $model     The model object.
@@ -70,6 +78,8 @@ abstract class AbstractHtmlView extends AbstractView
 		{
 			$this->engine = $config['engine'];
 		}
+
+		$this->context = ContextHelper::fromView($this);
 
 		parent::__construct($model, $container, $config);
 
@@ -96,9 +106,9 @@ abstract class AbstractHtmlView extends AbstractView
 	 * @param string $msgs The message list.
 	 * @param string $type The message type.
 	 *
-	 * @return AbstractHtmlView Return self to support chaining.
+	 * @return static Return self to support chaining.
 	 */
-	public function flash($msgs, $type = 'message')
+	public function addMessage($msgs, $type = 'message')
 	{
 		$app  = $this->getContainer()->get('app');
 		$msgs = (array) $msgs;
@@ -109,6 +119,21 @@ abstract class AbstractHtmlView extends AbstractView
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Alias for addMessage().
+	 *
+	 * @param string $msgs The message list.
+	 * @param string $type The message type.
+	 *
+	 * @return  static
+	 *
+	 * @deprecated  3.0  Use addMessage instead.
+	 */
+	public function flash($msgs, $type)
+	{
+		return $this->addMessage($msgs, $type);
 	}
 
 	/**

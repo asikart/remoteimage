@@ -2,13 +2,12 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Helper;
 
-use JFactory;
 use JProfiler;
 use Windwalker\DI\Container;
 
@@ -34,7 +33,7 @@ class ProfilerHelper
 	protected static $stateBuffer = array();
 
 	/**
-	 * A helper to add JProfiler log mark. Need to trun on the debug mode.
+	 * A helper to add JProfiler log mark. Need to turn on the debug mode.
 	 *
 	 * @param   string $text      Log text.
 	 * @param   string $namespace The JProfiler instance ID. Default is the core profiler "Application".
@@ -43,14 +42,15 @@ class ProfilerHelper
 	 */
 	public static function mark($text, $namespace = 'Windwalker')
 	{
-		$app = Container::getInstance()->get('app');
+		$container = Container::getInstance();
+		$app = $container->get('app');
 
 		if ($namespace == 'core' || !$namespace)
 		{
 			$namespace = 'Application';
 		}
 
-		if (!JDEBUG)
+		if (!$container->get('joomla.config')->get('debug'))
 		{
 			return;
 		}
@@ -86,8 +86,6 @@ class ProfilerHelper
 			$namespace = 'Application';
 		}
 
-		$buffer = 'No Profiler data.';
-
 		if (isset(self::$profiler[$namespace]))
 		{
 			$_PROFILER = self::$profiler[$namespace];
@@ -97,14 +95,14 @@ class ProfilerHelper
 		}
 		else
 		{
-			$buffer = $app->getUserState('windwalker.system.profiler.' . $namespace);
+			$buffer = $app->getUserState('windwalker.system.profiler.' . $namespace, array());
 			$buffer = $buffer ? implode("\n<br />\n", $buffer) : '';
 		}
 
 		$buffer = $buffer ? $buffer : 'No Profiler data.';
 
 		// Get last page logs
-		$state_buffer = \JArrayHelper::getValue(self::$stateBuffer, $namespace);
+		$state_buffer = ArrayHelper::getValue(self::$stateBuffer, $namespace);
 
 		if ($state_buffer)
 		{
@@ -125,5 +123,35 @@ class ProfilerHelper
 		echo $buffer;
 
 		return '';
+	}
+
+	/**
+	 * Get a profiler instance with a namespace
+	 *
+	 * @param   string  $namespace The JProfiler instance ID. Default is the core profiler "Application".
+	 *
+	 * @return  JProfiler|null
+	 */
+	public static function getProfiler($namespace = 'Windwalker')
+	{
+		if (isset(static::$profiler[$namespace]))
+		{
+			return static::$profiler[$namespace];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Set a profiler instance with a namespace
+	 *
+	 * @param   string    $namespace The JProfiler instance ID. Default is the core profiler "Application".
+	 * @param   JProfiler $profiler  The JProfiler instance.
+	 *
+	 * @return  void
+	 */
+	public static function setProfiler($namespace = 'Windwalker', JProfiler $profiler)
+	{
+		static::$profiler[$namespace] = $profiler;
 	}
 }

@@ -2,14 +2,14 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\View\Html;
 
 use Joomla\DI\Container;
-use Joomla\Registry\Registry;
+use Windwalker\Registry\Registry;
 use Windwalker\Helper\ArrayHelper;
 use Windwalker\Model\Model;
 use Windwalker\View\Helper\GridHelper;
@@ -79,14 +79,13 @@ class GridView extends ListHtmlView
 	{
 		parent::prepareRender();
 
-		$data             = $this->getData();
-		$data->grid       = $this->getGridHelper($this->gridConfig);
-		$data->filterForm = $this->get('FilterForm');
-		$data->batchForm  = $this->get('BatchForm');
+		$this['grid']       = $this['grid'] ? : $this->getGridHelper($this->gridConfig);
+		$this['filterForm'] = $this['filterForm'] ? : $this->get('FilterForm');
+		$this['batchForm']  = $this['batchForm'] ? : $this->get('BatchForm');
 
-		if ($errors = $data->state->get('errors'))
+		if ($errors = $this['state']->get('errors'))
 		{
-			$this->flash($errors);
+			$this->addMessage($errors);
 		}
 
 		// We don't need toolbar in the modal window.
@@ -95,7 +94,7 @@ class GridView extends ListHtmlView
 			$this->addToolbar();
 			$this->addSubmenu();
 
-			$data->sidebar = \JHtmlSidebar::render();
+			$this['sidebar'] = \JHtmlSidebar::render();
 
 			$this->setTitle();
 		}
@@ -262,7 +261,7 @@ class GridView extends ListHtmlView
 	/**
 	 * configureFields
 	 *
-	 * @param null $fields
+	 * @param array $fields
 	 *
 	 * @return  array
 	 */

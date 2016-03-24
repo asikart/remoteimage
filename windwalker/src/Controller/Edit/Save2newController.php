@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\Edit;
@@ -19,38 +19,17 @@ use Windwalker\Model\Exception\ValidateFailException;
 class Save2newController extends SaveController
 {
 	/**
-	 * Method to run this controller.
+	 * Set redirect URL for action success.
 	 *
-	 * @return  mixed
+	 * @return  string  Redirect URL.
 	 */
-	protected function doExecute()
+	public function getSuccessRedirect()
 	{
-		return $this->fetch($this->prefix, $this->name . '.edit.save');
-	}
-
-	/**
-	 * Pose execute hook.
-	 *
-	 * @param   mixed  $return  Executed return value.
-	 *
-	 * @return  mixed
-	 */
-	protected function postExecute($return = null)
-	{
-		// Clear the record id and data from the session.
-		$this->releaseEditId($this->context, $this->recordId);
-
-		// If save success, clean session.
-		if ($return)
-		{
-			$this->app->setUserState($this->context . '.data', null);
-		}
-
 		// Redirect back to the edit screen.
 		$this->input->set('layout', 'edit');
+		$this->input->set($this->urlVar, null);
+		$this->recordId = null;
 
-		$this->redirectToItem();
-
-		return $return;
+		return \JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false);
 	}
 }

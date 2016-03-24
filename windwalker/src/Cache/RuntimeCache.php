@@ -3,13 +3,15 @@
  * Part of Windwalker project.
  *
  * @copyright  Copyright (C) 2014 SMS Taiwan. All rights reserved.
- * @license    GNU General Public License version 2 or later;
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Cache;
 
 /**
  * The RuntimeCache class.
+ *
+ * @deprecated  Use Windwalker Cache package instead.
  * 
  * @since  1.0
  */

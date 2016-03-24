@@ -2,12 +2,15 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller;
 
+use Windwalker\Model\Model;
+use Windwalker\Utilities\Queue\PriorityQueue;
+use Windwalker\View\AbstractView;
 use Windwalker\View\Html\AbstractHtmlView;
 
 defined('_JEXEC') or die('Restricted access');
@@ -34,7 +37,9 @@ class DisplayController extends Controller
 	protected $cachable = false;
 
 	/**
-	 * An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * An array of safe url parameters and their variable types, for valid values.
+	 *
+	 * @see \JFilterInput::clean()
 	 *
 	 * @var array
 	 */
@@ -53,6 +58,13 @@ class DisplayController extends Controller
 	 * @var  string
 	 */
 	protected $format = 'html';
+
+	/**
+	 * Property subModels.
+	 *
+	 * @var  Model[]
+	 */
+	protected $subModels = array();
 
 	/**
 	 * Prepare execute hook.
@@ -85,11 +97,18 @@ class DisplayController extends Controller
 		}
 
 		// Push JDocument to View
-		$view->document = $document;
+		$view->getData()->set('document', $document);
 
 		$this->view = $view;
-	}
 
+		// Redirect to GET
+		if (strtoupper($this->input->getMethod()) == 'POST')
+		{
+			$this->redirect(\JUri::getInstance());
+
+			return;
+		}
+	}
 
 	/**
 	 * Method to run this controller.
@@ -99,9 +118,9 @@ class DisplayController extends Controller
 	protected function doExecute()
 	{
 		// Display the view
-		$conf = $this->container->get('joomla.config');
+		$config = $this->container->get('joomla.config');
 
-		if ($this->cachable && $this->format != 'feed' && $conf->get('caching') >= 1)
+		if ($this->cachable && $this->format != 'feed' && $config->get('caching') >= 1)
 		{
 			$option = $this->input->get('option');
 			$cache = \JFactory::getCache($option, 'view');
@@ -128,6 +147,12 @@ class DisplayController extends Controller
 			}
 
 			return $cache->get($this->view, 'render');
+		}
+
+		// Set sub models
+		foreach ($this->subModels as $subModel)
+		{
+			$this->view->setModel($subModel);
 		}
 
 		return  $this->view->render();
@@ -191,7 +216,7 @@ class DisplayController extends Controller
 	 *
 	 * @return  \Windwalker\View\AbstractView  Reference to the view or an error.
 	 */
-	public function getView($name = null, $type = null, $config = array(), $forceNew = false)
+	public function getView($name = null, $type = 'html', $config = array(), $forceNew = false)
 	{
 		// Get the name.
 		if (!$name)
@@ -200,70 +225,59 @@ class DisplayController extends Controller
 		}
 
 		$container = $this->getContainer();
+		$viewKey   = 'view.' . strtolower($name) . '.' . strtolower($type);
 
-		// Get View
-		$type     = ucfirst($type);
-		$prefix   = ucfirst($this->getPrefix()) . 'View';
-		$viewName = $prefix . ucfirst($name) . $type;
-
-		if (!class_exists($viewName))
+		if (!$container->exists($viewKey) || $forceNew)
 		{
-			$viewName = '\\Windwalker\\View\\' . $type . '\\' . $type . 'View';
-		}
+			// Get View
+			$type     = ucfirst($type);
+			$prefix   = ucfirst($this->getPrefix()) . 'View';
+			$viewName = $prefix . ucfirst($name) . $type;
 
-		// Load view
-		if (!class_exists($viewName))
-		{
-			return null;
-		}
+			if (!class_exists($viewName))
+			{
+				$viewName = 'Windwalker\View\\' . $type . '\\' . $type . 'View';
+			}
 
-		$model  = $this->getModel($name);
-		$paths  = $this->getTemplatePath($name);
+			// Load view
+			if (!class_exists($viewName))
+			{
+				throw new \LogicException('View: ' . $name . ' with type: ' . $type . ' not found.');
+			}
 
-		$defaultConfig = array(
-			'name'   => strtolower($name),
-			'option' => strtolower($this->option),
-			'prefix' => strtolower($this->getPrefix())
-		);
+			$model  = $this->getModel($name);
+			$paths  = $this->getTemplatePath($name);
 
-		$config = array_merge($defaultConfig, $config);
-
-		$viewKey = 'view.' . strtolower($name);
-
-		try
-		{
-			$view = $container->get($viewKey, $forceNew);
-		}
-		catch (\InvalidArgumentException $e)
-		{
-			$container->share(
-				$viewKey,
-				function($container) use($viewName, $model, $paths, $config)
-				{
-					return new $viewName($model, $container, $config, $paths);
-				}
+			$defaultConfig = array(
+				'name'   => strtolower($name),
+				'option' => strtolower($this->option),
+				'prefix' => strtolower($this->getPrefix())
 			);
 
-			$view = $container->get($viewKey);
+			$config = array_merge($defaultConfig, $config);
+
+			$view = new $viewName($model, $container, $config, $paths);
+
+			$container->share($viewKey, $view);
 		}
 
-		return $view;
+		return $container->get($viewKey);
 	}
 
 	/**
-	 * Get teplate path.
+	 * Get template path.
 	 *
-	 * @param \JView $view The view object.
+	 * @param string  $view  The view name.
 	 *
-	 * @return \SplPriorityQueue The queue object.
+	 * @return PriorityQueue The queue object.
 	 */
 	public function getTemplatePath($view)
 	{
 		// Register the layout paths for the view
 		$componentFolder = $this->getComponentPath();
-		$paths = new \SplPriorityQueue;
+		$paths = new PriorityQueue;
 
-		$view = $view ?: $this->defaultView;
+		$view = $view ? : $this->defaultView;
 
 		// Theme override path.
 		$paths->insert(JPATH_THEMES . '/' . $this->app->getTemplate() . '/html/' . $this->option . '/' . $view, 200);
@@ -277,7 +291,7 @@ class DisplayController extends Controller
 	/**
 	 * Assign Models Hook.
 	 *
-	 * @param \JView $view The view object.
+	 * @param AbstractView $view The view object.
 	 *
 	 * @return void
 	 */

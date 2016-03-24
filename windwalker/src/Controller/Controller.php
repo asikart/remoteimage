@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller;
@@ -12,9 +12,10 @@ use JApplicationCms;
 use JInput;
 use Joomla\DI\Container as JoomlaContainer;
 use Joomla\DI\ContainerAwareInterface;
-
-use Windwalker\Model\Model;
+use Windwalker\Bootstrap\Message;
 use Windwalker\DI\Container;
+use Windwalker\Helper\UriHelper;
+use Windwalker\Model\Model;
 
 /**
  * Class Controller
@@ -81,11 +82,25 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	protected $container;
 
 	/**
+	 * Property redirect.
+	 *
+	 * @var  array
+	 */
+	protected $redirect;
+
+	/**
+	 * Are we allow return?
+	 *
+	 * @var  boolean
+	 */
+	protected $allowReturn = false;
+
+	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput          $input  The input object.
-	 * @param   \JApplicationCms $app    The application object.
-	 * @param   array            $config The config object.
+	 * @param   \JInput           $input   The input object.
+	 * @param   \JApplicationCms  $app     The application object.
+	 * @param   array             $config  The config object.
 	 */
 	public function __construct(JInput $input = null, JApplicationCms $app = null, $config = array())
 	{
@@ -157,11 +172,11 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	/**
 	 * Fetch HMVC result.
 	 *
-	 * @param string       $prefix  The controller prefix, it means the component.
-	 * @param string       $name    Controller task name.
-	 * @param JInput|array $input   The input object or an array, it will pass to child controller.
+	 * @param   string        $prefix  The controller prefix, it means the component.
+	 * @param   string        $name    Controller task name.
+	 * @param   JInput|array  $input   The input object or an array, it will pass to child controller.
 	 *
-	 * @return mixed HMVC executed result.
+	 * @return   mixed  HMVC executed result.
 	 */
 	public function fetch($prefix, $name, $input = array())
 	{
@@ -268,24 +283,21 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 
 		$ref = $this->getReflection();
 
-		$name = explode('Controller', $ref->getName());
+		// Controller class name format: {Prefix}Controller{Name}
+		$name = explode('Controller', $ref->getShortName());
 
-		if ($name[0] == $this->getPrefix())
-		{
-			return $this->name = '';
-		}
-		elseif (!empty($name[1]))
+		if (!empty($name[1]))
 		{
 			return $this->name = trim($name[1], '\\');
 		}
 
-		return '';
+		return $this->name = '';
 	}
 
 	/**
 	 * Set controller name
 	 *
-	 * @param   string $name The controller name.
+	 * @param   string  $name  The controller name.
 	 *
 	 * @return  Controller  Return self to support chaining.
 	 */
@@ -299,7 +311,7 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	/**
 	 * Set option name.
 	 *
-	 * @param   string $option Option name.
+	 * @param   string  $option  Option name.
 	 *
 	 * @return  Controller  Return self to support chaining.
 	 */
@@ -308,6 +320,16 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 		$this->option = $option;
 
 		return $this;
+	}
+
+	/**
+	 * Method to get property Option
+	 *
+	 * @return  string
+	 */
+	public function getOption()
+	{
+		return $this->option;
 	}
 
 	/**
@@ -346,14 +368,97 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	}
 
 	/**
+	 * Set a URL for browser redirection.
+	 *
+	 * @param   string $url     URL to redirect to.
+	 * @param   string $message Message to display on redirect. Optional, defaults to value set internally by controller, if any.
+	 * @param   string $type    Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
+	 *
+	 * @return  void
+	 */
+	public function redirect($url = null, $message = null, $type = Message::MESSAGE_GREEN)
+	{
+		if ($this->input->get('hmvc') || !$this->input->get('redirect', true))
+		{
+			return;
+		}
+
+		if ($this->input->get('return') && $this->allowReturn)
+		{
+			$url = UriHelper::base64('decode', $this->input->get('return'));
+		}
+
+		if (!$url && $redirect = $this->getRedirect(true))
+		{
+			list($url, $message, $type) = $redirect;
+		}
+
+		if ($url)
+		{
+			$this->addMessage($message, $type);
+
+			$this->app->redirect($url);
+		}
+	}
+
+	/**
+	 * Store a redirect information then later call redirect() will use this URL to redirect.
+	 *
+	 * @param   string  $url      URL to redirect to.
+	 * @param   string  $message  Message to display on redirect. Optional, defaults to value set internally by controller, if any.
+	 * @param   string  $type     Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setRedirect($url, $message = null, $type = Message::MESSAGE_GREEN)
+	{
+		$this->redirect = array(
+			'url'     => $url,
+			'message' => $message,
+			'type'    => $type
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Remove redirect information.
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function removeRedirect()
+	{
+		$this->redirect = null;
+
+		return $this;
+	}
+
+	/**
+	 * Get redirect information.
+	 *
+	 * @param  bool  $onlyValue  Only get value without array key.
+	 *
+	 * @return  array
+	 */
+	public function getRedirect($onlyValue = false)
+	{
+		if (is_array($this->redirect) && $onlyValue)
+		{
+			return array_values($this->redirect);
+		}
+
+		return $this->redirect;
+	}
+
+	/**
 	 * Method to get a model object, loading it if required.
 	 *
-	 * @param   string  $name     The model name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $config   Configuration array for model. Optional.
-	 * @param   boolean $forceNew Force get new model, or we get it from cache.
+	 * @param   string   $name      The model name. Optional.
+	 * @param   string   $prefix    The class prefix. Optional.
+	 * @param   array    $config    Configuration array for model. Optional.
+	 * @param   boolean  $forceNew  Force get new model, or we get it from cache.
 	 *
-	 * @return  object  The model.
+	 * @return  Model  The model found.
 	 */
 	public function getModel($name = null, $prefix = null, $config = array(), $forceNew = false)
 	{
@@ -363,50 +468,40 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 			$name = $this->getName();
 		}
 
-		// Get Prefix
-		if (!$prefix)
-		{
-			$prefix = ucfirst($this->getPrefix());
-		}
-
-		$modelName = $prefix . 'Model' . ucfirst($name);
-
-		if (!class_exists($modelName))
-		{
-			$modelName = '\\Windwalker\\Model\\Model';
-		}
-
-		$defaultConfig = array(
-			'name'   => strtolower($name),
-			'option' => strtolower($this->option),
-			'prefix' => strtolower($this->getPrefix())
-		);
-
-		$config = array_merge($defaultConfig, $config);
-
-		// Get model.
-		$container = $this->getContainer();
-
 		$modelKey = 'model.' . strtolower($name);
 
-		try
+		$container = $this->getContainer();
+
+		if (!$container->exists($modelKey) || $forceNew)
 		{
-			$model = $container->get($modelKey, $forceNew);
-		}
-		catch (\InvalidArgumentException $e)
-		{
-			$container->share(
-				$modelKey,
-				function(Container $container) use($modelName, $config)
-				{
-					return new $modelName($config, $container, null, $container->get('db'));
-				}
+			// Get Prefix
+			if (!$prefix)
+			{
+				$prefix = ucfirst($this->getPrefix());
+			}
+
+			$defaultConfig = array(
+				'name'   => strtolower($name),
+				'option' => strtolower($this->option),
+				'prefix' => strtolower($this->getPrefix())
 			);
 
-			$model = $container->get($modelKey);
+			$config = array_merge($defaultConfig, $config);
+
+			$modelName = $prefix . 'Model' . ucfirst($name);
+
+			if (!class_exists($modelName))
+			{
+				$modelName = 'Windwalker\\Model\\Model';
+			}
+
+			// Get model.
+			$model = new $modelName($config, $container, null, $container->get('db'));
+
+			$container->share($modelKey, $model);
 		}
 
-		return $model;
+		return $container->get($modelKey);
 	}
 
 	/**
@@ -443,16 +538,33 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	/**
 	 * Set message to queue.
 	 *
-	 * @param   string  $msg   Message to display on redirect. Optional, defaults to value set internally by controller, if any.
-	 * @param   string  $type  Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
+	 * @param   string  $message  Message to display on redirect. Optional, defaults to value set internally by controller, if any.
+	 * @param   string  $type     Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
 	 *
-	 * @return  Controller
+	 * @return  static  Return self to support chaining.
+	 *
+	 * @deprecated  3.0  Use addMessage() instead.
 	 */
-	public function setMessage($msg, $type = 'message')
+	public function setMessage($message, $type = 'message')
+	{
+		$this->addMessage($message, $type);
+
+		return $this;
+	}
+
+	/**
+	 * Add message to queue.
+	 *
+	 * @param   string  $message  Message to display on redirect. Optional, defaults to value set internally by controller, if any.
+	 * @param   string  $type     Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function addMessage($message, $type = 'message')
 	{
 		if (!$this->input->get('quiet', false))
 		{
-			$this->app->enqueueMessage($msg, $type);
+			$this->app->enqueueMessage($message, $type);
 
 			return $this;
 		}

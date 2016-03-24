@@ -2,13 +2,12 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Helper;
 
-use JArrayHelper;
 use JForm;
 use JHtml;
 use Windwalker\DI\Container;
@@ -30,10 +29,14 @@ class ModalHelper
 	 * @param   array  $option   Modal options.
 	 *
 	 * @return  void
+	 *
+	 * @deprecated  3.0  This method was used by the old renderModal() implementation.
+	 *                   Since the new implementation it is unneeded and the broken JS it was injecting could create issues
+	 *                   As a case, please see: https://github.com/joomla/joomla-cms/pull/6918
 	 */
 	public static function modal($selector, $option = array())
 	{
-		JHtml::_('bootstrap.modal', $selector);
+		return;
 	}
 
 	/**
@@ -47,15 +50,18 @@ class ModalHelper
 	 */
 	public static function modalLink($title, $selector, $option = array())
 	{
-		$tag     = JArrayHelper::getValue($option, 'tag', 'a');
-		$id      = isset($option['id']) ? " id=\"{$option['id']}\"" : "id=\"{$selector}_link\"";
-		$class   = isset($option['class']) ? " class=\"{$option['class']} cursor-pointer\"" : 'class="cursor-pointer"';
+		$tag     = ArrayHelper::getValue($option, 'tag', 'a');
+		$id      = isset($option['id']) ? " id=\"{$option['id']}\"" : " id=\"{$selector}_link\"";
+		$class   = isset($option['class']) ? " class=\"{$option['class']} cursor-pointer\"" : ' class="cursor-pointer"';
 		$onclick = isset($option['onclick']) ? " onclick=\"{$option['onclick']}\"" : '';
-		$icon    = JArrayHelper::getValue($option, 'icon', '');
+		$icon    = ArrayHelper::getValue($option, 'icon', '');
 
-		$button = "<{$tag} data-toggle=\"modal\" data-target=\"#$selector\"{$id}{$class}{$onclick}>
-               <i class=\"{$icon}\" title=\"$title\"></i>
-                $title</{$tag}>";
+		$button = <<<HTML
+<{$tag} data-toggle="modal" data-target="#$selector"{$id}{$class}{$onclick}>
+	<i class="{$icon}" title="$title"></i>
+	$title
+</{$tag}>
+HTML;
 
 		return $button;
 	}
@@ -71,8 +77,6 @@ class ModalHelper
 	 */
 	public static function renderModal($selector = 'modal', $content = '', $option = array())
 	{
-		self::modal($selector, $option);
-
 		$header = '';
 		$footer = '';
 
@@ -124,11 +128,12 @@ MODAL;
 	 */
 	static public function getQuickaddForm($id, $path, $extension = null)
 	{
-		$content = '';
+		$content = '<div class="alert alert-info">' . \JText::_('LIB_WINDWALKER_QUICKADD_HOTKEY_DESC') . '</div>';
 
 		try
 		{
 			$form = new JForm($id . '.quickaddform', array('control' => $id));
+
 			$form->loadFile(JPATH_ROOT . '/' . $path);
 		}
 		catch (\Exception $e)
@@ -149,15 +154,16 @@ MODAL;
 
 		foreach ($fieldset as $field)
 		{
-			$content .= "
-<div class=\"control-group\" id=\"{$field->id}-wrap\">
-	<div class=\"control-label\">
+			$content .= <<<HTML
+<div class="control-group" id="{$field->id}-wrap">
+	<div class="control-label">
 		{$field->label}
 	</div>
-	<div class=\"controls\">
+	<div class="controls">
 		{$field->input}
 	</div>
-</div>";
+</div>
+HTML;
 		}
 
 		return $content;

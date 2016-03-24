@@ -2,15 +2,14 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Model;
 
-use Joomla\Registry\Registry;
-use Windwalker\Joomla\DataMapper\DataMapper;
-use Windwalker\System\ExtensionHelper;
+use Windwalker\DataMapper\DataMapper;
+use Windwalker\Registry\Registry;
 
 /**
  * Advanced Model.
@@ -60,17 +59,8 @@ abstract class AbstractAdvancedModel extends Model
 		}
 
 		$app = $this->getContainer()->get('app');
-		$comParams  = ExtensionHelper::getParams($this->option);
-		$menuParams = new Registry;
 
-		if ($menu = $app->getMenu()->getActive())
-		{
-			$menuParams->loadString($menu->params);
-		}
-
-		$menuParams->merge($comParams);
-
-		return $this->params = $menuParams;
+		return $app->getParams();
 	}
 
 	/**
@@ -91,7 +81,7 @@ abstract class AbstractAdvancedModel extends Model
 		$pk     = $pk ? : $this->state->get('category.id', $input->get('id'));
 		$mapper = new DataMapper('#__categories');
 
-		$data = $mapper->findOne(array('id' => $pk));
+		$data = $mapper->findOne($pk);
 		$data->params = new Registry($data->params);
 
 		return $data;

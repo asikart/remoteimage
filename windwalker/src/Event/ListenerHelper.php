@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Event;
@@ -67,7 +67,12 @@ class ListenerHelper
 			$listener = new $listener($dispatcher);
 		}
 
-		return $dispatcher->attach($listener);
+		if ($listener instanceof \JEvent)
+		{
+			return $dispatcher->attach($listener);
+		}
+
+		return false;
 	}
 
 	/**
@@ -94,7 +99,12 @@ class ListenerHelper
 			}
 		}
 
-		return $dispatcher->detach($listener);
+		if ($listener instanceof \JEvent)
+		{
+			return $dispatcher->detach($listener);
+		}
+
+		return false;
 	}
 
 	/**

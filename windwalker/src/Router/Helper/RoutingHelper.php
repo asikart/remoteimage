@@ -2,19 +2,21 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Router\Helper;
 
 use Windwalker\Helper\PathHelper;
-use Windwalker\Router\Router;
+use Windwalker\Router\LegacyRouter;
 
 /**
  * Routing helper.
  *
  * @since 2.0
+ *
+ * @deprecated  Use RadRoutingHelper instead.
  */
 class RoutingHelper
 {
@@ -60,7 +62,7 @@ class RoutingHelper
 	 * @throws \LogicException
 	 * @return  Router Registered router.
 	 */
-	public static function registerRouting(Router $router, $option)
+	public static function registerRouting(LegacyRouter $router, $option)
 	{
 		// Don't register twice.
 		if (self::$registered)

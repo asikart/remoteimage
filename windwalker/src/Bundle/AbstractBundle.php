@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Bundle;
@@ -113,6 +113,7 @@ class AbstractBundle implements ContainerAwareInterface
 
 		$path = new PathLocator($path);
 
+		/** @var \SplFileInfo $file */
 		foreach ($path as $file)
 		{
 			if (!$file->isDir())
@@ -122,7 +123,7 @@ class AbstractBundle implements ContainerAwareInterface
 
 			$class = $namespace . '\\Command\\' . $file->getBasename() . '\\' . $file->getBasename() . 'Command';
 
-			if (class_exists($class) && is_subclass_of($class, 'Joomla\\Console\\Command\\Command') && $class::$isEnabled)
+			if (class_exists($class) && is_subclass_of($class, 'Windwalker\Console\Command\AbstractCommand') && $class::$isEnabled)
 			{
 				$console->addCommand(new $class);
 			}

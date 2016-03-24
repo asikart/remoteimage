@@ -1,0 +1,34 @@
+{
+    "name": "windwalker/datamapper",
+    "type": "windwalker-package",
+    "description": "Windwalker DataMapper package",
+    "keywords": ["windwalker", "framework", "datamapper"],
+    "homepage": "https://github.com/ventoviro/windwalker-datamapper",
+    "license": "LGPL-2.0+",
+    "require": {
+        "php": ">=5.3.10",
+        "windwalker/data": "~2.0"
+    },
+    "require-dev": {
+		"windwalker/database": "~2.0",
+        "windwalker/test": "~2.0",
+        "windwalker/compare": "~2.0",
+        "windwalker/event": "~2.0"
+    },
+    "suggest": {
+        "windwalker/database": "Install 2.* if you want Windwalker Database.",
+        "windwalker/event": "Install 2.* if you want to use hooks.",
+        "windwalker/compare": "Install 2.* if you want to use Compare object."
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\DataMapper\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.2-dev"
+        }
+    }
+}

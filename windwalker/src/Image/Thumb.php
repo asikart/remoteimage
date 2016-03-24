@@ -2,14 +2,15 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Image;
 
-use Joomla\Filesystem\Path;
-use Joomla\Registry\Registry;
+use Windwalker\Filesystem\Path;
+use Windwalker\Joomla\Registry\DecoratingRegistry;
+use Windwalker\Registry\Registry;
 use Windwalker\Helper\CurlHelper;
 use Windwalker\System\ExtensionHelper;
 
@@ -38,7 +39,7 @@ class Thumb
 	 *
 	 * @var string
 	 */
-	protected $defaultImage = 'libraries/windwalker/Resource/images/default-image.png';
+	protected $defaultImage = 'libraries/windwalker/resource/images/default-image.png';
 
 	/**
 	 * Extension name.
@@ -57,12 +58,12 @@ class Thumb
 	/**
 	 * Constructor.
 	 *
-	 * @param Registry $config    The config object.
+	 * @param array    $config    The config object.
 	 * @param string   $extension The extension name.
 	 */
-	public function __construct(Registry $config = null, $extension = null)
+	public function __construct($config = array(), $extension = null)
 	{
-		$config = $config ? : new Registry;
+		$config = DecoratingRegistry::toWindwalkerRegistry($config);
 		$this->extension = $extension;
 
 		$this->resetCachePosition();

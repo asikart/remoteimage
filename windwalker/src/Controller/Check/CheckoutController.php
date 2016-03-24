@@ -2,12 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\Check;
 
+use Windwalker\Bootstrap\Message;
 use Windwalker\Controller\Admin\AbstractListController;
 
 /**
@@ -27,7 +28,9 @@ class CheckoutController extends AbstractListController
 	{
 		if (empty($this->cid))
 		{
-			throw new \InvalidArgumentException(\JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 500);
+			$this->setRedirect($this->getFailRedirect(), \JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), Message::ERROR_RED);
+
+			return false;
 		}
 
 		$pks = $this->cid;
@@ -45,7 +48,7 @@ class CheckoutController extends AbstractListController
 
 			if (!$this->allowEdit($data, $this->urlVar))
 			{
-				$this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
+				$this->addMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'), Message::ERROR_RED);
 
 				continue;
 			}
@@ -56,11 +59,11 @@ class CheckoutController extends AbstractListController
 			}
 			catch (\Exception $e)
 			{
-				$this->setMessage(\JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $this->table->getError()));
+				$this->addMessage(\JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $this->table->getError()));
 			}
 		}
 
-		$this->redirectToList();
+		$this->setRedirect($this->getSuccessRedirect());
 
 		return true;
 	}

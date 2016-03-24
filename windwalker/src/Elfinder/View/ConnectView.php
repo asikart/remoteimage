@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Elfinder\View;
@@ -12,7 +12,7 @@ use elFinder;
 use elFinderConnector;
 use JPath;
 use JURI;
-use Joomla\Registry\Registry;
+use Windwalker\Registry\Registry;
 use Windwalker\View\Json\AbstractJsonView;
 
 /**
@@ -95,13 +95,14 @@ class ConnectView extends AbstractJsonView
 					'tmbPath'       => JPath::clean(JPATH_ROOT . '/cache/windwalker-finder-thumb'),
 					'tmbURL'        => JURI::root(true) . '/cache/windwalker-finder-thumb',
 					// 'tmbSize'       => 128,
-					'tmp'           => JPath::clean(JPATH_ROOT . '/cache/windwalker-finder-temp'),
+					'tmp'           => JPath::clean(JPATH_ROOT . '/tmp/windwalker-finder-temp'),
 
 					// Disable and hide dot starting files (OPTIONAL)
 					'accessControl' => 'access',
 					'uploadDeny'    => array('text/x-php'),
 					// 'uploadAllow'   => array('image'),
-					'disabled'      => array('archive', 'extract', 'rename', 'mkfile')
+					'disabled'      => array('archive', 'extract', 'rename', 'mkfile'),
+					'quarantine'    => JPATH_ROOT . '/tmp/.quarantine'
 				)
 			)
 		);

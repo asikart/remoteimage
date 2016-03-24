@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\Edit;
@@ -42,9 +42,20 @@ class CancelController extends AbstractItemController
 		$this->releaseEditId($this->context, $this->recordId);
 		$this->app->setUserState($this->context . '.data', null);
 
-		$this->redirectToList();
+		$this->setRedirect($this->getSuccessRedirect());
 
 		return true;
+	}
 
+	/**
+	 * Set redirect URL for action success.
+	 *
+	 * @return  string  Redirect URL.
+	 */
+	public function getSuccessRedirect()
+	{
+		$this->input->set('layout', null);
+
+		return \JRoute::_($this->getRedirectListUrl(), false);
 	}
 }

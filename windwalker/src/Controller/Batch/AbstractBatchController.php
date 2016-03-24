@@ -2,12 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\Batch;
 
+use Windwalker\Bootstrap\Message;
 use Windwalker\Controller\Admin\AbstractListController;
 
 /**
@@ -79,19 +80,17 @@ abstract class AbstractBatchController extends AbstractListController
 			$result = $this->doBatch();
 
 			$result = $this->postBatchHook($result);
-
-			$db->transactionCommit();
 		}
 		catch (\Exception $e)
 		{
-			$this->setMessage(\JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $e->getMessage()), 'warning');
-
 			$db->transactionRollback();
 
-			$this->redirectToList();
+			$this->setRedirect($this->getFailRedirect(), \JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $e->getMessage()), Message::ERROR_RED);
 
 			return false;
 		}
+
+		$db->transactionCommit();
 
 		return $result;
 	}
@@ -161,14 +160,12 @@ abstract class AbstractBatchController extends AbstractListController
 
 		if (!in_array(true, $result, true))
 		{
-			$this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+			$this->setRedirect($this->getFailRedirect(), \JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), Message::WARNING_YELLOW);
 
 			return false;
 		}
 
-		$this->setMessage(\JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
-
-		$this->redirectToList();
+		$this->setRedirect($this->getSuccessRedirect(), \JText::_('JLIB_APPLICATION_SUCCESS_BATCH'), Message::MESSAGE_GREEN);
 
 		return true;
 	}

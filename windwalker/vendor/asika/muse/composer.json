@@ -1,0 +1,29 @@
+{
+    "name": "asika/muse",
+    "description": "Muse - The PHP Code generator. She is Goddess, she is the Creator.",
+    "type": "framework",
+    "keywords": ["code", "generator", "builder", "scaffolding", "scaffold", "muse"],
+    "homepage": "https://github.com/asika32764/muse",
+    "license": "GNU Lesser General Public License",
+    "authors": [
+        {
+            "name": "Simon Asika",
+            "email": "asika32764@gmail.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {
+        "windwalker/filesystem": "~2.0",
+        "windwalker/registry": "~2.0",
+        "windwalker/utilities": "~2.0"
+    },
+    "require-dev": {
+        "windwalker/database": "~2.0",
+        "windwalker/console": "~2.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    }
+}

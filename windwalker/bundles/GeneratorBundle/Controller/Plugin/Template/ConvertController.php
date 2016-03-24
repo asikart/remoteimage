@@ -2,21 +2,21 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace GeneratorBundle\Controller\Plugin\Template;
 
 use GeneratorBundle\Action;
-use GeneratorBundle\Controller\Plugin\PluginController;
+use GeneratorBundle\Controller\Plugin\AbstractPluginController;
 
 /**
  * Class ConvertController
  *
  * @since 1.0
  */
-class ConvertController extends PluginController
+class ConvertController extends AbstractPluginController
 {
 	/**
 	 * Execute the controller.

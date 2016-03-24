@@ -2,14 +2,14 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace GeneratorBundle\Action\Component;
 
 use GeneratorBundle\Action\AbstractAction;
-use Joomla\Filesystem\Folder;
+use Windwalker\Filesystem\Folder;
 
 /**
  * Class ConvertTemplateAction
@@ -38,7 +38,10 @@ class ConvertTemplateAction extends AbstractAction
 		$dest = $this->config['dir.dest'];
 
 		// Remove dir first
-		Folder::delete($dest);
+		if (is_dir($dest))
+		{
+			Folder::delete($dest);
+		}
 
 		$this->container->get('operator.convert')->copy($src, $dest, $replace);
 	}

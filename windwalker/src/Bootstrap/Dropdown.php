@@ -2,8 +2,8 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Bootstrap;
@@ -37,7 +37,7 @@ class Dropdown extends \JHtmlActionsdropdown
 	 */
 	public static function clean()
 	{
-		static::$dropDownList = null;
+		static::$dropDownList = array();
 	}
 
 	/**

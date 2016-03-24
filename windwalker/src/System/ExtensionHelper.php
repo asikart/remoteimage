@@ -2,13 +2,11 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\System;
-
-use Joomla\Registry\Registry;
 
 /**
  * The extension helper.
@@ -107,23 +105,23 @@ class ExtensionHelper
 		{
 			case 'component':
 				$params = \JComponentHelper::getParams($element);
-				$params = new Registry($params->toArray());
+				$params = new \JRegistry($params->toArray());
 				break;
 
 			case 'module':
 				$module = \JModuleHelper::getModule($element);
-				$params = new Registry;
+				$params = new \JRegistry;
 				$params->loadString($module->params);
 				break;
 
 			case 'plugin':
 				$plugin = \JPluginHelper::getPlugin($extension['group'], $extension['name']);
 				$params = $plugin->params;
-				$params = new Registry($params);
+				$params = new \JRegistry($params);
 				break;
 
 			default:
-				$params = new Registry;
+				$params = new \JRegistry;
 				break;
 		}
 

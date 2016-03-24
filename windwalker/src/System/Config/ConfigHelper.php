@@ -2,13 +2,14 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\System\Config;
 
-use Joomla\Registry\Registry;
+use Windwalker\Joomla\Registry\DecoratingRegistry;
+use Windwalker\Registry\Registry;
 use Windwalker\System\ExtensionHelper;
 
 /**
@@ -33,8 +34,10 @@ abstract class ConfigHelper
 	 *
 	 * @return  void
 	 */
-	public static function saveConfig(Registry $config, $element)
+	public static function saveConfig($config, $element)
 	{
+		$config = DecoratingRegistry::toWindwalkerRegistry($config);
+
 		/** @var $class AbstractConfig */
 		$class = static::getClass($element);
 
@@ -51,6 +54,8 @@ abstract class ConfigHelper
 	 */
 	public static function setConfig(Registry $config, $element)
 	{
+		DecoratingRegistry::toWindwalkerRegistry($config);
+
 		/** @var $class AbstractConfig */
 		$class = static::getClass($element);
 

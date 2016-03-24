@@ -2,16 +2,14 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace GeneratorBundle\Action\Component;
 
 use GeneratorBundle\Action\AbstractAction;
-use CodeGenerator\Controller\TaskController;
-use Windwalker\DI\Container;
-use Windwalker\String\String;
+use Windwalker\String\StringHelper;
 
 /**
  * Class ImportSqlAction
@@ -145,6 +143,6 @@ class CopyLanguageAction extends AbstractAction
 
 		$text = substr($text, strpos($text, '; {{controller.item.name.cap}}') - strlen($text));
 
-		return String::parseVariable($text, $this->config['replace']);
+		return StringHelper::parseVariable($text, $this->config['replace']);
 	}
 }

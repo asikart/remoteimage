@@ -2,12 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\Admin;
 
+use Windwalker\Helper\ContextHelper;
 use Windwalker\Model\CrudModel;
 use Windwalker\Table\Table;
 
@@ -77,9 +78,9 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput          $input  The input object.
-	 * @param   \JApplicationCms $app    The application object.
-	 * @param   array            $config Additional config.
+	 * @param   \JInput           $input   The input object.
+	 * @param   \JApplicationCms  $app     The application object.
+	 * @param   array             $config  Additional config.
 	 *
 	 * @throws  \Exception
 	 */
@@ -87,7 +88,7 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	{
 		parent::__construct($input, $app, $config);
 
-		$this->context    = $this->option . '.' . $this->task;
+		$this->context    = $this->context ? : ContextHelper::fromController($this);
 		$this->textPrefix = strtoupper($this->option);
 	}
 

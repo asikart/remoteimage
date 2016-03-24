@@ -2,19 +2,19 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\View\Helper;
 
 use JHtml;
 use JText;
-use Windwalker\Bootstrap\Dropdown;
 use Windwalker\Data\Data;
-use Joomla\Registry\Registry;
+use Windwalker\Dom\HtmlElement;
+use Windwalker\Joomla\Registry\DecoratingRegistry;
+use Windwalker\Registry\Registry;
 use Windwalker\DI\Container;
-use Windwalker\Html\HtmlElement;
 
 /**
  * A helper to handle list grid operation.
@@ -86,7 +86,7 @@ class GridHelper
 	public function __construct($view, $config = array())
 	{
 		$this->view   = $view;
-		$this->config = $config = ($config instanceof Registry) ? $config : new Registry($config);
+		$this->config = $config = DecoratingRegistry::toWindwalkerRegistry($config);
 		$this->state  = $state = $view->state;
 
 		// Merge fields

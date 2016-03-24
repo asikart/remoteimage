@@ -2,11 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\Batch;
+
+use Windwalker\String\StringHelper;
 
 /**
  * Copy Batch Controller.
@@ -35,7 +37,7 @@ class CopyController extends AbstractBatchController
 	 */
 	protected function save($pk, $data)
 	{
-		if (!$this->allowAdd($data, $this->urlVar))
+		if (!$this->allowAdd($data))
 		{
 			return false;
 		}
@@ -72,7 +74,7 @@ class CopyController extends AbstractBatchController
 			{
 				if (property_exists($this->table, $field))
 				{
-					$item[$field] = $condition[$field] = \JString::increment($item[$field], $type);
+					$item[$field] = $condition[$field] = StringHelper::increment($item[$field], $type);
 				}
 			}
 		}

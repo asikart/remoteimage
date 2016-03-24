@@ -2,15 +2,15 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Model\Helper;
 
 use Windwalker\DI\Container;
+use Windwalker\Helper\DatabaseHelper;
 use Windwalker\Helper\DateHelper;
-use Windwalker\Joomla\Database\DatabaseFactory;
 
 /**
  * The Query Helper
@@ -30,7 +30,7 @@ class QueryHelper extends \Windwalker\Joomla\Database\QueryHelper
 
 		foreach ($this->tables as $alias => $table)
 		{
-			$columns = DatabaseFactory::getCommand()->getColumns($table['name']);
+			$columns = DatabaseHelper::getColumns($table['name']);
 
 			foreach ($columns as $key => $var)
 			{

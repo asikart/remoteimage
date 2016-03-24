@@ -2,16 +2,19 @@
 /**
  * Part of datamapper project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Joomla\Database;
 
 use JDatabaseDriver as DatabaseDriver;
+use Windwalker\Helper\DatabaseHelper;
 
 /**
  * Some Useful function for database operation.
+ *
+ * @deprecated  3.0  Use DatabaseHelper instead.
  */
 class DatabaseCommand
 {
@@ -60,7 +63,7 @@ class DatabaseCommand
 		$query = QueryHelper::buildWheres($query, $conditions);
 
 		// Build update values.
-		$fields = array_keys($this->getColumns($table));
+		$fields = array_keys(DatabaseHelper::getColumns($table));
 
 		$hasField = false;
 

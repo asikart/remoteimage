@@ -2,14 +2,14 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Console\Descriptor;
 
-use Joomla\Console\Command\AbstractCommand;
-use Joomla\Console\Descriptor\Text\TextCommandDescriptor;
+use Windwalker\Console\Command\AbstractCommand;
+use Windwalker\Console\Descriptor\Text\TextCommandDescriptor;
 
 /**
  * Class Option Descriptor

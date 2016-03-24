@@ -2,13 +2,14 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\View\Html;
 
 use Windwalker\DI\Container;
+use Windwalker\Helper\ArrayHelper;
 use Windwalker\Model\Model;
 
 /**
@@ -32,7 +33,7 @@ class EditView extends ItemHtmlView
 
 		if (!$this->toolbarConfig)
 		{
-			$this->toolbarConfig = \JArrayHelper::getValue($config, 'toolbar', array());
+			$this->toolbarConfig = ArrayHelper::getValue($config, 'toolbar', array());
 		}
 	}
 
@@ -45,12 +46,11 @@ class EditView extends ItemHtmlView
 	{
 		parent::prepareRender();
 
-		$data        = $this->getData();
-		$data->form  = $this->get('Form');
+		$this['form'] = $this['form'] ? : $this->get('Form');
 
-		if ($errors = $data->state->get('errors'))
+		if ($errors = $this['state']->get('errors'))
 		{
-			$this->flash($errors);
+			$this->addMessage($errors);
 		}
 
 		// Configure UI

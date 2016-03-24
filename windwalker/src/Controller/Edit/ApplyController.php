@@ -2,31 +2,19 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\Edit;
-
-use Windwalker\Controller\Admin\AbstractItemController;
 
 /**
  * Apply Controller.
  *
  * @since 2.0
  */
-class ApplyController extends AbstractItemController
+class ApplyController extends SaveController
 {
-	/**
-	 * Method to run this controller.
-	 *
-	 * @return  mixed
-	 */
-	protected function doExecute()
-	{
-		return $this->fetch($this->prefix, $this->name . '.edit.save');
-	}
-
 	/**
 	 * Pose execute hook.
 	 *
@@ -47,8 +35,18 @@ class ApplyController extends AbstractItemController
 		}
 
 		// Redirect back to the edit screen.
-		$this->redirectToItem($this->recordId, $this->urlVar);
+		$this->setRedirect($this->getSuccessRedirect());
 
 		return $return;
+	}
+
+	/**
+	 * Set redirect URL for action success.
+	 *
+	 * @return  string  Redirect URL.
+	 */
+	public function getSuccessRedirect()
+	{
+		return \JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false);
 	}
 }

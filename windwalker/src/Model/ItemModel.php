@@ -2,11 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Model;
+
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * The model for single item.
@@ -52,7 +54,12 @@ class ItemModel extends AbstractAdvancedModel
 
 		// Convert to the JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = \JArrayHelper::toObject($properties, 'stdClass');
+		$item = ArrayHelper::toObject($properties, 'stdClass');
+
+		if (!$item)
+		{
+			return $item;
+		}
 
 		if (property_exists($item, 'params'))
 		{
@@ -63,6 +70,19 @@ class ItemModel extends AbstractAdvancedModel
 			$item->params = $registry->toArray();
 		}
 
+		$this->postGetItem($item);
+
 		return $item;
+	}
+
+	/**
+	 * Method to get something after get item.
+	 *
+	 * @param   \stdClass  $item  The item object.
+	 *
+	 * @return  void
+	 */
+	protected function postGetItem($item)
+	{
 	}
 }

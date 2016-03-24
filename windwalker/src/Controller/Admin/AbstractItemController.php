@@ -2,16 +2,20 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\Admin;
 
+use Windwalker\String\StringInflector as Inflector;;
+use Windwalker\Helper\ArrayHelper;
+use Windwalker\Helper\ContextHelper;
+
 /**
  * The Controller to handle single item.
  *
- * @since 2.0
+ * @since  2.0
  */
 abstract class AbstractItemController extends AbstractAdminController
 {
@@ -32,23 +36,23 @@ abstract class AbstractItemController extends AbstractAdminController
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput          $input  The input object.
-	 * @param   \JApplicationCms $app    The application object.
-	 * @param   array            $config The config object.
+	 * @param   \JInput           $input   The input object.
+	 * @param   \JApplicationCms  $app     The application object.
+	 * @param   array             $config  The config object.
 	 */
 	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
 	{
 		parent::__construct($input, $app, $config);
 
 		// Guess the item view as the context.
-		$this->viewItem = $this->viewItem ? : \JArrayHelper::getValue($config, 'view_item', $this->getName());
+		$this->viewItem = $this->viewItem ? : ArrayHelper::getValue($config, 'view_item', $this->getName());
 
 		// Guess the list view as the plural of the item view.
-		$this->viewList = $this->viewList ? : \JArrayHelper::getValue($config, 'view_list');
+		$this->viewList = $this->viewList ? : ArrayHelper::getValue($config, 'view_list');
 
 		if (empty($this->viewList))
 		{
-			$inflector = \JStringInflector::getInstance();
+			$inflector = Inflector::getInstance();
 
 			$this->viewList = $inflector->toPlural($this->viewItem);
 		}
@@ -61,10 +65,9 @@ abstract class AbstractItemController extends AbstractAdminController
 	 */
 	protected function prepareExecute()
 	{
-		parent::prepareExecute();
+		$this->context = ContextHelper::fromController($this, 'edit');
 
-		$this->data     = $this->input->post->get('jform', array(), 'array');
-		$this->context  = sprintf('%s.edit.%s', $this->option, $this->name);
+		parent::prepareExecute();
 
 		$this->recordId = $this->input->get($this->urlVar);
 
@@ -182,5 +185,25 @@ abstract class AbstractItemController extends AbstractAdminController
 			// No id for a new item.
 			return true;
 		}
+	}
+
+	/**
+	 * Set redirect URL for action success.
+	 *
+	 * @return  string  Redirect URL.
+	 */
+	public function getSuccessRedirect()
+	{
+		return \JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false);
+	}
+
+	/**
+	 * Set redirect URL for action failure.
+	 *
+	 * @return  string  Redirect URL.
+	 */
+	public function getFailRedirect()
+	{
+		return \JRoute::_($this->getRedirectListUrl(), false);
 	}
 }

@@ -2,13 +2,13 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2016 LYRASOFT, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace GeneratorBundle\Provider;
 
-use GeneratorBundle\IO\IO;
+use Muse\Windwalker\IO;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Windwalker\Console\Command\Command;
@@ -51,8 +51,8 @@ class GeneratorBundleProvider implements ServiceProviderInterface
 		$ioClass = 'GeneratorBundle\\IO\\IO';
 
 		$container->alias('io', $ioClass)
-			->alias('CodeGenerator\\IO\\IO', $ioClass)
-			->alias('CodeGenerator\\IO\\IOInterface', $ioClass)
+			->alias('Muse\\IO\\IO', $ioClass)
+			->alias('Muse\\IO\\IOInterface', $ioClass)
 			->share($ioClass, new IO($this->command));
 	}
 }

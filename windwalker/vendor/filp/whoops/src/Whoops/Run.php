@@ -285,6 +285,7 @@ class Run
         }
 
         if ($willQuit) {
+            flush(); // HHVM fix for https://github.com/facebook/hhvm/issues/4055
             exit(1);
         }
 
@@ -317,7 +318,9 @@ class Run
                 }
             }
 
-            $exception = new ErrorException($message, $level, 0, $file, $line);
+            // XXX we pass $level for the "code" param only for BC reasons.
+            // see https://github.com/filp/whoops/issues/267
+            $exception = new ErrorException($message, /*code*/ $level, /*severity*/ $level, $file, $line);
             if ($this->canThrowExceptions) {
                 throw $exception;
             } else {

@@ -143,7 +143,7 @@ class ManagerView extends HtmlView
 		$asset->addCss('js/elfinder/css/theme.css');
 		$asset->addCss('remoteimage.css');
 
-		$asset->addJs('js/jquery-ui/js/jquery-ui.min.js');
+		$asset->addJs('js/jquery/jquery-ui.min.js');
 		$asset->addJs('js/elfinder/js/elfinder.full.js');
 		
 		$iso639_1_lang_code = substr($lang_code, 0, 2);

@@ -2,21 +2,22 @@
 /**
  * Part of Windwalker project. 
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\String;
 
-use JString;
 use Windwalker\Helper\ArrayHelper;
 
 /**
  * Windwalker String. Based on Joomla String.
  *
+ * @deprecated  Please use \Windwalker\String\Utf8String and StringHelper instead
+ *
  * @since 2.0
  */
-class String extends JString
+class String extends Utf8String
 {
 	/**
 	 * Quote a string.

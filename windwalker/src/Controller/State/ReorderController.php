@@ -2,11 +2,13 @@
 /**
  * Part of Windwalker project.
  *
- * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2016 LYRASOFT. All rights reserved.
+ * @license    GNU General Public License version 2 or later.
  */
 
 namespace Windwalker\Controller\State;
+
+use Windwalker\Bootstrap\Message;
 
 /**
  * Reorder Controller
@@ -93,7 +95,7 @@ class ReorderController extends AbstractUpdateStateController
 					unset($pks[$i]);
 					unset($ordering[$i]);
 
-					$this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+					$this->addMessage(\JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 				}
 			}
 		}
@@ -114,7 +116,7 @@ class ReorderController extends AbstractUpdateStateController
 
 		if (count($errors))
 		{
-			$this->setMessage(implode('<br />', $errors));
+			$this->addMessage(implode('<br />', $errors));
 		}
 
 		return true;
@@ -123,14 +125,19 @@ class ReorderController extends AbstractUpdateStateController
 	/**
 	 * Set a URL for browser redirection.
 	 *
-	 * @param   string $url  URL to redirect to.
-	 * @param   string $msg  Message to display on redirect. Optional, defaults to value set internally by controller, if any.
-	 * @param   string $type Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
+	 * @param   string  $url      URL to redirect to.
+	 * @param   string  $message  Message to display on redirect. Optional, defaults to value set internally by controller, if any.
+	 * @param   string  $type     Message type. Optional, defaults to 'message' or the type set by a previous call to setMessage.
 	 *
 	 * @return  void
 	 */
-	public function redirect($url, $msg = null, $type = 'message')
+	public function redirect($url, $message = null, $type = Message::MESSAGE_GREEN)
 	{
-		jexit($msg);
+		if (!$message && $redirect = $this->getRedirect(true))
+		{
+			list($url, $message, $type) = $redirect;
+		}
+
+		jexit($message);
 	}
 }
