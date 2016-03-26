@@ -93,7 +93,7 @@ class Build
 			}
 
 			$this->out('[Zip file] ' . $file);
-			$zip->addFile($file);
+			$zip->addFile(str_replace('\\', '/', $file));
 		}
 
 		$zip->close();
@@ -120,7 +120,7 @@ class Build
 			{
 				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
 
-				foreach($files as $file) 
+				foreach($files as $file)
 				{
 					$file->isDir() && !$file->isLink() ? rmdir($file->getPathname()) : unlink($file->getPathname());
 				}
