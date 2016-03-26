@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
+	<!-- Joomla!3.5 -->
+	<update>
+		<name>Asikart Remoteimage Component</name>
+		<version>2.0.7</version>
+		<infourl title="Remote and Local Image Manager">http://ext.asikart.com</infourl>
+		<downloads>
+			<downloadurl type="upgrade" format="zip">https://github.com/asikart/remoteimage/archive/master.zip</downloadurl>
+		</downloads>
+		<targetplatform name="joomla" version="3.5" />
+		<element>com_remoteimage</element>
+		<type>component</type>
+	</update>
+
 	<!-- Joomla!3.4 -->
 	<update>
 		<name>Asikart Remoteimage Component</name>
-		<version>2.0.5</version>
+		<version>2.0.7</version>
 		<infourl title="Remote and Local Image Manager">http://ext.asikart.com</infourl>
 		<downloads>
 			<downloadurl type="upgrade" format="zip">https://github.com/asikart/remoteimage/archive/master.zip</downloadurl>
@@ -12,11 +25,11 @@
 		<element>com_remoteimage</element>
 		<type>component</type>
 	</update>
-	
+
 	<!-- Joomla!3.3 -->
 	<update>
 		<name>Asikart Remoteimage Component</name>
-		<version>2.0.5</version>
+		<version>2.0.7</version>
 		<infourl title="Remote and Local Image Manager">http://ext.asikart.com</infourl>
 		<downloads>
 			<downloadurl type="upgrade" format="zip">https://github.com/asikart/remoteimage/archive/master.zip</downloadurl>
