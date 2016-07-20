@@ -8,6 +8,7 @@
 
 namespace Windwalker\Router;
 
+use Joomla\Uri\Uri;
 use Windwalker\Helper\ArrayHelper;
 
 /**
@@ -176,7 +177,7 @@ class RadRoute
 			$data['_resource'] = null;
 		}
 
-		$url = new \JUri;
+		$url = new Uri;
 
 		$url->setQuery($data);
 
@@ -194,7 +195,7 @@ class RadRoute
 	 */
 	public static function build(&$data = array())
 	{
-		$menu = \JFactory::getApplication()->getMenu();
+		$menu = \JFactory::getApplication()->getMenu('site');
 
 		$items = $menu->getMenu();
 

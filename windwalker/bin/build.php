@@ -24,7 +24,8 @@ class Build
 		'.gitignore',
 		'.travis.yml',
 		'phpunit.xml.dist',
-		'README.md'
+		'README.md',
+		'update.xml'
 	);
 
 	/**
@@ -120,7 +121,7 @@ class Build
 			{
 				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
 
-				foreach($files as $file)
+				foreach($files as $file) 
 				{
 					$file->isDir() && !$file->isLink() ? rmdir($file->getPathname()) : unlink($file->getPathname());
 				}
