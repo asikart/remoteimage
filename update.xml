@@ -6,7 +6,7 @@
 		<version>2.0.11</version>
 		<infourl title="Remote and Local Image Manager">http://ext.asikart.com</infourl>
 		<downloads>
-			<downloadurl type="upgrade" format="zip">https://github.com/lyrasoft/remoteimage/releases/download/2.0.11/com-remoteimage-2.0.11.zip</downloadurl>
+			<downloadurl type="upgrade" format="zip">http://asikart.co/?cmd=download&amp;slug=remoteimage#filename=remoteimage.zip</downloadurl>
 		</downloads>
 		<targetplatform name="joomla" version="3.[34567]" />
 		<element>com_remoteimage</element>
