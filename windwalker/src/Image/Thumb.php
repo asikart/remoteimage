@@ -96,9 +96,13 @@ class Thumb
 		{
 			$img = new \JImage;
 
-			if (\JFile::exists($path))
+			if (is_file($path))
 			{
 				$img->loadFile($path);
+			}
+			elseif (is_file(urldecode($path)))
+			{
+				$img->loadFile(urldecode($path));
 			}
 			else
 			{
@@ -206,7 +210,12 @@ class Thumb
 
 			if (!is_file($path))
 			{
-				CurlHelper::download((string) $url, $path);
+				$options = array(
+					CURLOPT_CONNECTTIMEOUT => $this->config->get('timeout', 10),
+					CURLOPT_TIMEOUT => $this->config->get('timeout', 10),
+				);
+
+				CurlHelper::download((string) $url, $path, $options);
 			}
 		}
 

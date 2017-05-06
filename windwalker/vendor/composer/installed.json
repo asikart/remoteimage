@@ -24,7 +24,7 @@
         "suggest": {
             "windwalker/utilities": "Install 2.* if you want to use StringHelper::parseVariable() tmpl engine."
         },
-        "time": "2016-03-23 15:03:50",
+        "time": "2016-03-23T15:03:50+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -71,7 +71,7 @@
         "require-dev": {
             "windwalker/test": "~2.0"
         },
-        "time": "2016-02-12 15:36:22",
+        "time": "2016-02-12T15:36:22+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -124,7 +124,7 @@
         "suggest": {
             "symfony/yaml": "Install 2.* if you require YAML support."
         },
-        "time": "2016-03-07 10:02:08",
+        "time": "2016-03-07T10:02:08+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -147,7 +147,8 @@
             "framework",
             "registry",
             "windwalker"
-        ]
+        ],
+        "abandoned": "windwalker/structure"
     },
     {
         "name": "windwalker/filesystem",
@@ -170,7 +171,7 @@
         "require-dev": {
             "windwalker/test": "~2.0"
         },
-        "time": "2016-03-23 15:01:32",
+        "time": "2016-03-23T15:01:32+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -219,7 +220,7 @@
             "windwalker/console": "~2.0",
             "windwalker/database": "~2.0"
         },
-        "time": "2016-03-23 12:47:07",
+        "time": "2016-03-23T12:47:07+00:00",
         "type": "framework",
         "installation-source": "dist",
         "autoload": {
@@ -249,119 +250,6 @@
         ]
     },
     {
-        "name": "filp/whoops",
-        "version": "2.1.2",
-        "version_normalized": "2.1.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/filp/whoops.git",
-            "reference": "d13505b240a6f580bc75ba591da30299d6cb0eec"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/filp/whoops/zipball/d13505b240a6f580bc75ba591da30299d6cb0eec",
-            "reference": "d13505b240a6f580bc75ba591da30299d6cb0eec",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.5.9"
-        },
-        "require-dev": {
-            "mockery/mockery": "0.9.*",
-            "phpunit/phpunit": "^4.8 || ^5.0",
-            "symfony/var-dumper": "~3.0"
-        },
-        "suggest": {
-            "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
-            "whoops/soap": "Formats errors as SOAP responses"
-        },
-        "time": "2016-04-07 06:16:25",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Whoops\\": "src/Whoops/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Filipe Dobreira",
-                "homepage": "https://github.com/filp",
-                "role": "Developer"
-            }
-        ],
-        "description": "php error handling for cool kids",
-        "homepage": "https://github.com/filp/whoops",
-        "keywords": [
-            "error",
-            "exception",
-            "handling",
-            "library",
-            "whoops",
-            "zf2"
-        ]
-    },
-    {
-        "name": "symfony/yaml",
-        "version": "v2.8.6",
-        "version_normalized": "2.8.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/yaml.git",
-            "reference": "e4fbcc65f90909c999ac3b4dfa699ee6563a9940"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/yaml/zipball/e4fbcc65f90909c999ac3b4dfa699ee6563a9940",
-            "reference": "e4fbcc65f90909c999ac3b4dfa699ee6563a9940",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9"
-        },
-        "time": "2016-03-29 19:00:15",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Yaml\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Yaml Component",
-        "homepage": "https://symfony.com"
-    },
-    {
         "name": "windwalker/cache",
         "version": "2.1.9",
         "version_normalized": "2.1.9.0",
@@ -382,7 +270,7 @@
         "require-dev": {
             "windwalker/test": "~2.0"
         },
-        "time": "2016-02-12 15:36:22",
+        "time": "2016-02-12T15:36:22+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -428,7 +316,7 @@
         "require-dev": {
             "windwalker/test": "~2.0"
         },
-        "time": "2016-02-12 15:36:22",
+        "time": "2016-02-12T15:36:22+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -478,7 +366,7 @@
         "suggest": {
             "windwalker/filter": "Install 2.* if you require filter support."
         },
-        "time": "2016-03-08 11:38:11",
+        "time": "2016-03-08T11:38:11+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -526,7 +414,7 @@
         "require-dev": {
             "windwalker/test": "~2.0"
         },
-        "time": "2016-04-02 04:13:51",
+        "time": "2016-04-02T04:13:51+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -572,7 +460,7 @@
         "require-dev": {
             "windwalker/test": "~2.0"
         },
-        "time": "2016-02-12 15:36:22",
+        "time": "2016-02-12T15:36:22+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -627,7 +515,7 @@
             "windwalker/database": "Install 2.* if you want Windwalker Database.",
             "windwalker/event": "Install 2.* if you want to use hooks."
         },
-        "time": "2016-03-21 06:58:16",
+        "time": "2016-03-21T06:58:16+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -673,7 +561,7 @@
         "require-dev": {
             "windwalker/test": "~2.0"
         },
-        "time": "2016-02-12 15:36:22",
+        "time": "2016-02-12T15:36:22+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -720,7 +608,7 @@
         "require-dev": {
             "windwalker/test": "~2.0"
         },
-        "time": "2016-02-12 15:36:22",
+        "time": "2016-02-12T15:36:22+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -767,7 +655,7 @@
             "windwalker/test": "~2.0",
             "windwalker/uri": "~2.0"
         },
-        "time": "2016-03-21 07:58:51",
+        "time": "2016-03-21T07:58:51+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -813,7 +701,7 @@
         "require-dev": {
             "windwalker/test": "~2.0"
         },
-        "time": "2016-02-12 15:36:22",
+        "time": "2016-02-12T15:36:22+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -857,7 +745,7 @@
             "php": ">=5.3.10",
             "windwalker/environment": "~2.0"
         },
-        "time": "2016-02-12 15:36:22",
+        "time": "2016-02-12T15:36:22+00:00",
         "type": "windwalker-package",
         "extra": {
             "branch-alias": {
@@ -880,6 +768,169 @@
             "framework",
             "test",
             "windwalker"
+        ]
+    },
+    {
+        "name": "symfony/yaml",
+        "version": "v2.8.20",
+        "version_normalized": "2.8.20.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/yaml.git",
+            "reference": "93ccdde79f4b079c7558da4656a3cb1c50c68e02"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/yaml/zipball/93ccdde79f4b079c7558da4656a3cb1c50c68e02",
+            "reference": "93ccdde79f4b079c7558da4656a3cb1c50c68e02",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "time": "2017-05-01T14:31:55+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Yaml\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Yaml Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "psr/log",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/php-fig/log.git",
+            "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+            "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-10-10T12:19:37+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Psr\\Log\\": "Psr/Log/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "PHP-FIG",
+                "homepage": "http://www.php-fig.org/"
+            }
+        ],
+        "description": "Common interface for logging libraries",
+        "homepage": "https://github.com/php-fig/log",
+        "keywords": [
+            "log",
+            "psr",
+            "psr-3"
+        ]
+    },
+    {
+        "name": "filp/whoops",
+        "version": "2.1.8",
+        "version_normalized": "2.1.8.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/filp/whoops.git",
+            "reference": "f2950be7da8b8d6c4e77821b6c9d486e36cdc4f3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/filp/whoops/zipball/f2950be7da8b8d6c4e77821b6c9d486e36cdc4f3",
+            "reference": "f2950be7da8b8d6c4e77821b6c9d486e36cdc4f3",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.5.9 || ^7.0",
+            "psr/log": "^1.0.1"
+        },
+        "require-dev": {
+            "mockery/mockery": "0.9.*",
+            "phpunit/phpunit": "^4.8 || ^5.0",
+            "symfony/var-dumper": "^2.6 || ^3.0"
+        },
+        "suggest": {
+            "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
+            "whoops/soap": "Formats errors as SOAP responses"
+        },
+        "time": "2017-03-07T09:04:45+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Whoops\\": "src/Whoops/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Filipe Dobreira",
+                "homepage": "https://github.com/filp",
+                "role": "Developer"
+            }
+        ],
+        "description": "php error handling for cool kids",
+        "homepage": "https://filp.github.io/whoops/",
+        "keywords": [
+            "error",
+            "exception",
+            "handling",
+            "library",
+            "whoops",
+            "zf2"
         ]
     }
 ]
