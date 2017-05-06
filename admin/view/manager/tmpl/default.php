@@ -26,7 +26,6 @@ $app = JFactory::getApplication();
  * @var $lang   string
  * @var $params Joomla\Registry\Registry
  */
-$lang      = $data->langCode;
 $lang      = substr($data->langCode, 0, 2);
 $params    = $data->params;
 $safemode  = $params->get('Safemode', true);
@@ -43,6 +42,7 @@ $sysinfo .= ' | ' . JText::_('COM_REMOTEIMAGE_UPLOAD_NUM') . ' ' . $data->upload
 $fieldid = $params->get('fieldId');
 ?>
 <script type="text/javascript">
+	var joomlaVersion = <?php echo (float) JVERSION; ?>;
 	var elFinder;
 	var elSelected = [];
 	var el;
@@ -98,16 +98,28 @@ $fieldid = $params->get('fieldId');
 		}
 
 		url = url.replace(root_uri, '');
-		console.log(url);
-		window.parent.jInsertFieldValue(url, '<?php echo $fieldid; ?>');
 
-		setTimeout(function()
-		{
-			if (window.parent)
+		if (joomlaVersion < 3.7) {
+			window.parent.jInsertFieldValue(url, '<?php echo $fieldid; ?>');
+
+			setTimeout(function()
 			{
-				window.parent.SqueezeBox.close();
-			}
-		}, 50);
+				if (window.parent)
+				{
+					// Close legacy mootools box
+					if (window.parent.SqueezeBox) {
+						window.parent.SqueezeBox.close();
+					}
+				}
+			}, 50);
+		} else {
+			var fieldMedia = window.parent.jQuery('#<?php echo $fieldid; ?>')
+				.parents('.field-media-wrapper')
+				.data('fieldMedia');
+
+			fieldMedia.setValue(url);
+			fieldMedia.modalClose();
+		}
 	};
 
 	// Init elFinder
