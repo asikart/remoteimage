@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<!-- Joomla!3.[34567] -->
+	<!-- Joomla!3.[3456789] -->
 	<update>
 		<name>Asikart Remoteimage Component</name>
-		<version>2.0.11</version>
+		<version>2.0.12</version>
 		<infourl title="Remote and Local Image Manager">http://ext.asikart.com</infourl>
 		<downloads>
 			<downloadurl type="upgrade" format="zip">http://asikart.co/?cmd=download&amp;slug=remoteimage#filename=remoteimage.zip</downloadurl>
 		</downloads>
-		<targetplatform name="joomla" version="3.[34567]" />
+		<targetplatform name="joomla" version="3.[3456789]" />
 		<element>com_remoteimage</element>
 		<type>component</type>
 	</update>
