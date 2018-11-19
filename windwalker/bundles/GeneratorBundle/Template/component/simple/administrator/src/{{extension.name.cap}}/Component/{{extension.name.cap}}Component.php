@@ -1,4 +1,10 @@
 <?php
+/**
+ * Part of Component {{extension.name.cap}} files.
+ *
+ * @copyright   Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @license     GNU General Public License version 2 or later.
+ */
 
 namespace {{extension.name.cap}}\Component;
 
@@ -8,7 +14,6 @@ use Windwalker\Debugger\Debugger;
 use Windwalker\Helper\LanguageHelper;
 use Windwalker\Helper\ProfilerHelper;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -70,7 +75,7 @@ abstract class {{extension.name.cap}}Component extends Component
 		$doc = \JFactory::getDocument();
 
 		// Debug profiler
-		if (JDEBUG && $doc->getType() == 'html')
+		if (JDEBUG && $doc->getType() === 'html')
 		{
 			$result .= "<hr />" . ProfilerHelper::render('Windwalker', true);
 		}

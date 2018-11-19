@@ -8,9 +8,11 @@
 
 namespace Windwalker\Helper;
 
+use Joomla\CMS\Date\Date;
+use Joomla\CMS\Factory;
 use Windwalker\DI\Container;
 
-define('WINDWALKER_DATE_FORMAT_SQL', \JFactory::getDbo()->getDateFormat());
+define('WINDWALKER_DATE_FORMAT_SQL', Factory::getDbo()->getDateFormat());
 
 /**
  * The Date Helper
@@ -38,7 +40,7 @@ abstract class DateHelper
 	 * @param   mixed  $time      The initial time for the JDate object
 	 * @param   mixed  $tzOffset  The timezone offset.
 	 *
-	 * @return  \JDate object
+	 * @return  Date  Date object
 	 */
 	public static function getDate($time = 'now', $tzOffset = null)
 	{
@@ -49,7 +51,21 @@ abstract class DateHelper
 			$tzOffset = $config->get('offset');
 		}
 
-		return \JFactory::getDate($time, $tzOffset);
+		return Factory::getDate($time, $tzOffset);
+	}
+
+	/**
+	 * getServerDate
+	 *
+	 * @param string $time
+	 *
+	 * @return  Date
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public static function getServerDate($time = 'now')
+	{
+		return Factory::getDate($time);
 	}
 
 //	public static function toUTCTime($date, $format = null, $from = null)
@@ -68,10 +84,10 @@ abstract class DateHelper
 	/**
 	 * Convert a date string to another timezone.
 	 *
-	 * @param string $date
-	 * @param string $from
-	 * @param string $to
-	 * @param string $format
+	 * @param string|Date          $date
+	 * @param string|\DateTimeZone $from
+	 * @param string|\DateTimeZone $to
+	 * @param string               $format
 	 *
 	 * @return  string
 	 */
@@ -87,8 +103,7 @@ abstract class DateHelper
 
 		$from = $from instanceof \DateTimeZone ? $from : new \DateTimeZone($from);
 		$to   = $to   instanceof \DateTimeZone ? $to   : new \DateTimeZone($to);
-
-		$date = new \JDate($date, $from);
+		$date = $date instanceof Date ? $date : new Date($date, $from);
 
 		$date->setTimezone($to);
 

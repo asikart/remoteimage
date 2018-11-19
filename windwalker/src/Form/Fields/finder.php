@@ -6,16 +6,21 @@
  * @license    GNU General Public License version 2 or later.
  */
 
-// No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Session\Session;
 use Windwalker\DI\Container;
 use Windwalker\Helper\DateHelper;
 use Windwalker\Helper\XmlHelper;
 use Windwalker\Script\WindwalkerScript;
-use Windwalker\String\StringHelper;
+use Windwalker\String\SimpleTemplate;
 
-JFormHelper::loadFieldClass('text');
+FormHelper::loadFieldClass('text');
 
 include_once JPATH_LIBRARIES . '/windwalker/src/init.php';
 
@@ -67,7 +72,7 @@ class JFormFieldFinder extends JFormFieldText
 		// ================================================================
 		if (empty($title))
 		{
-			$title = \JText::_(XmlHelper::get($this->element, 'select_label', 'LIB_WINDWALKER_FORMFIELD_FINDER_SELECT_FILE'));
+			$title = \Joomla\CMS\Language\Text::_(XmlHelper::get($this->element, 'select_label', 'LIB_WINDWALKER_FORMFIELD_FINDER_SELECT_FILE'));
 		}
 
 		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
@@ -78,10 +83,10 @@ class JFormFieldFinder extends JFormFieldText
 
 		// The current user display field.
 		$html[] = '<span class="' . (!$disabled && !$readonly ? 'input-append' : '') . '">';
-		$html[] = '<input type="text" class="finder-item-name ' . (!$disabled && !$readonly ? 'input-medium ' . $this->element['class'] : $this->element['class']) . '" id="' . $this->id . '_name" value="' . $title . '" disabled="disabled" size="35" />';
+		$html[] = '<input type="text" class="finder-item-name ' . (!$disabled && !$readonly ? 'input-large ' . $this->element['class'] : $this->element['class']) . '" id="' . $this->id . '_name" value="' . $title . '" disabled="disabled" title="' . $title . '" />';
 
 		if (!$disabled && !$readonly) :
-			$html[] = '<a class="hasFinderModal btn btn-primary" title="' . JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES') . '"  href="' . $link . '&amp;' . JSession::getFormToken() . '=1">
+			$html[] = '<a class="hasFinderModal btn btn-primary" title="' . JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES') . '"  href="' . $link . '&amp;' . Session::getFormToken() . '=1">
 							<i class="icon-picture"></i> ' . JText::_('LIB_WINDWALKER_FORMFIELD_FINDER_BROWSE_FILES')
 				. '</a>';
 		endif;
@@ -153,9 +158,14 @@ class JFormFieldFinder extends JFormFieldText
 		{
 			$value = urldecode($this->value);
 
-			if ($value && (is_file(JPATH_ROOT . '/' . $value) || is_file(JPATH_ROOT . '/' . $this->value)))
+
+			if ($value && (strpos($value, 'http') === 0 || strpos($value, '//') === 0))
 			{
-				$src = JURI::root() . $this->value;
+				$src = $value;
+			}
+			elseif ($value && (is_file(JPATH_ROOT . '/' . $value) || is_file(JPATH_ROOT . '/' . $this->value)))
+			{
+				$src = Uri::root() . $this->value;
 			}
 			else
 			{
@@ -177,12 +187,12 @@ class JFormFieldFinder extends JFormFieldText
 
 			$imgattr['class'] = $imgattr['class'] . ' img-polaroid';
 
-			$img             = JHtml::image($src, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'), $imgattr);
+			$img             = HTMLHelper::image($src, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'), $imgattr);
 			$previewImg      = '<div class="preview-img" id="' . $this->id . '_preview_img"' . ($src ? '' : ' style="display:none"') . '>' . $img . '</div>';
 			$previewImgEmpty = '<div class="preview-empty" id="' . $this->id . '_preview_empty"' . ($src ? ' style="display:none"' : '') . '>'
-				. JText::_('JLIB_FORM_MEDIA_PREVIEW_EMPTY') . '</div>';
+				. Text::_('JLIB_FORM_MEDIA_PREVIEW_EMPTY') . '</div>';
 
-			$html[] = '<div class="media-preview add-on fltlft">';
+			$html[] = '<div class="media-preview add-on">';
 
 			$html[] = ' ' . $previewImgEmpty;
 			$html[] = ' ' . $previewImg;
@@ -227,7 +237,7 @@ JS
 	public function setScript()
 	{
 		// Build Select script.
-		$url_root = JUri::root();
+		$url_root = Uri::root();
 
 		$script = <<<JS
 
@@ -288,17 +298,17 @@ JS
     	    	return;
     	    }
 
-            var link = elFinder.url(selected[0].hash) ;
+            var link = elFinder.url(selected[0].hash) || selected[0].hash;
             var name = selected[0].name;
 
             // Clean DS
             link = link.replace(/\\\\/g, '/');
-            link = link.replace( root, '' );
+            link = link.replace(root, '');
 
             // Detect is image
             var onlyImage = false;
 
-            if(selected[0].mime.substring(0, 5) == 'image' ) {
+            if(selected[0].mime.substring(0, 5) === 'image' ) {
                 this.element.attr('image', 1);
             	this.element.attr('mime', selected[0].mime.split('/')[1]);
 
@@ -343,7 +353,11 @@ JS
 
             if (this.previewWrapper.length > 0) {
                 if ($.inArray(imgExts, ext.toLowerCase())) {
-                    this.previewImage.attr('src', urlRoot + value);
+                    if (value.substring(0, 4) !== 'http' && value.substring(0, 2) !== '//') {
+                        value = urlRoot + value;
+                    }
+
+                    this.previewImage.attr('src', value);
                     this.previewWrapper.css('display', '');
                     this.previewEmpty.css('display', 'none');
                 } else {
@@ -400,12 +414,15 @@ JS;
 			return null;
 		}
 
+		if (strpos($path, 'http') === 0 || strpos($path, '//') === 0)
+		{
+			return $path;
+		}
+
 		$path = JPath::clean($path, '/');
 		$path = explode('/', $path);
 
-		$file_name = array_pop($path);
-
-		return $file_name;
+		return array_pop($path);
 	}
 
 	/**
@@ -445,12 +462,12 @@ JS;
 		$replace = array(
 			'username' => $user->username,
 			'name' => $user->name,
-			'session' => \JFactory::getSession()->getId(),
+			'session' => Factory::getSession()->getId(),
 			'year' => $date->year,
 			'month' => $date->month,
 			'day' => $date->day
 		);
 
-		return StringHelper::parseVariable($path, $replace);
+		return SimpleTemplate::render($path, $replace);
 	}
 }

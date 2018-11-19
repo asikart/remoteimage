@@ -6,16 +6,19 @@
  * @license    GNU General Public License version 2 or later.
  */
 
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Table\Table;
 use Windwalker\DI\Container;
-use Windwalker\Helper\HtmlHelper;
 use Windwalker\Helper\LanguageHelper;
 use Windwalker\Helper\ModalHelper;
+use Windwalker\Helper\XmlHelper;
+use Windwalker\Object\BaseObject;
 use Windwalker\Script\WindwalkerScript;
 
-// No direct access
 defined('_JEXEC') or die;
 
-JFormHelper::loadFieldClass('list');
+FormHelper::loadFieldClass('list');
 
 include_once JPATH_LIBRARIES . '/windwalker/src/init.php';
 
@@ -76,6 +79,20 @@ class JFormFieldItemlist extends JFormFieldList
 	protected $component = null;
 
 	/**
+	 * The default table to get items.
+	 *
+	 * @var string
+	 */
+	protected $table;
+
+	/**
+	 * Is a nested set?
+	 *
+	 * @var bool
+	 */
+	protected $nested;
+
+	/**
 	 * Set the published column name in table.
 	 *
 	 * @var string
@@ -120,7 +137,7 @@ class JFormFieldItemlist extends JFormFieldList
 		$key_field   = $this->element['key_field'] ? (string) $this->element['key_field'] : 'id';
 		$value_field = $this->element['value_field'] ? (string) $this->element['value_field'] : 'title';
 		$show_root   = (string) $this->element['show_root'] ? $this->element['show_root'] : false;
-		$nested      = (string) $this->element['nested'];
+		$nested      = $this->getElement('nested', false);
 
 		$items = $this->getItems();
 
@@ -128,7 +145,7 @@ class JFormFieldItemlist extends JFormFieldList
 		// ========================================================================
 		foreach ($items as $item)
 		{
-			$item  = new JObject($item);
+			$item  = new BaseObject($item);
 			$level = !empty($item->level) ? $item->level - 1 : 0;
 
 			if ($level < 0)
@@ -136,7 +153,7 @@ class JFormFieldItemlist extends JFormFieldList
 				$level = 0;
 			}
 
-			$options[] = JHtml::_('select.option', $item->$key_field, str_repeat('- ', $level) . $item->$value_field);
+			$options[] = HTMLHelper::_('select.option', $item->$key_field, str_repeat('- ', $level) . $item->$value_field);
 		}
 
 		// Verify permissions.  If the action attribute is set, then we scan the options.
@@ -150,7 +167,7 @@ class JFormFieldItemlist extends JFormFieldList
 		// ========================================================================
 		if ($show_root)
 		{
-			array_unshift($options, JHtml::_('select.option', 1, JText::_('JGLOBAL_ROOT')));
+			array_unshift($options, HTMLHelper::_('select.option', 1, JText::_('JGLOBAL_ROOT')));
 		}
 
 		// Merge any additional options in the XML definition.
@@ -169,10 +186,10 @@ class JFormFieldItemlist extends JFormFieldList
 	{
 		$published   = (string) $this->element['published'];
 		$nested      = (string) $this->element['nested'];
-		$key_field   = $this->element['key_field'] ? (string) $this->element['key_field'] : 'id';
-		$value_field = $this->element['value_field'] ? (string) $this->element['value_field'] : 'title';
+		$keyField    = $this->element['key_field'] ? (string) $this->element['key_field'] : 'id';
+		$valueField  = $this->element['value_field'] ? (string) $this->element['value_field'] : 'title';
 		$ordering    = $this->element['ordering'] ? (string) $this->element['ordering'] : null;
-		$table_name  = $this->element['table'] ? (string) $this->element['table'] : '#__' . $this->component . '_' . $this->view_list;
+		$tableName   = $this->getTable();
 		$select      = $this->element['select'];
 
 		/** @var JDatabaseDriver $db */
@@ -190,7 +207,7 @@ class JFormFieldItemlist extends JFormFieldList
 
 		if ($nested && $id)
 		{
-			$table = JTable::getInstance(ucfirst($this->view_item), ucfirst($this->component) . 'Table');
+			$table = Table::getInstance(ucfirst($this->view_item), ucfirst($this->component) . 'Table');
 			$table->load($id);
 			$query->where("id != {$id}");
 			$query->where("lft < {$table->lft} OR rgt > {$table->rgt}");
@@ -198,7 +215,7 @@ class JFormFieldItemlist extends JFormFieldList
 
 		if ($nested)
 		{
-			$query->where("( id != 1 AND `{$value_field}` != 'ROOT' )");
+			$query->where("( id != 1 AND `{$valueField}` !== 'ROOT' )");
 		}
 
 		// Some filter
@@ -213,7 +230,7 @@ class JFormFieldItemlist extends JFormFieldList
 		$order    = $this->ordering_field ? $this->ordering_field : $order;
 		$ordering = $ordering ? $ordering : $order;
 
-		if ($ordering != 'false')
+		if ($ordering !== 'false')
 		{
 			$query->order($ordering);
 		}
@@ -223,7 +240,7 @@ class JFormFieldItemlist extends JFormFieldList
 		$select = $select ? '*, ' . $select : '*';
 
 		$query->select($select)
-			->from($table_name);
+			->from($tableName);
 
 		$db->setQuery($query);
 		$items = $db->loadObjectList();
@@ -310,7 +327,7 @@ class JFormFieldItemlist extends JFormFieldList
 
 		$task             = $this->getElement('task', $this->view_item . '.ajax.quickadd');
 		$quickadd         = $this->getElement('quickadd', false);
-		$table_name       = $this->getElement('table', '#__' . $this->component . '_' . $this->view_list);
+		$table_name       = $this->getTable();
 		$key_field        = $this->getElement('key_field', 'id');
 		$value_field      = $this->getElement('value_field', 'title');
 		$formpath         = $this->getElement('quickadd_formpath', "administrator/components/{$this->extension}/model/form/{$this->view_item}.xml");
@@ -356,6 +373,16 @@ class JFormFieldItemlist extends JFormFieldList
 		$html .= ModalHelper::renderModal($qid, $content, array('title' => JText::_($modal_title), 'footer' => $footer));
 
 		return $html;
+	}
+
+	/**
+	 * getTable
+	 *
+	 * @return  string
+	 */
+	public function getTable()
+	{
+		return XmlHelper::get($this->element, 'table', $this->table ? : '#__' . $this->component . '_' . $this->view_list);
 	}
 
 	/**

@@ -8,16 +8,21 @@
 
 namespace Windwalker\Api;
 
-use Joomla\Uri\Uri;
-use Windwalker\Registry\Registry;
+use Joomla\CMS\Document\Document;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Router;
+use Joomla\CMS\Uri\Uri;
 use Windwalker\Api\Authentication\Authentication;
-use Windwalker\System\ExtensionHelper;
 use Windwalker\Api\Response\JsonResponse;
+use Windwalker\Registry\Registry;
+use Windwalker\System\ExtensionHelper;
 
 /**
  * API server.
  *
  * @since 2.0
+ *
+ * @deprecated  API server will be re-write after Windwalker RAD 3.
  */
 class ApiServer
 {
@@ -38,7 +43,7 @@ class ApiServer
 	/**
 	 * Property uri.
 	 *
-	 * @var  \JUri
+	 * @var  \Joomla\CMS\Uri\Uri
 	 */
 	protected $uri = null;
 
@@ -46,12 +51,12 @@ class ApiServer
 	 * Class init.
 	 *
 	 * @param  string   $element The component option name.
-	 * @param  \JUri    $uri     The uri object.
+	 * @param  Uri      $uri     The uri object.
 	 * @param  Registry $option  The option of this server.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($element, \JUri $uri, Registry $option = null)
+	public function __construct($element, Uri $uri, Registry $option = null)
 	{
 		$extracted = ExtensionHelper::extractElement($element);
 		$this->option = $option ? : new Registry;
@@ -73,14 +78,14 @@ class ApiServer
 	 */
 	public function register()
 	{
-		$uri = \JURI::getInstance();
+		$uri = Uri::getInstance();
 
 		if (!$this->isApi())
 		{
 			return false;
 		}
 
-		$app   = \JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$input = $app->input;
 
 		// Restore Joomla handler and using our Json handler.
@@ -91,7 +96,7 @@ class ApiServer
 		{
 			if (!Authentication::authenticate($input->get('session_key')))
 			{
-				throw new \Exception(\JText::_('JERROR_ALERTNOAUTHOR'), 403);
+				throw new \Exception(\Joomla\CMS\Language\Text::_('JERROR_ALERTNOAUTHOR'), 403);
 			}
 		}
 
@@ -99,7 +104,7 @@ class ApiServer
 		$input->set('format', 'json');
 
 		// Store JDocumentJson to Factory
-		\JFactory::$document = \JDocument::getInstance('json');
+		Factory::$document = Document::getInstance('json');
 
 		$router = $app::getRouter();
 
@@ -112,15 +117,15 @@ class ApiServer
 	/**
 	 * Is the uri pattern match api rule?
 	 *
-	 * @param  \JUri  $uri The Uri object.
+	 * @param  Uri  $uri The Uri object.
 	 *
 	 * @return  boolean True is api server.
 	 */
-	public function isApi(\JUri $uri = null)
+	public function isApi(Uri $uri = null)
 	{
 		$uri   = $uri ? : $this->uri;
 		$path  = $uri->getPath();
-		$root  = \JUri::root(true);
+		$root  = Uri::root(true);
 		$route = substr($path, strlen($root));
 
 		return (strpos($route, '/api') === 0);
@@ -129,29 +134,29 @@ class ApiServer
 	/**
 	 * isRoot
 	 *
-	 * @param \JUri $uri
+	 * @param Uri $uri
 	 *
 	 * @return  bool
 	 */
-	public function isRoot(\JUri $uri = null)
+	public function isRoot(Uri $uri = null)
 	{
 		$uri  = $uri ? : $this->uri;
 		$path = $uri->getPath();
 
-		return rtrim($path, '/') == '/api';
+		return rtrim($path, '/') === '/api';
 	}
 
 	/**
 	 * isUserOperation
 	 *
-	 * @param \JUri $uri
+	 * @param Uri $uri
 	 *
 	 * @return  boolean
 	 */
-	public function isUserOperation(\JUri $uri)
+	public function isUserOperation(Uri $uri)
 	{
 		$path  = $uri->getPath();
-		$root  = \JUri::root(true);
+		$root  = Uri::root(true);
 		$route = substr($path, strlen($root));
 
 		return (strpos($route, '/api/user') === 0);
@@ -160,14 +165,14 @@ class ApiServer
 	/**
 	 * Parse rule hook.
 	 *
-	 * @param \JRouter $router The router object.
-	 * @param Uri      $uri    The uri object.
+	 * @param Router $router The router object.
+	 * @param Uri    $uri    The uri object.
 	 *
 	 * @return  array
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function parseRule(\JRouter $router, Uri $uri)
+	public function parseRule(Router $router, Uri $uri)
 	{
 		$path = $uri->getPath();
 

@@ -8,11 +8,13 @@
 
 namespace Windwalker\Controller;
 
-use JApplicationCms;
 use JInput;
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\DI\Container as JoomlaContainer;
 use Joomla\DI\ContainerAwareInterface;
 use Windwalker\Bootstrap\Message;
+use Windwalker\Controller\Resolver\ControllerDelegator;
+use Windwalker\Controller\Resolver\ControllerResolver;
 use Windwalker\DI\Container;
 use Windwalker\Helper\UriHelper;
 use Windwalker\Model\Model;
@@ -27,7 +29,7 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	/**
 	 * The application object.
 	 *
-	 * @var    JApplicationCms
+	 * @var    CMSApplication
 	 * @since  12.1
 	 */
 	protected $app = null;
@@ -82,6 +84,13 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	protected $container;
 
 	/**
+	 * Property delegator.
+	 *
+	 * @var  ControllerDelegator
+	 */
+	protected $delegator;
+
+	/**
 	 * Property redirect.
 	 *
 	 * @var  array
@@ -98,11 +107,13 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput           $input   The input object.
-	 * @param   \JApplicationCms  $app     The application object.
-	 * @param   array             $config  The config object.
+	 * @param   \JInput         $input   The input object.
+	 * @param   CMSApplication  $app     The application object.
+	 * @param   array           $config  The config object.
+	 *
+	 * @throws \LogicException
 	 */
-	public function __construct(JInput $input = null, JApplicationCms $app = null, $config = array())
+	public function __construct(JInput $input = null, CMSApplication $app = null, $config = array())
 	{
 		if (!$this->prefix && !empty($config['prefix']))
 		{
@@ -125,6 +136,19 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 		}
 
 		parent::__construct($input, $app);
+
+		if (!$this->delegator)
+		{
+			/** @var ControllerResolver $resolver */
+			$resolver = $this->getContainer()->get('controller.resolver');
+
+			$this->delegator = $resolver->getDelegator(array(
+				'name' => $this->getName(),
+				'task' => $this->task,
+				'prefix' => $this->prefix,
+				'option' => $this->option
+			));
+		}
 	}
 
 	/**
@@ -357,14 +381,40 @@ abstract class Controller extends \JControllerBase implements ContainerAwareInte
 	}
 
 	/**
+	 * Method to get property Delegator
+	 *
+	 * @return  ControllerDelegator
+	 */
+	public function getDelegator()
+	{
+		return $this->delegator;
+	}
+
+	/**
+	 * Method to set property delegator
+	 *
+	 * @param   ControllerDelegator $delegator
+	 *
+	 * @return  static  Return self to support chaining.
+	 */
+	public function setDelegator(ControllerDelegator $delegator)
+	{
+		$this->delegator = $delegator;
+
+		return $this;
+	}
+
+	/**
 	 * Check session token or die.
 	 *
-	 * @return void
+	 * @param string $method
+	 * @param bool   $redirect
+	 *
+	 * @return bool
 	 */
-	protected function checkToken()
+	protected function checkToken($method = 'post', $redirect = true)
 	{
-		// Check for request forgeries
-		\JSession::checkToken() or jexit(\JText::_('JInvalid_Token'));
+		return $this->getDelegator()->checkToken($method, $redirect);
 	}
 
 	/**

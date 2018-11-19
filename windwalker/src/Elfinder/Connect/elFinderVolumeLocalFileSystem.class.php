@@ -8,7 +8,6 @@
  * @license     GNU General Public License version 2 or later..txt
  */
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -194,7 +193,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 				
 			if (($comp != '..') 
 			|| (!$initial_slashes && !$new_comps) 
-			|| ($new_comps && (end($new_comps) == '..'))) {
+			|| ($new_comps && (end($new_comps) === '..'))) {
 				array_push($new_comps, $comp);
 			} elseif ($new_comps) {
 				array_pop($new_comps);

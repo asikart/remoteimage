@@ -11,7 +11,6 @@ namespace {{extension.name.cap}}\Provider;
 use Joomla\DI\Container;
 use Windwalker\DI\ServiceProvider;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -26,7 +25,7 @@ class {{extension.name.cap}}Provider extends ServiceProvider
 	 *
 	 * @param   Container $container The DI container.
 	 *
-	 * @return  Container  Returns itself to support chaining.
+	 * @return  void
 	 */
 	public function register(Container $container)
 	{

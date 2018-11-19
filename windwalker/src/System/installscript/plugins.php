@@ -6,7 +6,9 @@
  * @license    GNU General Public License version 2 or later.
  */
 
-// No direct access
+use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 // Install plugins
@@ -27,7 +29,7 @@ if (!empty($plugins))
 			$path2    = explode('/', $var);
 			$plg_name = array_pop($path2);
 
-			if (substr($plg_name, 0, 4) == 'plg_')
+			if (substr($plg_name, 0, 4) === 'plg_')
 			{
 				$plg_name = substr($plg_name, 4);
 			}
@@ -36,14 +38,14 @@ if (!empty($plugins))
 			$plg_name = $plg_name[1];
 
 			// Do install
-			$installer = new JInstaller;
+			$installer = new Installer;
 
 			if ($result[] = $installer->install($install_path))
 			{
 				$plg_group = (string) $installer->manifest['group'];
 
 				// Enable this plugin.
-				if ($type == 'install')
+				if ($type === 'install')
 				{
 					$q = $db->getQuery(true);
 
@@ -67,11 +69,11 @@ if (!empty($plugins))
 			// Set success table
 			$grid->addRow(array('class' => 'row' . ($i % 2)));
 			$grid->setRowCell('num',     ++$i, $tdClass);
-			$grid->setRowCell('type',    JText::_('COM_INSTALLER_TYPE_PLUGIN'), $tdClass);
-			$grid->setRowCell('name',    JText::_($var), array());
+			$grid->setRowCell('type',    Text::_('COM_INSTALLER_TYPE_PLUGIN'), $tdClass);
+			$grid->setRowCell('name',    Text::_($var), array());
 			$grid->setRowCell('version', $installer->manifest->version, $tdClass);
 			$grid->setRowCell('state',   $status, $tdClass);
-			$grid->setRowCell('info',    JText::_($installer->manifest->description), array());
+			$grid->setRowCell('info',    Text::_($installer->manifest->description), array());
 		}
 	}
 }

@@ -10,7 +10,6 @@ use {{extension.name.cap}}\Router\Route;
 use Windwalker\Data\Data;
 use Windwalker\View\Html\ItemHtmlView;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -76,9 +75,9 @@ class {{extension.name.cap}}View{{controller.item.name.cap}}Html extends ItemHtm
 
 		// Link
 		// =====================================================================================
-		$item->link = Route::_('{{extension.element.lower}}.{{controller.item.name.lower}}', array(
-			'id'    => $item->id,
-			'alias' => $item->alias
+		$item->link = Route::view('{{controller.item.name.lower}}', array(
+			'id'    => $item->id . ':' . $item->alias,
+			'catid' => $item->catid
 		));
 
 		$item->text = $item->introtext . $item->fulltext;

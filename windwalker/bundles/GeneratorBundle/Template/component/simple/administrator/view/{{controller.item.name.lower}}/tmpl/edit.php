@@ -6,12 +6,12 @@
  * @license     GNU General Public License version 2 or later.
  */
 
-// No direct access
 defined('_JEXEC') or die;
 
 JHtmlBootstrap::tooltip();
 JHtmlFormbehavior::chosen('select');
 JHtmlBehavior::formvalidator();
+JHtmlBehavior::tabstate();
 
 /**
  * Prepare data for this template.
@@ -34,7 +34,7 @@ $tabs = array(
 <script type="text/javascript">
 	Joomla.submitbutton = function(task)
 	{
-		if (task == '{{controller.item.name.lower}}.edit.cancel' || document.formvalidator.isValid(document.getElementById('adminForm')))
+		if (task === '{{controller.item.name.lower}}.edit.cancel' || document.formvalidator.isValid(document.getElementById('adminForm')))
 		{
 			Joomla.submitform(task, document.getElementById('adminForm'));
 		}
@@ -44,6 +44,8 @@ $tabs = array(
 <div id="{{extension.name.lower}}" class="windwalker {{controller.item.name.lower}} edit-form row-fluid">
 	<form action="<?php echo JUri::getInstance(); ?>"  method="post" name="adminForm" id="adminForm"
 		class="form-validate" enctype="multipart/form-data">
+
+		<?php echo JLayoutHelper::render('joomla.edit.title_alias', $data->viewObject); ?>
 
 		<?php echo JHtmlBootstrap::startTabSet('{{controller.item.name.lower}}EditTab', array('active' => 'tab_basic')); ?>
 

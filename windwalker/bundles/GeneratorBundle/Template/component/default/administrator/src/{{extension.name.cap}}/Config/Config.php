@@ -5,12 +5,12 @@
  * @copyright   Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
  * @license     GNU General Public License version 2 or later.
  */
+
 namespace {{extension.name.cap}}\Config;
 
 use Windwalker\System\Config\AbstractConfig;
 use Windwalker\Helper\PathHelper;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -35,7 +35,7 @@ abstract class Config extends AbstractConfig
 	public static function getPath()
 	{
 		$type = static::$type;
-		$ext  = (static::$type == 'yaml') ? 'yml' : $type;
+		$ext  = (static::$type === 'yaml') ? 'yml' : $type;
 
 		return PathHelper::getAdmin('{{extension.element.lower}}') . '/etc/config.' . $ext;
 	}

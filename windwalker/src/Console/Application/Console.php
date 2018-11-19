@@ -8,11 +8,14 @@
 
 namespace Windwalker\Console\Application;
 
-use Windwalker\Console\IO\IOInterface;
-use Windwalker\DI\Container;
+use Joomla\CMS\Date\Date;
+use Joomla\CMS\Plugin\PluginHelper;
 use Windwalker\Console\Descriptor\CommandDescriptor;
 use Windwalker\Console\Descriptor\OptionDescriptor;
+use Windwalker\Console\IO\IOInterface;
+use Windwalker\DI\Container;
 use Windwalker\Registry\Registry;
+use Windwalker\Registry\Registry as WindwalkerRegistry;
 
 /**
  * Console Class.
@@ -55,7 +58,7 @@ class Console extends \Windwalker\Console\Console
 	 * @param   IOInterface $io      The Input and output handler.
 	 * @param   Registry    $config  Application's config object.
 	 */
-	public function __construct(IOInterface $io = null, \Windwalker\Registry\Registry $config = null)
+	public function __construct(IOInterface $io = null, WindwalkerRegistry $config = null)
 	{
 		$this->loadDispatcher();
 
@@ -64,7 +67,7 @@ class Console extends \Windwalker\Console\Console
 		// Make Windows no ANSI color
 		if (defined('PHP_WINDOWS_VERSION_BUILD'))
 		{
-			$io->setOption('ansi', true);
+			$io->setOption('ansi', 'off');
 		}
 
 		parent::__construct($io, $config);
@@ -88,7 +91,7 @@ HELP
 		 * https://github.com/joomla/joomla-cms/issues/12108 explains why things will crash and burn if you ever attempt to make this change
 		 * without a proper dependency injection container.
 		 */
-		$session = \JFactory::getSession();
+		$session = \Joomla\CMS\Factory::getSession();
 		$session->initialise(new \JInput, $this->dispatcher);
 
 		$this->loadFirstlevelCommands();
@@ -103,7 +106,7 @@ HELP
 	{
 		try
 		{
-			\JPluginHelper::importPlugin('windwalker');
+			PluginHelper::importPlugin('windwalker');
 		}
 		catch (\RuntimeException $e)
 		{
@@ -186,7 +189,33 @@ HELP
 	 */
 	public function enqueueMessage($msg, $type = 'message')
 	{
-		$this->out($msg);
+		switch ($type)
+		{
+			case 'success':
+			case 'green':
+				$tag = '<info>%s</info>';
+				break;
+			case 'warning':
+			case 'yellow':
+				$tag = '<comment>%s</comment>';
+				break;
+			case 'info':
+			case 'blue':
+				$tag = '<option>%s</option>';
+				break;
+			case 'error':
+			case 'danger':
+			case 'red':
+				$tag = '<error>%s</error>';
+				break;
+			default:
+				$tag = '%s';
+				break;
+		}
+
+		$time = Date::getInstance('now', $this->get('offset'))->format('Y-m-d H:i:s', true);
+
+		$this->out(sprintf('[%s] ' . $tag, $time, $msg));
 
 		return $this;
 	}

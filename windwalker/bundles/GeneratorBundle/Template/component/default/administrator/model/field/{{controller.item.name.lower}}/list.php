@@ -6,12 +6,14 @@
  * @license     GNU General Public License version 2 or later.
  */
 
-// No direct access
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Form\FormHelper;
+
 defined('_JEXEC') or die;
 
 include_once JPATH_LIBRARIES . '/windwalker/src/init.php';
-JForm::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
-JFormHelper::loadFieldClass('itemlist');
+Form::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
+FormHelper::loadFieldClass('itemlist');
 
 /**
  * Supports an HTML select list of categories

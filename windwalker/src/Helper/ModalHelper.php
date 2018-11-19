@@ -8,11 +8,9 @@
 
 namespace Windwalker\Helper;
 
-use JForm;
-use JHtml;
+use Joomla\CMS\Form\Form;
 use Windwalker\DI\Container;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -132,11 +130,11 @@ HTML;
 	 */
 	static public function getQuickaddForm($id, $path, $extension = null)
 	{
-		$content = '<div class="alert alert-info">' . \JText::_('LIB_WINDWALKER_QUICKADD_HOTKEY_DESC') . '</div>';
+		$content = '<div class="alert alert-info">' . \Joomla\CMS\Language\Text::_('LIB_WINDWALKER_QUICKADD_HOTKEY_DESC') . '</div>';
 
 		try
 		{
-			$form = new JForm($id . '.quickaddform', array('control' => $id));
+			$form = new Form($id . '.quickaddform', array('control' => $id));
 
 			$form->loadFile(JPATH_ROOT . '/' . $path);
 		}

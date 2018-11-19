@@ -54,20 +54,11 @@ class ItemModel extends AbstractAdvancedModel
 
 		// Convert to the JObject before adding other data.
 		$properties = $table->getProperties(1);
-		$item = ArrayHelper::toObject($properties, 'stdClass');
+		$item = ArrayHelper::toObject($properties, 'stdClass', false);
 
 		if (!$item)
 		{
 			return $item;
-		}
-
-		if (property_exists($item, 'params'))
-		{
-			$registry = new \JRegistry;
-
-			$registry->loadString($item->params);
-
-			$item->params = $registry->toArray();
 		}
 
 		$this->postGetItem($item);

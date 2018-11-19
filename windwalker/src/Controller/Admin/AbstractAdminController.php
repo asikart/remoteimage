@@ -8,6 +8,9 @@
 
 namespace Windwalker\Controller\Admin;
 
+use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Language\Language;
+use Joomla\CMS\User\User;
 use Windwalker\Helper\ContextHelper;
 use Windwalker\Model\CrudModel;
 use Windwalker\Table\Table;
@@ -29,7 +32,7 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	/**
 	 * The user object.
 	 *
-	 * @var \JUser
+	 * @var User
 	 */
 	protected $user = null;
 
@@ -71,20 +74,20 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	/**
 	 * Language object.
 	 *
-	 * @var \JLanguage
+	 * @var Language
 	 */
 	protected $lang = null;
 
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput           $input   The input object.
-	 * @param   \JApplicationCms  $app     The application object.
-	 * @param   array             $config  Additional config.
+	 * @param   \JInput         $input   The input object.
+	 * @param   CMSApplication  $app     The application object.
+	 * @param   array           $config  Additional config.
 	 *
 	 * @throws  \Exception
 	 */
-	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
+	public function __construct(\JInput $input = null, CMSApplication $app = null, $config = array())
 	{
 		parent::__construct($input, $app, $config);
 
@@ -137,10 +140,7 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	 */
 	protected function allowAdd($data = array())
 	{
-		return (
-			$this->user->authorise('core.create', $this->option)
-			|| count($this->user->getAuthorisedCategories($this->option, 'core.create'))
-		);
+		return $this->getDelegator()->allowAdd($data);
 	}
 
 	/**
@@ -155,16 +155,7 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	 */
 	protected function allowSave($data, $key = 'id')
 	{
-		$recordId = isset($data[$key]) ? $data[$key] : '0';
-
-		if ($recordId)
-		{
-			return $this->allowEdit($data, $key);
-		}
-		else
-		{
-			return $this->allowAdd($data);
-		}
+		return $this->getDelegator()->allowSave($data, $key);
 	}
 
 	/**
@@ -179,7 +170,7 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
-		return $this->user->authorise('core.edit', $this->option);
+		return $this->getDelegator()->allowEdit($data, $key);
 	}
 
 	/**
@@ -194,7 +185,7 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	 */
 	protected function allowUpdateState($data = array(), $key = 'id')
 	{
-		return $this->user->authorise('core.edit.state', $this->option);
+		return $this->getDelegator()->allowUpdateState($data, $key);
 	}
 
 	/**
@@ -209,7 +200,7 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	 */
 	protected function allowDelete($data = array(), $key = 'id')
 	{
-		return $this->user->authorise('core.edit', $this->option);
+		return $this->getDelegator()->allowDelete($data, $key);
 	}
 
 	/**
@@ -222,6 +213,6 @@ abstract class AbstractAdminController extends AbstractRedirectController
 	 */
 	public function allowCategoryAdd($data, $key = 'catid')
 	{
-		return $this->user->authorise('core.create', $this->option . '.category.' . $data[$key]);
+		return $this->getDelegator()->allowCategoryAdd($data, $key);
 	}
 }

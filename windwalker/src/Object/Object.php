@@ -11,17 +11,11 @@ namespace Windwalker\Object;
 /**
  * The basic Object class with isNull() method.
  *
- * @since 2.0
+ * @since      2.0
+ *
+ * @deprecated Use BaseObject.
  */
-class Object extends \JObject implements NullObjectInterface
+class Object extends BaseObject
 {
-	/**
-	 * Is this object not contain any values.
-	 *
-	 * @return boolean
-	 */
-	public function isNull()
-	{
-		return (boolean) $this->getProperties();
-	}
+	//
 }

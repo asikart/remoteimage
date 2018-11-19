@@ -8,12 +8,12 @@
 
 namespace Windwalker\View\Helper;
 
-use JToolbar;
+use Joomla\CMS\Toolbar\Toolbar;
 use JToolbarHelper;
 use Windwalker\Data\Data;
 use Windwalker\DI\Container;
 use Windwalker\Helper\ArrayHelper;
-use Windwalker\Object\Object;
+use Windwalker\Object\BaseObject;
 use Windwalker\Registry\Registry;
 
 /**
@@ -40,7 +40,7 @@ class ToolbarHelper
 	/**
 	 * The access object.
 	 *
-	 * @var  Object
+	 * @var  BaseObject
 	 */
 	protected $access;
 
@@ -68,7 +68,7 @@ class ToolbarHelper
 		// Access
 		$access = (array) $this->config->get('access');
 
-		$this->access = new Object($access);
+		$this->access = new BaseObject($access);
 
 	}
 
@@ -200,7 +200,7 @@ class ToolbarHelper
 	 */
 	public function custom($html)
 	{
-		$bar = JToolbar::getInstance('toolbar');
+		$bar = Toolbar::getInstance('toolbar');
 
 		// Add a custom button.
 		$bar->appendButton('Custom', $html);
@@ -217,7 +217,7 @@ class ToolbarHelper
 	 */
 	public function deleteList($task = 'remove', $alt = 'JTOOLBAR_DELETE', $msg = '')
 	{
-		$bar = JToolbar::getInstance('toolbar');
+		$bar = Toolbar::getInstance('toolbar');
 
 		// Add a delete button.
 		if ($msg)
@@ -285,7 +285,7 @@ class ToolbarHelper
 	 */
 	public function link($alt, $href = '#', $icon = 'asterisk')
 	{
-		$bar = JToolbar::getInstance('toolbar');
+		$bar = Toolbar::getInstance('toolbar');
 
 		// Add a back button.
 		$bar->appendButton('Link', $icon, $alt, $href);

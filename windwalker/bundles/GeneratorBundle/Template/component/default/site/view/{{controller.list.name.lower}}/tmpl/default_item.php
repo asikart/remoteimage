@@ -7,9 +7,10 @@
  */
 
 use {{extension.name.cap}}\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Windwalker\View\Helper\FrontViewHelper;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -37,7 +38,7 @@ $anchor_id = '{{controller.item.name.lower}}-item-' . $item->id;
 		<!-- ============================================================================= -->
 		<div class="heading">
 			<h2>
-                <?php echo $params->get('link_titles_in_list', 1) ? JHtml::_('link', $item->link, $item->title) : $item->title ?>
+                <?php echo $params->get('link_titles_in_list', 1) ? HTMLHelper::_('link', $item->link, $item->title) : $item->title ?>
             </h2>
 		</div>
 		<!-- ============================================================================= -->
@@ -49,17 +50,11 @@ $anchor_id = '{{controller.item.name.lower}}-item-' . $item->id;
 		<!-- ============================================================================= -->
 		<!-- afterDisplayTitle -->
 
-		<!-- beforeDisplayContent -->
-		<!-- ============================================================================= -->
-		<?php echo $data->item->event->beforeDisplayContent; ?>
-		<!-- ============================================================================= -->
-		<!-- beforeDisplayContent -->
-
 		<!-- Info -->
 		<!-- ============================================================================= -->
 		<div class="info">
 			<div class="info-inner">
-				<?php echo FrontViewHelper::showLink('jcategory', $item->category_title, Route::_('{{controller.list.name.lower}}', array('id' => $item->catid)), 'folder'); ?>
+				<?php echo FrontViewHelper::showLink('jcategory', $item->category_title, Route::view('{{controller.list.name.lower}}', array('id' => $item->catid)), 'folder'); ?>
 				<?php echo FrontViewHelper::showDate('{{extension.element.lower}}_created', $item->created); ?>
 				<?php echo FrontViewHelper::showDate('{{extension.element.lower}}_modified', $item->modified); ?>
 				<?php echo FrontViewHelper::showLabel('{{extension.element.lower}}_created_by', $item->user_name, 'user'); ?>
@@ -70,6 +65,12 @@ $anchor_id = '{{controller.item.name.lower}}-item-' . $item->id;
 
 		<hr class="info-separator" />
 
+        <!-- beforeDisplayContent -->
+        <!-- ============================================================================= -->
+		<?php echo $data->item->event->beforeDisplayContent; ?>
+        <!-- ============================================================================= -->
+        <!-- beforeDisplayContent -->
+
 		<!-- Content -->
 		<!-- ============================================================================= -->
 		<div class="content">
@@ -77,7 +78,7 @@ $anchor_id = '{{controller.item.name.lower}}-item-' . $item->id;
 
 				<?php if (!empty($item->images)): ?>
 					<div class="content-img thumbnail span3">
-						<?php echo JHtml::_('image', $this->escape($item->images), $this->escape($item->title)); ?>
+						<?php echo HTMLHelper::_('image', $this->escape($item->images), $this->escape($item->title)); ?>
 					</div>
 				<?php endif; ?>
 
@@ -100,7 +101,7 @@ $anchor_id = '{{controller.item.name.lower}}-item-' . $item->id;
 				<p></p>
 				<p class="readmore">
                     <a href="<?php echo $this->escape($item->link); ?>" class="btn btn-small btn-primary">
-                        <?php echo JText::_('{{extension.element.upper}}_READMORE'); ?>
+                        <?php echo Text::_('{{extension.element.upper}}_READMORE'); ?>
                     </a>
 				</p>
 			</div>

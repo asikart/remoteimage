@@ -34,9 +34,10 @@ class PrepareAction extends AbstractAction
 			'model/field'
 		);
 
-		if ($this->config['client'] == 'administrator')
+		if ($this->config['client'] === 'administrator')
 		{
 			$files[] = 'table/' . $this->config['item_name'] . '.php';
+			$files[] = 'src/{{extension.name.cap}}/Mapper/{{controller.item.name.cap}}Mapper.php';
 		}
 		
 		foreach ($files as $file)

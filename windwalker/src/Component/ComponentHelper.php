@@ -8,8 +8,11 @@
 
 namespace Windwalker\Component;
 
+use Joomla\CMS\Access\Access;
+use Joomla\CMS\Factory;
+use Joomla\CMS\User\User;
 use Windwalker\Helper\PathHelper;
-use Windwalker\Object\Object;
+use Windwalker\Object\BaseObject;
 use Windwalker\System\ExtensionHelper;
 
 /**
@@ -22,17 +25,17 @@ abstract class ComponentHelper
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @param   \JUser  $user       The user object.
+	 * @param   User    $user       The user object.
 	 * @param   string  $component  The component access file path, component base path or option name.
 	 * @param   string  $assetName  The asset name
 	 * @param   integer $categoryId The category ID.
 	 * @param   integer $id         The item ID.
 	 *
-	 * @return  Object
+	 * @return  BaseObject
 	 */
-	public static function getActions(\JUser $user, $component, $assetName, $categoryId = 0, $id = 0)
+	public static function getActions(User $user, $component, $assetName, $categoryId = 0, $id = 0)
 	{
-		$result	= new Object;
+		$result	= new BaseObject;
 
 		// New rules: If path is access file
 		$path = $component;
@@ -73,7 +76,7 @@ abstract class ComponentHelper
 			$assetName .= '.' . $assetName;
 		}
 
-		$actions = \JAccess::getActionsFromFile($path, "/access/section[@name='" . $section . "']/");
+		$actions = Access::getActionsFromFile($path, "/access/section[@name='" . $section . "']/");
 
 		foreach ($actions as $action)
 		{
@@ -109,24 +112,24 @@ abstract class ComponentHelper
 
 		$_SERVER['HTTP_HOST'] = 'windwalker';
 
-		if ($client == 'admin')
+		if ($client === 'admin')
 		{
 			$client = 'administrator';
 		}
 
 		$appClass = 'JApplication' . ucfirst($client);
 
-		$console = \JFactory::$application;
+		$console = Factory::$application;
 
-		\JFactory::$application = $appClass::getInstance('site', $input);
+		Factory::$application = $appClass::getInstance('site', $input);
 
 		$class = ucfirst($element['name']) . 'Component';
 
-		$component = new $class(ucfirst($element['name']), $input, \JFactory::$application);
+		$component = new $class(ucfirst($element['name']), $input, Factory::$application);
 
 		$result = $component->execute();
 
-		\JFactory::$application = $console;
+		Factory::$application = $console;
 
 		return $result;
 	}

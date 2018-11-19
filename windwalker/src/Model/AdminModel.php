@@ -8,13 +8,19 @@
 
 namespace Windwalker\Model;
 
-use JFilterOutput;
+use Joomla\CMS\Filter\OutputFilter;
+use Joomla\CMS\Helper\TagsHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Observer\Tags;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\UCM\UCMType;
 use Joomla\DI\Container as JoomlaContainer;
-use Windwalker\String\StringInflector as Inflector;;
-use JTable;
 use Windwalker\Helper\ArrayHelper;
 use Windwalker\Helper\DateHelper;
 use Windwalker\String\StringHelper;
+use Windwalker\String\StringInflector as Inflector;
+
+;
 
 /**
  * Prototype admin model.
@@ -33,10 +39,12 @@ class AdminModel extends CrudModel
 	/**
 	 * Constructor
 	 *
-	 * @param   array              $config    An array of configuration options (name, state, dbo, table_path, ignore_request).
-	 * @param   JoomlaContainer    $container Service container.
-	 * @param   \JRegistry         $state     The model state.
-	 * @param   \JDatabaseDriver   $db        The database adapter.
+	 * @param   array             $config     An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   JoomlaContainer   $container  Service container.
+	 * @param   \JRegistry        $state      The model state.
+	 * @param   \JDatabaseDriver  $db         The database adapter.
+	 *
+	 * @throws  \Exception
 	 */
 	public function __construct($config = array(), JoomlaContainer $container = null, \JRegistry $state = null, \JDatabaseDriver $db = null)
 	{
@@ -68,13 +76,14 @@ class AdminModel extends CrudModel
 	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success, False on error.
+	 * @throws \Exception
 	 */
 	public function save($data)
 	{
 		$result = parent::save($data);
 
 		// Reorder
-		if ($result && $this->state->get('order.position') == 'first')
+		if ($result && $this->state->get('order.position') === 'first')
 		{
 			$pk = $this->state->get($this->getName() . '.id');
 
@@ -114,7 +123,7 @@ class AdminModel extends CrudModel
 		// Check if this is the user has previously checked out the row.
 		if ($table->checked_out > 0 && $table->checked_out != $user->get('id') && !$user->authorise('core.admin', 'com_checkin'))
 		{
-			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'));
+			throw new \Exception(Text::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'));
 		}
 
 		// Attempt to check the row in.
@@ -154,7 +163,7 @@ class AdminModel extends CrudModel
 		// Check if this is the user having previously checked out the row.
 		if ($table->checked_out > 0 && $table->checked_out != $user->get('id'))
 		{
-			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_CHECKOUT_USER_MISMATCH'));
+			throw new \Exception(Text::_('JLIB_APPLICATION_ERROR_CHECKOUT_USER_MISMATCH'));
 		}
 
 		// Attempt to check the row out.
@@ -169,16 +178,17 @@ class AdminModel extends CrudModel
 	/**
 	 * Saves the manually set order of records.
 	 *
-	 * @param   array    $pks    An array of primary key ids.
-	 * @param   array    $order  THe new ordering list.
+	 * @param   array  $pks    An array of primary key ids.
+	 * @param   array  $order  THe new ordering list.
 	 *
 	 * @return  mixed
+	 * @throws \Exception
 	 */
 	public function reorder($pks = null, $order = array())
 	{
 		$table          = $this->getTable();
 		$tableClassName = get_class($table);
-		$contentType    = new \JUcmType;
+		$contentType    = new UCMType;
 		$type           = $contentType->getTypeByTable($tableClassName);
 		$typeAlias      = $type ? $type->type_alias : null;
 		$tagsObserver   = $table->getObserverOfClass('JTableObserverTags');
@@ -246,13 +256,14 @@ class AdminModel extends CrudModel
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   JTable  $table  A reference to a JTable object.
+	 * @param   Table|\JTable  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 */
 	protected function prepareTable(\JTable $table)
 	{
 		$date = DateHelper::getDate('now');
+		
 		$user = $this->container->get('user');
 		$key  = $table->getKeyName();
 
@@ -261,27 +272,23 @@ class AdminModel extends CrudModel
 		{
 			if (!$table->alias)
 			{
-				$table->alias = JFilterOutput::stringURLSafe(trim($table->title));
+				$table->alias = OutputFilter::stringURLSafe(trim($table->title));
 			}
 			else
 			{
-				$table->alias = JFilterOutput::stringURLSafe(trim($table->alias));
+				$table->alias = OutputFilter::stringURLSafe(trim($table->alias));
 			}
 
 			if (!$table->alias)
 			{
-				$table->alias = JFilterOutput::stringURLSafe($date->toSql(true));
+				$table->alias = OutputFilter::stringURLSafe($date->toSql(true));
 			}
 		}
 
 		// Created date
 		if (property_exists($table, 'created'))
 		{
-			if ($table->created)
-			{
-				$table->created = DateHelper::toServerTime($table->created);
-			}
-			else
+			if (!$table->created)
 			{
 				$table->created = $date->toSql();
 			}
@@ -290,11 +297,7 @@ class AdminModel extends CrudModel
 		// Publish_up date
 		if (property_exists($table, 'publish_up'))
 		{
-			if ($table->publish_up)
-			{
-				$table->publish_up = DateHelper::toServerTime($table->publish_up);
-			}
-			else
+			if (!$table->publish_up)
 			{
 				$table->publish_up = $this->db->getNullDate();
 			}
@@ -303,11 +306,7 @@ class AdminModel extends CrudModel
 		// Publish_down date
 		if (property_exists($table, 'publish_down'))
 		{
-			if ($table->publish_down)
-			{
-				$table->publish_down = DateHelper::toServerTime($table->publish_down);
-			}
-			else
+			if (!$table->publish_down)
 			{
 				$table->publish_down = $this->db->getNullDate();
 			}
@@ -344,7 +343,7 @@ class AdminModel extends CrudModel
 	/**
 	 * Method to set new item ordering as first or last.
 	 *
-	 * @param   JTable $table    Item table to save.
+	 * @param   Table  $table    Item table to save.
 	 * @param   string $position `first` or other are `last`.
 	 *
 	 * @return  void
@@ -358,7 +357,7 @@ class AdminModel extends CrudModel
 			return;
 		}
 
-		if ($position == 'first')
+		if ($position === 'first')
 		{
 			if (empty($table->$orderCol))
 			{
@@ -394,7 +393,7 @@ class AdminModel extends CrudModel
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param   JTable  $table  A JTable object.
+	 * @param   Table  $table  A JTable object.
 	 *
 	 * @return  array  An array of conditions to add to ordering queries.
 	 */
@@ -418,11 +417,11 @@ class AdminModel extends CrudModel
 	/**
 	 * Method to create a tags helper to ensure proper management of tags
 	 *
-	 * @param   \JTableObserverTags  $tagsObserver  The tags observer for this table
-	 * @param   \JUcmType            $type          The type for the table being processed
-	 * @param   integer              $pk            Primary key of the item bing processed
-	 * @param   string               $typeAlias     The type alias for this table
-	 * @param   \JTable              $table         The JTable object
+	 * @param   Tags     $tagsObserver  The tags observer for this table
+	 * @param   UCMType  $type          The type for the table being processed
+	 * @param   int      $pk            Primary key of the item bing processed
+	 * @param   string   $typeAlias     The type alias for this table
+	 * @param   Table    $table         The JTable object
 	 *
 	 * @return  void
 	 */
@@ -430,7 +429,7 @@ class AdminModel extends CrudModel
 	{
 		if (!empty($tagsObserver) && !empty($type))
 		{
-			$table->tagsHelper = new \JHelperTags;
+			$table->tagsHelper = new TagsHelper;
 			$table->tagsHelper->typeAlias = $typeAlias;
 			$table->tagsHelper->tags = explode(',', $table->tagsHelper->getTagIds($pk, $typeAlias));
 		}

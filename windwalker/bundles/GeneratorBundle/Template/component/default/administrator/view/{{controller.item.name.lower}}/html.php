@@ -10,9 +10,7 @@ use Windwalker\DI\Container;
 use Windwalker\Model\Model;
 use Windwalker\View\Engine\PhpEngine;
 use Windwalker\View\Html\EditView;
-use Windwalker\Xul\XulEngine;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**

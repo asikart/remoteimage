@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6114c587bed3d40fef82253b91842863
+class ComposerStaticInite5151ff6b91074bd7f055bccb1736d07
 {
     public static $files = array (
         '5309a257854ca5cc9612aafe2e186e93' => __DIR__ . '/..' . '/windwalker/utilities/functions.php',
@@ -109,7 +109,7 @@ class ComposerStaticInit6114c587bed3d40fef82253b91842863
         ),
         'Whoops\\' => 
         array (
-            0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
+            0 => __DIR__ . '/..' . '/asika/whoops/src/Whoops',
         ),
         'Symfony\\Component\\Yaml\\' => 
         array (
@@ -132,10 +132,10 @@ class ComposerStaticInit6114c587bed3d40fef82253b91842863
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6114c587bed3d40fef82253b91842863::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6114c587bed3d40fef82253b91842863::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit6114c587bed3d40fef82253b91842863::$fallbackDirsPsr4;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit6114c587bed3d40fef82253b91842863::$fallbackDirsPsr0;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite5151ff6b91074bd7f055bccb1736d07::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite5151ff6b91074bd7f055bccb1736d07::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInite5151ff6b91074bd7f055bccb1736d07::$fallbackDirsPsr4;
+            $loader->fallbackDirsPsr0 = ComposerStaticInite5151ff6b91074bd7f055bccb1736d07::$fallbackDirsPsr0;
 
         }, null, ClassLoader::class);
     }

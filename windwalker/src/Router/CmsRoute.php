@@ -8,6 +8,8 @@
 
 namespace Windwalker\Router;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route as JRoute;
 use Joomla\Uri\Uri;
 use Windwalker\Helper\ArrayHelper;
 
@@ -153,12 +155,12 @@ class CmsRoute
 	{
 		$resource = explode('.', $resource, 2);
 
-		if (count($resource) == 2)
+		if (count($resource) === 2)
 		{
 			$data['option']    = $resource[0];
 			$data['_resource'] = $resource[1];
 		}
-		elseif (count($resource) == 1)
+		elseif (count($resource) === 1)
 		{
 			$data['option']    = $resource[0];
 			$data['_resource'] = null;
@@ -170,19 +172,20 @@ class CmsRoute
 
 		$url->setPath('index.php');
 
-		return \JRoute::_((string) $url, $xhtml, $ssl);
+		return JRoute::_((string) $url, $xhtml, $ssl);
 	}
 
 	/**
 	 * Build route.
 	 *
-	 * @param   array  &$data The query data to build route.
+	 * @param   array &$data The query data to build route.
 	 *
 	 * @return  string Route url.
+	 * @throws \Exception
 	 */
 	public static function build(&$data = array())
 	{
-		$menu = \JFactory::getApplication()->getMenu();
+		$menu = Factory::getApplication()->getMenu();
 
 		$items = $menu->getMenu();
 
@@ -210,7 +213,7 @@ class CmsRoute
 				$view   = ArrayHelper::getValue($item->query, 'view');
 				$id     = ArrayHelper::getValue($item->query, 'id');
 
-				if ($option == $data['option'] && $view == $data['view'] && $id == $data['id'])
+				if ($option === $data['option'] && $view === $data['view'] && $id == $data['id'])
 				{
 					$data['Itemid'] = $item->id;
 
@@ -227,7 +230,7 @@ class CmsRoute
 				$option = ArrayHelper::getValue($item->query, 'option');
 				$view   = ArrayHelper::getValue($item->query, 'view');
 
-				if ($option == $data['option'] && $view == $data['view'])
+				if ($option === $data['option'] && $view === $data['view'])
 				{
 					unset($data['view']);
 
@@ -245,7 +248,7 @@ class CmsRoute
 			{
 				$option = ArrayHelper::getValue($item->query, 'option');
 
-				if ($option == $data['option'])
+				if ($option === $data['option'])
 				{
 					$data['Itemid'] = $item->id;
 
@@ -560,7 +563,7 @@ class CmsRoute
 	{
 		$this->scheme = strtolower($scheme);
 
-		$this->ssl = ($this->scheme == 'https');
+		$this->ssl = ($this->scheme === 'https');
 
 		return $this;
 	}

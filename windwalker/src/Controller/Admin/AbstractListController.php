@@ -8,8 +8,12 @@
 
 namespace Windwalker\Controller\Admin;
 
-use Windwalker\String\StringInflector as Inflector;;
+use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Router\Route;
 use Windwalker\Helper\ArrayHelper;
+use Windwalker\String\StringInflector as Inflector;
+
+;
 
 /**
  * A controller to handle list page operation.
@@ -28,11 +32,11 @@ abstract class AbstractListController extends AbstractAdminController
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput           $input   The input object.
-	 * @param   \JApplicationCms  $app     The application object.
-	 * @param   array             $config  Alternative config.
+	 * @param   \JInput         $input   The input object.
+	 * @param   CMSApplication  $app     The application object.
+	 * @param   array           $config  Alternative config.
 	 */
-	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
+	public function __construct(\JInput $input = null, CMSApplication $app = null, $config = array())
 	{
 		parent::__construct($input, $app, $config);
 
@@ -89,7 +93,7 @@ abstract class AbstractListController extends AbstractAdminController
 	 */
 	public function getSuccessRedirect()
 	{
-		return \JRoute::_($this->getRedirectListUrl(), false);
+		return Route::_($this->getRedirectListUrl(), false);
 	}
 
 	/**
@@ -99,6 +103,6 @@ abstract class AbstractListController extends AbstractAdminController
 	 */
 	public function getFailRedirect()
 	{
-		return \JRoute::_($this->getRedirectListUrl(), false);
+		return Route::_($this->getRedirectListUrl(), false);
 	}
 }

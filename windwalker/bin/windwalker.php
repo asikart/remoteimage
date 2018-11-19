@@ -6,6 +6,8 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+use Joomla\CMS\Factory;
+
 // We are a valid entry point.
 const _JEXEC = 1;
 
@@ -19,9 +21,13 @@ if (file_exists(dirname(__DIR__) . '/../../defines.php'))
 	require_once dirname(__DIR__) . '/../../defines.php';
 }
 
-if (!defined('_JDEFINES'))
+if (!defined('JPATH_BASE'))
 {
 	define('JPATH_BASE', realpath(dirname(__DIR__) . '/../..'));
+}
+
+if (!defined('_JDEFINES'))
+{
 	require_once JPATH_BASE . '/includes/defines.php';
 }
 
@@ -46,7 +52,7 @@ $config = new JConfig;
 
 $console = \Windwalker\DI\Container::getInstance()->get('app');
 
-\JFactory::$application = $console;
+Factory::$application = $console;
 
 $console->setDescription(null)
 	->execute();

@@ -8,8 +8,8 @@
 	<author>Asika</author>
 	<authorEmail>asika32764@gmail.com</authorEmail>
 	<authorUrl>http://lyrasoft.net</authorUrl>
-	<version>4.1.9</version>
-	<newversion>2.1.9</newversion>
+	<version>4.1.19</version>
+	<newversion>2.1.19</newversion>
 	<description>LIB_WINDWALKER_XML_DESC</description>
 
 	<files>
@@ -25,6 +25,12 @@
 		<file>index.html</file>
 		<file>windwalker.xml</file>
 	</files>
+
+	<media folder="asset" destination="windwalker">
+		<folder>css</folder>
+		<folder>js</folder>
+		<filename>index.html</filename>
+	</media>
 
 	<languages folder="language">
 		<language tag="zh-TW">zh-TW/zh-TW.lib_windwalker.ini</language>

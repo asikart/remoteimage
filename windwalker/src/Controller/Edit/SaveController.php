@@ -8,6 +8,9 @@
 
 namespace Windwalker\Controller\Edit;
 
+use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Language\Language;
+use Joomla\CMS\Router\Route;
 use Windwalker\Bootstrap\Message;
 use Windwalker\Controller\Admin\AbstractItemController;
 use Windwalker\Helper\ArrayHelper;
@@ -23,7 +26,7 @@ class SaveController extends AbstractItemController
 	/**
 	 * Language object.
 	 *
-	 * @var \JLanguage
+	 * @var Language
 	 */
 	protected $lang = null;
 
@@ -51,11 +54,11 @@ class SaveController extends AbstractItemController
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput          $input  The input object.
-	 * @param   \JApplicationCms $app    The application object.
-	 * @param   array            $config The config object.
+	 * @param   \JInput         $input  The input object.
+	 * @param   CMSApplication  $app    The application object.
+	 * @param   array           $config The config object.
 	 */
-	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
+	public function __construct(\JInput $input = null, CMSApplication $app = null, $config = array())
 	{
 		parent::__construct($input, $app, $config);
 
@@ -100,7 +103,7 @@ class SaveController extends AbstractItemController
 
 			// Set success message
 			$this->addMessage(
-				\JText::_(
+				\Joomla\CMS\Language\Text::_(
 					($this->lang->hasKey(strtoupper($this->option) . ($this->recordId == 0 && $this->app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS')
 						? strtoupper($this->option)
 						: 'JLIB_APPLICATION') . ($this->recordId == 0 && $this->app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS'
@@ -170,7 +173,7 @@ class SaveController extends AbstractItemController
 		// Access check.
 		if (!$this->allowSave($this->data, $key))
 		{
-			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
+			throw new \Exception(\Joomla\CMS\Language\Text::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
 		}
 
 		// Validate the posted data.
@@ -188,7 +191,10 @@ class SaveController extends AbstractItemController
 		// Attempt to save the data.
 		try
 		{
-			$this->model->save($validData);
+			if ($this->model->save($validData))
+			{
+				$validData[$this->key] = $this->model->get($this->model->getName() . '.id');
+			}
 		}
 		catch (\Exception $e)
 		{
@@ -196,7 +202,7 @@ class SaveController extends AbstractItemController
 			$this->app->setUserState($this->context . '.data', $validData);
 
 			// Redirect back to the edit screen.
-			throw new \Exception(\JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $e->getMessage()), 500, $e);
+			throw new \Exception(\Joomla\CMS\Language\Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $e->getMessage()), 500, $e);
 		}
 
 		return $validData;
@@ -241,7 +247,7 @@ class SaveController extends AbstractItemController
 	{
 		$this->input->set('layout', null);
 
-		return \JRoute::_($this->getRedirectListUrl(), false);
+		return Route::_($this->getRedirectListUrl(), false);
 	}
 
 	/**
@@ -251,7 +257,7 @@ class SaveController extends AbstractItemController
 	 */
 	public function getFailRedirect()
 	{
-		return \JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false);
+		return Route::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false);
 	}
 
 	/**

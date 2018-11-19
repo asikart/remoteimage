@@ -6,7 +6,8 @@
  * @license        GNU General Public License version 2 or later.
  */
 
-// No direct access
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die;
 
 /**
@@ -33,7 +34,7 @@ abstract class Mod{{extension.name.cap}}Helper
 	 */
 	public static function getSelectList($tables = array(), $all = true)
 	{
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		$select = array();
 		$fields = array();

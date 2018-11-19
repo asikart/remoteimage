@@ -1,14 +1,20 @@
 <?php
+/**
+ * Part of Component {{extension.name.cap}} files.
+ *
+ * @copyright   Copyright (C) 2016 {ORGANIZATION}. All rights reserved.
+ * @license     GNU General Public License version 2 or later.
+ */
 
 namespace {{extension.name.cap}}\Component;
 
 use {{extension.name.cap}}\Provider\{{extension.name.cap}}Provider;
+use Joomla\CMS\Factory;
 use Windwalker\Component\Component;
 use Windwalker\Debugger\Debugger;
 use Windwalker\Helper\LanguageHelper;
 use Windwalker\Helper\ProfilerHelper;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -67,10 +73,10 @@ abstract class {{extension.name.cap}}Component extends Component
 	 */
 	protected function postExecute($result)
 	{
-		$doc = \JFactory::getDocument();
+		$doc = Factory::getDocument();
 
 		// Debug profiler
-		if (JDEBUG && $doc->getType() == 'html')
+		if (JDEBUG && $doc->getType() === 'html')
 		{
 			$result .= "<hr />" . ProfilerHelper::render('Windwalker', true);
 		}

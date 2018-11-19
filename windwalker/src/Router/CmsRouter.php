@@ -35,7 +35,7 @@ class CmsRouter extends LegacyRouter
 	{
 		if (empty(self::$instance[$option]))
 		{
-			$input = \JFactory::getApplication()->input;
+			$input = \Joomla\CMS\Factory::getApplication()->input;
 
 			self::$instance[$option] = new CmsRouter($input);
 		}
@@ -72,7 +72,7 @@ class CmsRouter extends LegacyRouter
 
 		foreach ($this->maps as $view => $map)
 		{
-			if ($map['controller'] == $queries['view'])
+			if ($map['controller'] === $queries['view'])
 			{
 				unset($queries['view']);
 

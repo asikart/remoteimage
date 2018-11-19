@@ -8,8 +8,10 @@
 
 namespace Windwalker\Controller\Batch;
 
+use Joomla\CMS\Form\Form;
 use Windwalker\Bootstrap\Message;
 use Windwalker\Controller\Admin\AbstractListController;
+use Windwalker\Model\Exception\ValidateFailException;
 
 /**
  * Batch controller.
@@ -40,6 +42,13 @@ abstract class AbstractBatchController extends AbstractListController
 	protected $categoryKey = 'catid';
 
 	/**
+	 * Property emptyMark.
+	 *
+	 * @var  string
+	 */
+	protected $emptyMark = '__EMPTY__';
+
+	/**
 	 * Prepare execute hook.
 	 *
 	 * @return void
@@ -52,12 +61,30 @@ abstract class AbstractBatchController extends AbstractListController
 
 		unset($this->batch['task']);
 
+		$form = $this->getForm();
+
 		// Sanitize data.
 		foreach ($this->batch as $key => &$value)
 		{
-			if ($value == '')
+			if ($value === '')
 			{
 				unset($this->batch[$key]);
+			}
+			elseif ($value === $this->emptyMark)
+			{
+				$value = '';
+			}
+			elseif ($value === '\\' . $this->emptyMark)
+			{
+				$value = $this->emptyMark;
+			}
+			
+			// Fix for user field
+			$field = $form->getField($key, 'batch');
+
+			if ($field->type === 'User' && (int) $value === 0)
+			{
+				unset($value);
 			}
 		}
 	}
@@ -85,7 +112,12 @@ abstract class AbstractBatchController extends AbstractListController
 		{
 			$db->transactionRollback();
 
-			$this->setRedirect($this->getFailRedirect(), \JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $e->getMessage()), Message::ERROR_RED);
+			if (JDEBUG)
+			{
+				throw $e;
+			}
+
+			$this->setRedirect($this->getFailRedirect(), \Joomla\CMS\Language\Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $e->getMessage()), Message::ERROR_RED);
 
 			return false;
 		}
@@ -105,18 +137,23 @@ abstract class AbstractBatchController extends AbstractListController
 	{
 		if (!count($this->cid))
 		{
-			throw new \Exception(\JText::_('JGLOBAL_NO_ITEM_SELECTED'));
+			throw new \Exception(\Joomla\CMS\Language\Text::_('JGLOBAL_NO_ITEM_SELECTED'));
 		}
 
 		// Category Access
 		if (in_array($this->categoryKey, $this->batch) && !$this->allowCategoryAdd($this->batch, $this->categoryKey))
 		{
-			throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+			throw new \Exception(\Joomla\CMS\Language\Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 		}
 
 		$pks = array_unique($this->cid);
 
 		$result = array();
+
+		$data = $this->batch;
+
+		$this->validate($data);
+		$data = $this->filter($data);
 
 		foreach ($pks as $pk)
 		{
@@ -125,13 +162,46 @@ abstract class AbstractBatchController extends AbstractListController
 				continue;
 			}
 
-			$data = $this->batch;
-
 			// Start Batch Process
 			$result[] = $this->save($pk, $data);
 		}
 
 		return $result;
+	}
+
+	/**
+	 * validate
+	 *
+	 * @param array $data
+	 *
+	 * @return  void
+	 *
+	 * @throws ValidateFailException
+	 */
+	protected function validate($data)
+	{
+		$form = $this->getForm();
+
+		if (!$form->validate(array('batch' => $data)))
+		{
+			throw new ValidateFailException($form->getErrors());
+		}
+	}
+
+	/**
+	 * filter
+	 *
+	 * @param array $data
+	 *
+	 * @return  array
+	 */
+	protected function filter($data)
+	{
+		$form = $this->getForm();
+
+		$data = $form->filter(array('batch' => $data));
+
+		return isset($data['batch']) ? $data['batch'] : array();
 	}
 
 	/**
@@ -165,12 +235,12 @@ abstract class AbstractBatchController extends AbstractListController
 
 		if (!in_array(true, $result, true))
 		{
-			$this->setRedirect($this->getFailRedirect(), \JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), Message::WARNING_YELLOW);
+			$this->setRedirect($this->getFailRedirect(), \Joomla\CMS\Language\Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), Message::WARNING_YELLOW);
 
 			return false;
 		}
 
-		$this->setRedirect($this->getSuccessRedirect(), \JText::_('JLIB_APPLICATION_SUCCESS_BATCH'), Message::MESSAGE_GREEN);
+		$this->setRedirect($this->getSuccessRedirect(), \Joomla\CMS\Language\Text::_('JLIB_APPLICATION_SUCCESS_BATCH'), Message::MESSAGE_GREEN);
 
 		return true;
 	}
@@ -194,5 +264,15 @@ abstract class AbstractBatchController extends AbstractListController
 	protected function postBatchHook($result)
 	{
 		return $result;
+	}
+
+	/**
+	 * getForm
+	 *
+	 * @return  Form
+	 */
+	public function getForm()
+	{
+		return $this->getModel($this->viewList)->getBatchForm();
 	}
 }

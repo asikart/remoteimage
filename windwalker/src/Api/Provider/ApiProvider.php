@@ -9,15 +9,17 @@
 namespace Windwalker\Api\Provider;
 
 use Joomla\DI\Container;
-use Windwalker\Registry\Registry;
 use Windwalker\Api\ApiServer;
 use Windwalker\Api\Listener\ApiListener;
 use Windwalker\DI\ServiceProvider;
+use Windwalker\Registry\Registry;
 
 /**
  * Class ApiProvider
  *
  * @since 2.0
+ *
+ * @deprecated  API server will be re-write after Windwalker RAD 3.
  */
 class ApiProvider extends ServiceProvider
 {
@@ -31,7 +33,7 @@ class ApiProvider extends ServiceProvider
 	/**
 	 * Property uri.
 	 *
-	 * @var  \JUri
+	 * @var  \Joomla\CMS\Uri\Uri
 	 */
 	protected $uri;
 
@@ -46,13 +48,13 @@ class ApiProvider extends ServiceProvider
 	 * Class init.
 	 *
 	 * @param string         $element
-	 * @param \JUri          $uri
+	 * @param \Joomla\CMS\Uri\Uri          $uri
 	 * @param Registry|array $option
 	 */
-	public function __construct($element, \JUri $uri = null, $option = array())
+	public function __construct($element, \Joomla\CMS\Uri\Uri $uri = null, $option = array())
 	{
 		$this->option = ($option instanceof Registry) ? $option : new Registry($option);
-		$this->uri = $uri ? : \JUri::getInstance();
+		$this->uri = $uri ? : \Joomla\CMS\Uri\Uri::getInstance();
 		$this->element = $element;
 	}
 

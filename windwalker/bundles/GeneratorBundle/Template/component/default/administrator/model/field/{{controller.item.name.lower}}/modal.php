@@ -6,12 +6,14 @@
  * @license     GNU General Public License version 2 or later.
  */
 
-// No direct access
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Form\FormHelper;
+
 defined('_JEXEC') or die;
 
 include_once JPATH_LIBRARIES . '/windwalker/src/init.php';
-JForm::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
-JFormHelper::loadFieldClass('Modal');
+Form::addFieldPath(WINDWALKER_SOURCE . '/Form/Fields');
+FormHelper::loadFieldClass('Modal');
 
 /**
  * Supports a modal picker.
@@ -46,5 +48,4 @@ class JFormField{{controller.item.name.cap}}_Modal extends JFormFieldModal
 	 * @var string
 	 */
 	protected $extension = '{{extension.element.lower}}';
-
 }

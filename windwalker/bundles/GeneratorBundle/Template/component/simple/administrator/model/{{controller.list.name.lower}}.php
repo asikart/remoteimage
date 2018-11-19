@@ -6,11 +6,9 @@
  * @license     GNU General Public License version 2 or later.
  */
 
-use Windwalker\DI\Container;
 use Windwalker\Model\Filter\FilterHelper;
 use Windwalker\Model\ListModel;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -130,7 +128,7 @@ class {{extension.name.cap}}Model{{controller.list.name.cap}} extends ListModel
 	 *
 	 * @return  void
 	 */
-	protected function populateState($ordering = null, $direction = 'ASC')
+	protected function populateState($ordering = '{{controller.item.name.lower}}.id', $direction = 'DESC')
 	{
 		// Build ordering prefix
 		if (!$ordering)

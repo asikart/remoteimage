@@ -6,16 +6,15 @@
  * @license    GNU General Public License version 2 or later.
  */
 
+use Joomla\CMS\Form\FormHelper;
 use Windwalker\DI\Container;
-use Windwalker\Helper\HtmlHelper;
-use Windwalker\Helper\ModalHelper;
 use Windwalker\Helper\LanguageHelper;
+use Windwalker\Helper\ModalHelper;
 use Windwalker\Script\WindwalkerScript;
 
-// No direct access
 defined('_JEXEC') or die;
 
-JFormHelper::loadFieldClass('category');
+FormHelper::loadFieldClass('category');
 
 include_once JPATH_LIBRARIES . '/windwalker/src/init.php';
 

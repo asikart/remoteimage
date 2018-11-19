@@ -8,9 +8,10 @@
 
 namespace Windwalker\Helper;
 
-use JFactory;
 use JFolder;
-use Joomla\Uri\Uri;
+use Joomla\CMS\Language\Language;
+use Joomla\CMS\Language\LanguageHelper as JoomlaLanguageHelper;
+use Joomla\CMS\Uri\Uri;
 use Windwalker\Data\Data;
 use Windwalker\Data\DataSet;
 use Windwalker\DataMapper\DataMapperFacade;
@@ -49,7 +50,7 @@ class LanguageHelper extends AbstractFacade
 	 */
 	public static function getLocale()
 	{
-		/** @var \JLanguage $lang */
+		/** @var Language $lang */
 		$lang = static::getInstance();
 
 		return $lang->getTag();
@@ -78,7 +79,7 @@ class LanguageHelper extends AbstractFacade
 	 */
 	public static function detectLanguageFromBrowser()
 	{
-		return \JLanguageHelper::detectLanguage();
+		return JoomlaLanguageHelper::detectLanguage();
 	}
 
 	/**
@@ -116,7 +117,7 @@ class LanguageHelper extends AbstractFacade
 
 		$key = $key ? : 'default';
 
-		return \JLanguageHelper::getLanguages($key);
+		return JoomlaLanguageHelper::getLanguages($key);
 	}
 
 	/**
@@ -141,7 +142,7 @@ class LanguageHelper extends AbstractFacade
 	/**
 	 * getInstalledLanguages
 	 *
-	 * @param   integer  $client
+	 * @param   integer|string  $client
 	 *
 	 * @return  DataSet|Data[]
 	 * 
@@ -151,15 +152,15 @@ class LanguageHelper extends AbstractFacade
 	{
 		$client = strtolower($client);
 
-		if ($client == 'site')
+		if ($client === 'site')
 		{
 			$client = JClient::SITE;
 		}
-		elseif ($client == 'admin' || $client == 'administrator')
+		elseif ($client === 'admin' || $client === 'administrator')
 		{
 			$client = JClient::ADMINISTRATOR;
 		}
-		elseif ($client == 'both')
+		elseif ($client === 'both')
 		{
 			$client = JClient::BOTH;
 		}
@@ -268,8 +269,13 @@ class LanguageHelper extends AbstractFacade
 	 *
 	 * @return  boolean
 	 */
-	public static function loadAll($lang = 'en-GB', $option = null)
+	public static function loadAll($lang = null, $option = null)
 	{
+		/** @var Language $language */
+		$language = static::getInstance();
+
+		$lang = $lang ? : $language->getTag();
+
 		$folder = PathHelper::getAdmin($option) . '/language/' . $lang;
 
 		if (is_dir($folder))
@@ -281,20 +287,18 @@ class LanguageHelper extends AbstractFacade
 			return false;
 		}
 
-		$language = static::getInstance();
-
 		foreach ($files as $file)
 		{
 			$file = explode('.', $file);
 
-			if (array_pop($file) != 'ini')
+			if (array_pop($file) !== 'ini')
 			{
 				continue;
 			}
 
 			array_shift($file);
 
-			if (count($file) != 1 && $file[1] == 'sys')
+			if (count($file) != 1 && $file[1] === 'sys')
 			{
 				continue;
 			}

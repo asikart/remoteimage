@@ -6,9 +6,12 @@
  * @license     GNU General Public License version 2 or later.
  */
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
 use Windwalker\String\StringInflector;
 
-// No direct access
 defined('_JEXEC') or die;
 
 include_once JPATH_LIBRARIES . '/windwalker/src/init.php';
@@ -23,23 +26,39 @@ abstract class {{extension.name.cap}}Helper
 	/**
 	 * Configure the Link bar.
 	 *
-	 * @param   string  $vName  The name of the active view.
+	 * @param   string $vName The name of the active view.
 	 *
 	 * @return  void
+	 *
+	 * @throws  Exception
 	 */
 	public static function addSubmenu($vName)
 	{
-		$app       = \JFactory::getApplication();
+		$app       = Factory::getApplication();
 		$inflector = StringInflector::getInstance(true);
 
 		// Add Category Menu Item
-		if ($app->isAdmin())
+		if ($app->isClient('administrator'))
 		{
 			JHtmlSidebar::addEntry(
-				JText::_('JCATEGORY'),
+				Text::_('JCATEGORY'),
 				'index.php?option=com_categories&extension={{extension.element.lower}}',
-				($vName == 'categories')
+				$vName === 'categories'
 			);
+
+			if (ComponentHelper::isEnabled('com_fields'))
+			{
+				JHtmlSidebar::addEntry(
+					Text::_('JGLOBAL_FIELDS'),
+					'index.php?option=com_fields&context={{extension.element.lower}}.{{controller.item.name.lower}}',
+					$vName === 'fields.fields'
+				);
+				JHtmlSidebar::addEntry(
+					Text::_('JGLOBAL_FIELD_GROUPS'),
+					'index.php?option=com_fields&view=groups&context={{extension.element.lower}}.{{controller.item.name.lower}}',
+					$vName === 'fields.groups'
+				);
+			}
 		}
 
 		foreach (new \DirectoryIterator(JPATH_ADMINISTRATOR . '/components/{{extension.element.lower}}/view') as $folder)
@@ -47,9 +66,9 @@ abstract class {{extension.name.cap}}Helper
 			if ($folder->isDir() && $inflector->isPlural($view = $folder->getBasename()))
 			{
 				JHtmlSidebar::addEntry(
-					JText::sprintf(sprintf('{{extension.element.upper}}_%s_TITLE_LIST', strtoupper($folder))),
+					Text::sprintf(sprintf('{{extension.element.upper}}_%s_TITLE_LIST', strtoupper($folder))),
 					'index.php?option={{extension.element.lower}}&view=' . $view,
-					($vName == $view)
+					$vName === $view
 				);
 			}
 		}
@@ -71,7 +90,7 @@ abstract class {{extension.name.cap}}Helper
 	 */
 	public static function countItems(&$items)
 	{
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		foreach ($items as $item)
 		{
@@ -121,21 +140,23 @@ abstract class {{extension.name.cap}}Helper
 	 *
 	 * @param   string  $option  Action option.
 	 *
-	 * @return  JObject
+	 * @return  CMSObject
 	 */
 	public static function getActions($option = '{{extension.element.lower}}')
 	{
-		$user   = JFactory::getUser();
-		$result = new \JObject;
+		$user   = Factory::getUser();
+		$result = new CMSObject;
 
 		$actions = array(
 			'core.admin',
+			'core.options',
 			'core.manage',
 			'core.create',
+			'core.delete',
 			'core.edit',
-			'core.edit.own',
 			'core.edit.state',
-			'core.delete'
+			'core.edit.own',
+			'core.edit.value',
 		);
 
 		foreach ($actions as $action)
@@ -144,5 +165,59 @@ abstract class {{extension.name.cap}}Helper
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Returns a valid section for articles. If it is not valid then null
+	 * is returned.
+	 *
+	 * @param   string $section The section to get the mapping for
+	 *
+	 * @return  string|null  The new section
+	 *
+	 * @since   1.0
+	 *
+	 * @throws  Exception
+	 */
+	public static function validateSection($section)
+	{
+		if (Factory::getApplication()->isClient('site'))
+		{
+			// On the front end we need to map some sections
+			switch ($section)
+			{
+				// Map to {{controller.item.name.lower}}
+				case '{{controller.item.name.lower}}':
+				case '{{controller.list.name.lower}}':
+					$section = '{{controller.item.name.lower}}';
+					break;
+
+				default:
+					$section = null;
+			}
+		}
+
+		return $section;
+	}
+
+	/**
+	 * Returns valid contexts
+	 *
+	 * @return  array
+	 *
+	 * @since   1.0
+	 */
+	public static function getContexts()
+	{
+		Factory::getLanguage()->load('com_content', JPATH_ADMINISTRATOR);
+
+		$contexts = array(
+			'{{extension.element.lower}}.{{controller.item.name.lower}}'    => Text::_('{{extension.element.upper}}_VIEW_{{controller.item.name.upper}}'),
+			'{{extension.element.lower}}.categories' => Text::_('JCATEGORY'),
+
+			// Add more group here...
+		);
+
+		return $contexts;
 	}
 }

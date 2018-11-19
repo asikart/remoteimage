@@ -8,7 +8,9 @@
 
 namespace Windwalker\Router;
 
-use Joomla\Uri\Uri;
+use Joomla\CMS\Router\Router as JoomlaRouter;
+use Joomla\CMS\Router\SiteRouter;
+use Joomla\CMS\Uri\Uri;
 use Windwalker\Test\TestHelper;
 
 /**
@@ -16,7 +18,7 @@ use Windwalker\Test\TestHelper;
  *
  * @since  2.1.5
  */
-class SiteRoute
+class SiteRoute extends RadRoute
 {
 	/**
 	 * Property defaultOption.
@@ -28,53 +30,9 @@ class SiteRoute
 	/**
 	 * Property router.
 	 *
-	 * @var  \JRouterSite
+	 * @var  SiteRouter
 	 */
 	protected static $router;
-
-	/**
-	 * Build by resource.
-	 *
-	 * @param   string   $resource The resource key to find our route.
-	 * @param   array    $data     The url query data.
-	 * @param   boolean  $xhtml    Replace & by &amp; for XML compilance.
-	 * @param   integer  $ssl      Secure state for the resolved URI.
-	 *                             1: Make URI secure using global secure site URI.
-	 *                             2: Make URI unsecure using the global unsecure site URI.
-	 *
-	 * @return  string Route url.
-	 */
-	public static function _($resource, $data = array(), $xhtml = true, $ssl = null)
-	{
-		// Replace all '.' and ':' to '@' to make it B/C
-		$resource = str_replace(array('.', ':'), '@', $resource);
-
-		if (static::$defaultOption && strpos($resource, '@') === false)
-		{
-			$resource = static::$defaultOption . '@' . $resource;
-		}
-
-		$resource = explode('@', $resource, 2);
-
-		if (count($resource) == 2)
-		{
-			$data['option']    = $resource[0];
-			$data['_resource'] = $resource[1];
-		}
-		elseif (count($resource) == 1)
-		{
-			$data['option']    = $resource[0];
-			$data['_resource'] = null;
-		}
-
-		$url = new Uri;
-
-		$url->setQuery($data);
-
-		$url->setPath('index.php');
-
-		return static::jroute((string) $url, $xhtml, $ssl);
-	}
 
 	/**
 	 * Translates an internal Joomla URL to a humanly readable URL.
@@ -88,7 +46,7 @@ class SiteRoute
 	 *
 	 * @return string The translated humanly readable URL.
 	 */
-	public static function jroute($url, $xhtml = true, $ssl = null)
+	public static function toJoomlaRoute($url, $xhtml = true, $ssl = null)
 	{
 		if (!static::$router)
 		{
@@ -126,7 +84,7 @@ class SiteRoute
 
 			if (!is_array($host_port))
 			{
-				$uri2 = \JUri::getInstance();
+				$uri2 = Uri::getInstance();
 				$host_port = array($uri2->getHost(), $uri2->getPort());
 			}
 
@@ -153,10 +111,10 @@ class SiteRoute
 	/**
 	 * getRouter
 	 *
-	 * @return  \JRouterSite
+	 * @return  SiteRouter|JoomlaRouter
 	 */
 	protected static function getRouter()
 	{
-		return \JRouter::getInstance('site', ['mode' => JROUTER_MODE_SEF]);
+		return JoomlaRouter::getInstance('site', array('mode' => JROUTER_MODE_SEF));
 	}
 }

@@ -2,8 +2,11 @@
 
 namespace Windwalker\Model;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
 use Joomla\DI\Container as JoomlaContainer;
-use JTable;
+use Joomla\Registry\Registry;
 use Windwalker\Helper\ArrayHelper;
 
 /**
@@ -65,20 +68,22 @@ class CrudModel extends AbstractFormModel
 	/**
 	 * Constructor
 	 *
-	 * @param   array              $config    An array of configuration options (name, state, dbo, table_path, ignore_request).
-	 * @param   JoomlaContainer    $container Service container.
-	 * @param   \JRegistry         $state     The model state.
-	 * @param   \JDatabaseDriver   $db        The database adapter.
+	 * @param   array            $config    An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   JoomlaContainer  $container Service container.
+	 * @param   Registry         $state     The model state.
+	 * @param   \JDatabaseDriver $db        The database adapter.
+	 *
+	 * @throws  \Exception
 	 */
-	public function __construct($config = array(), JoomlaContainer $container = null, \JRegistry $state = null, \JDatabaseDriver $db = null)
+	public function __construct($config = array(), JoomlaContainer $container = null, Registry $state = null, \JDatabaseDriver $db = null)
 	{
 		parent::__construct($config, $container, $state, $db);
 
 		$this->eventAfterDelete  = $this->eventAfterDelete  ? : ArrayHelper::getValue($config, 'event_after_delete', 'onContentAfterDelete');
 		$this->eventBeforeDelete = $this->eventBeforeDelete ? : ArrayHelper::getValue($config, 'event_before_delete', 'onContentBeforeDelete');
 		$this->eventAfterSave    = $this->eventAfterSave    ? : ArrayHelper::getValue($config, 'event_after_save', 'onContentAfterSave');
-		$this->eventBeforeSave   = $this->eventAfterSave    ? : ArrayHelper::getValue($config, 'event_before_save', 'onContentBeforeSave');
-		$this->eventChangeState  = $this->eventAfterSave    ? : ArrayHelper::getValue($config, 'event_change_state', 'onContentChangeState');
+		$this->eventBeforeSave   = $this->eventBeforeSave   ? : ArrayHelper::getValue($config, 'event_before_save', 'onContentBeforeSave');
+		$this->eventChangeState  = $this->eventChangeState  ? : ArrayHelper::getValue($config, 'event_change_state', 'onContentChangeState');
 
 		// @TODO: Check is needed or not.
 		$this->textPrefix = $this->textPrefix ? : strtoupper(ArrayHelper::getValue($config, 'text_prefix', $this->option));
@@ -90,6 +95,7 @@ class CrudModel extends AbstractFormModel
 	 * This method will only called in constructor. Using `ignore_request` to ignore this method.
 	 *
 	 * @return  void
+	 * @throws \Exception
 	 */
 	protected function populateState()
 	{
@@ -101,7 +107,7 @@ class CrudModel extends AbstractFormModel
 		$this->state->set($this->getName() . '.id', $pk);
 
 		// Load the parameters.
-		$value = \JComponentHelper::getParams($this->option);
+		$value = ComponentHelper::getParams($this->option);
 		$this->state->set('params', $value);
 	}
 
@@ -119,7 +125,7 @@ class CrudModel extends AbstractFormModel
 		$table      = $this->getTable();
 		$dispatcher = $container->get('event.dispatcher');
 
-		if ((!empty($data['tags']) && $data['tags'][0] != ''))
+		if ((!empty($data['tags']) && $data['tags'][0] !== ''))
 		{
 			$table->newTags = $data['tags'];
 		}
@@ -130,7 +136,7 @@ class CrudModel extends AbstractFormModel
 		$isNew = true;
 
 		// Include the content plugins for the on save events.
-		\JPluginHelper::importPlugin('content');
+		PluginHelper::importPlugin('content');
 
 		// Load the row if saving an existing record.
 		if ($pk)
@@ -152,7 +158,7 @@ class CrudModel extends AbstractFormModel
 		}
 
 		// Trigger the onContentBeforeSave event.
-		$result = $dispatcher->trigger($this->eventBeforeSave, array($this->option . '.' . $this->name, $table, $isNew));
+		$result = $dispatcher->trigger($this->eventBeforeSave, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 		if (in_array(false, $result, true))
 		{
@@ -169,7 +175,7 @@ class CrudModel extends AbstractFormModel
 		$this->cleanCache();
 
 		// Trigger the onContentAfterSave event.
-		$dispatcher->trigger($this->eventAfterSave, array($this->option . '.' . $this->name, $table, $isNew));
+		$dispatcher->trigger($this->eventAfterSave, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 		$pkName = $table->getKeyName();
 
@@ -188,7 +194,7 @@ class CrudModel extends AbstractFormModel
 	/**
 	 * Post save hook.
 	 *
-	 * @param JTable $table The table object.
+	 * @param Table $table The table object.
 	 *
 	 * @return  void
 	 */
@@ -199,7 +205,7 @@ class CrudModel extends AbstractFormModel
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   JTable  $table  A reference to a JTable object.
+	 * @param   Table  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 */
@@ -252,6 +258,8 @@ class CrudModel extends AbstractFormModel
 	 * @param mixed  $data The data to update.
 	 *
 	 * @return boolean True if update success.
+	 *
+	 * @throws \Exception
 	 */
 	public function updateState($pks, $data = array())
 	{
@@ -267,7 +275,7 @@ class CrudModel extends AbstractFormModel
 		}
 
 		// Include the content plugins for the change of state event.
-		\JPluginHelper::importPlugin('content');
+		PluginHelper::importPlugin('content');
 
 		$key = $table->getKeyName();
 
@@ -275,6 +283,8 @@ class CrudModel extends AbstractFormModel
 		foreach ($pks as $pk)
 		{
 			$table->reset();
+
+			$table->load($pk);
 
 			// Set primary
 			$table->$key = $pk;
@@ -310,9 +320,10 @@ class CrudModel extends AbstractFormModel
 	/**
 	 * Method to delete one or more records.
 	 *
-	 * @param   array  &$pks  An array of record primary keys.
+	 * @param   array &$pks An array of record primary keys.
 	 *
 	 * @return  boolean  True if successful, false if an error occurs.
+	 * @throws \Exception
 	 */
 	public function delete(&$pks)
 	{
@@ -323,7 +334,7 @@ class CrudModel extends AbstractFormModel
 		$table   = $this->getTable();
 
 		// Include the content plugins for the on delete events.
-		\JPluginHelper::importPlugin('content');
+		PluginHelper::importPlugin('content');
 
 		// Iterate the items to delete each one.
 		foreach ($pks as $i => $pk)

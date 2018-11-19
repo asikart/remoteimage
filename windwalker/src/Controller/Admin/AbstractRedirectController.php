@@ -2,8 +2,9 @@
 
 namespace Windwalker\Controller\Admin;
 
+use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Router\Route;
 use Windwalker\Controller\Controller;
-use Windwalker\Helper\UriHelper;
 
 /**
  * Class AbstractRedirectController
@@ -40,11 +41,11 @@ abstract class AbstractRedirectController extends Controller
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput           $input   The input object.
-	 * @param   \JApplicationCms  $app     The application object.
-	 * @param   array             $config  The config object.
+	 * @param   \JInput         $input   The input object.
+	 * @param   CMSApplication  $app     The application object.
+	 * @param   array           $config  The config object.
 	 */
-	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
+	public function __construct(\JInput $input = null, CMSApplication $app = null, $config = array())
 	{
 		parent::__construct($input, $app, $config);
 
@@ -66,7 +67,7 @@ abstract class AbstractRedirectController extends Controller
 	 */
 	public function getSuccessRedirect()
 	{
-		return \JRoute::_($this->getRedirectListUrl(), false);
+		return Route::_($this->getRedirectListUrl(), false);
 	}
 
 	/**
@@ -76,7 +77,7 @@ abstract class AbstractRedirectController extends Controller
 	 */
 	public function getFailRedirect()
 	{
-		return \JRoute::_($this->getRedirectItemUrl(), false);
+		return Route::_($this->getRedirectItemUrl(), false);
 	}
 
 	/**
@@ -91,7 +92,7 @@ abstract class AbstractRedirectController extends Controller
 	 */
 	public function redirectToItem($recordId = null, $urlVar = 'id', $msg = null, $type = 'message')
 	{
-		$this->setRedirect(\JRoute::_($this->getRedirectItemUrl($recordId, $urlVar), false), $msg, $type);
+		$this->setRedirect(Route::_($this->getRedirectItemUrl($recordId, $urlVar), false), $msg, $type);
 
 		return $this;
 	}
@@ -108,7 +109,7 @@ abstract class AbstractRedirectController extends Controller
 	{
 		$this->input->set('layout', null);
 
-		$this->setRedirect(\JRoute::_($this->getRedirectListUrl(), false), $msg, $type);
+		$this->setRedirect(Route::_($this->getRedirectListUrl(), false), $msg, $type);
 
 		return $this;
 	}

@@ -9,9 +9,9 @@
 namespace Windwalker\View\Html;
 
 use Joomla\DI\Container;
-use Windwalker\Registry\Registry;
 use Windwalker\Helper\ArrayHelper;
 use Windwalker\Model\Model;
+use Windwalker\Registry\Registry;
 use Windwalker\View\Helper\GridHelper;
 
 /**
@@ -83,6 +83,8 @@ class GridView extends ListHtmlView
 		$this['filterForm'] = $this['filterForm'] ? : $this->get('FilterForm');
 		$this['batchForm']  = $this['batchForm'] ? : $this->get('BatchForm');
 
+		$this['viewObject']->filterForm = $this['filterForm'];
+
 		if ($errors = $this['state']->get('errors'))
 		{
 			$this->addMessage($errors);
@@ -112,7 +114,7 @@ class GridView extends ListHtmlView
 	{
 		if (!$title)
 		{
-			$title = \JText::_(sprintf('COM_%s_%s_TITLE_LIST', strtoupper($this->prefix), strtoupper($this->getName())));
+			$title = \Joomla\CMS\Language\Text::_(sprintf('COM_%s_%s_TITLE_LIST', strtoupper($this->prefix), strtoupper($this->getName())));
 		}
 
 		parent::setTitle($title, $icons);

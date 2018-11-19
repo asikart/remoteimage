@@ -8,7 +8,6 @@
  * @license     GNU General Public License version 2 or later..txt
  */
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -62,8 +61,8 @@ class elFinderConnector {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	public function run() {
-		$isPost = $_SERVER["REQUEST_METHOD"] == 'POST';
-		$src    = $_SERVER["REQUEST_METHOD"] == 'POST' ? $_POST : $_GET;
+		$isPost = $_SERVER["REQUEST_METHOD"] === 'POST';
+		$src    = $_SERVER["REQUEST_METHOD"] === 'POST' ? $_POST : $_GET;
 		$cmd    = isset($src['cmd']) ? $src['cmd'] : '';
 		$args   = array();
 		
@@ -88,7 +87,7 @@ class elFinderConnector {
 		
 		// collect required arguments to exec command
 		foreach ($this->elFinder->commandArgsList($cmd) as $name => $req) {
-			$arg = $name == 'FILES' 
+			$arg = $name === 'FILES' 
 				? $_FILES 
 				: (isset($src[$name]) ? $src[$name] : '');
 				

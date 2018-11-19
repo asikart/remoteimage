@@ -8,7 +8,7 @@
 
 namespace Windwalker\Helper;
 
-use Joomla\Uri\Uri;
+use Joomla\CMS\Uri\Uri;
 use Windwalker\DI\Container;
 use Windwalker\String\Utf8String;
 
@@ -137,7 +137,7 @@ class UriHelper
 		{
 			if (!$absolute)
 			{
-				$path = \JURI::root() . $path;
+				$path = Uri::root() . $path;
 			}
 
 			// Redirect it.
@@ -190,28 +190,24 @@ class UriHelper
 			return '';
 		}
 
-		// Build path
-		$uri = new Uri($path);
-
-		if ($uri->getHost())
+		if (strpos($path, 'http') === 0 || strpos($path, '//') === 0)
 		{
 			return $path;
 		}
 
-		$uri = new Uri(\JUri::root());
-		$root_path = $uri->getPath();
-
-		if (strpos($path, $root_path) === 0)
+		if (strpos($path, '/') !== 0)
 		{
-			$num  = Utf8String::strlen($root_path);
-			$path = Utf8String::substr($path, $num);
+			return Uri::root() . $path;
 		}
 
-		$uri->setPath($uri->getPath() . $path);
-		$uri->setScheme('http');
-		$uri->setQuery(null);
+		$uri = clone Uri::getInstance();
 
-		return $uri->toString();
+		$uri->setQuery(array());
+		$uri->setPath('');
+
+		$host = $uri->toString();
+
+		return rtrim($host, '/') . $path;
 	}
 
 	/**
@@ -221,7 +217,7 @@ class UriHelper
 	 */
 	public static function isHome()
 	{
-		$uri  = \JUri::getInstance();
+		$uri  = Uri::getInstance();
 		$root = $uri::root(true);
 
 		// Get site route
@@ -230,11 +226,6 @@ class UriHelper
 		// Remove index.php
 		$route = str_replace('index.php', '', $route);
 
-		if (! trim($route, '/') && ! $uri->getVar('option'))
-		{
-			return true;
-		}
-
-		return false;
+		return !trim($route, '/') && !$uri->getVar('option');
 	}
 }

@@ -8,9 +8,12 @@
 
 namespace Windwalker\Asset;
 
-use Windwalker\DI\Container;
+use Joomla\CMS\Document\Document;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
 use Joomla\DI\Container as JoomlaContainer;
 use Joomla\DI\ContainerAwareInterface;
+use Windwalker\DI\Container;
 use Windwalker\Helper\ArrayHelper;
 use Windwalker\String\StringHelper;
 use Windwalker\Utilities\Queue\PriorityQueue;
@@ -60,7 +63,7 @@ class AssetManager implements ContainerAwareInterface
 	/**
 	 * The JDocument instance.
 	 *
-	 * @var \JDocument
+	 * @var Document
 	 */
 	protected $doc = null;
 
@@ -108,7 +111,7 @@ class AssetManager implements ContainerAwareInterface
 
 		$name = strtolower($name);
 
-		if ($name == 'windwalker')
+		if ($name === 'windwalker')
 		{
 			return static::$instances['windwalker'];
 		}
@@ -155,14 +158,15 @@ class AssetManager implements ContainerAwareInterface
 	 * @param   string  $name   The instance name, also means component subfolder name,
 	 *                          default is the name of this instance.
 	 * @param   array  $attribs The link attributes in html element.
+	 * @param   array  $options Array of options.
 	 *
 	 * @return AssetManager Return self to support chaining.
 	 */
-	public function addCSS($file, $name = null, $attribs = array())
+	public function addCSS($file, $name = null, $attribs = array(), $options = array())
 	{
 		$doc = $this->getDoc();
 
-		if ($doc->getType() != 'html')
+		if ($doc->getType() !== 'html')
 		{
 			return $this;
 		}
@@ -187,16 +191,17 @@ class AssetManager implements ContainerAwareInterface
 
 			$sum = $filePath['sum'];
 
-			$url = \JUri::root(true) . '/' . $filePath['file'];
+			$url = Uri::root(true) . '/' . $filePath['file'];
 		}
 
-		$type  = ArrayHelper::getValue($attribs, 'type');
-		$media = ArrayHelper::getValue($attribs, 'media');
+		$options['type']  = ArrayHelper::getValue($attribs, 'type', 'text/javascript');
+		$options['defer'] = ArrayHelper::getValue($attribs, 'defer');
+		$options['version'] = $sum ? : 'auto';
 
 		unset($attribs['type']);
 		unset($attribs['media']);
 
-		$doc->addStyleSheetVersion($url, $sum, $type, $media, $attribs);
+		$doc->addStyleSheet($url, $options, $attribs);
 
 		return $this;
 	}
@@ -208,14 +213,15 @@ class AssetManager implements ContainerAwareInterface
 	 * @param string $name    The instance name, also means component subfolder name,
 	 *                        default is the name of this instance.
 	 * @param array  $attribs The link attributes in html element.
+	 * @param array  $options Array of options.
 	 *
 	 * @return AssetManager Return self to support chaining.
 	 */
-	public function addJS($file, $name = null, $attribs = array())
+	public function addJS($file, $name = null, $attribs = array(), $options = array())
 	{
 		$doc = $this->getDoc();
 
-		if ($doc->getType() != 'html')
+		if ($doc->getType() !== 'html')
 		{
 			return $this;
 		}
@@ -240,22 +246,23 @@ class AssetManager implements ContainerAwareInterface
 
 			$sum = $filePath['sum'];
 
-			$url = \JUri::root(true) . '/' . $filePath['file'];
+			$url = Uri::root(true) . '/' . $filePath['file'];
 		}
 
-		$type  = ArrayHelper::getValue($attribs, 'type', 'text/javascript');
-		$defer = ArrayHelper::getValue($attribs, 'defer');
-		$async = ArrayHelper::getValue($attribs, 'async');
+		$options['type']  = ArrayHelper::getValue($attribs, 'type', 'text/javascript');
+		$options['defer'] = ArrayHelper::getValue($attribs, 'defer');
+		$options['async'] = ArrayHelper::getValue($attribs, 'async');
+		$options['version'] = $sum ? : 'auto';
 
 		unset($attribs['type']);
 		unset($attribs['media']);
 
 		if ($this->jquery)
 		{
-			\JHtml::_('jquery.framework', $this->mootools);
+			HTMLHelper::_('jquery.framework', $this->mootools);
 		}
 
-		$doc->addScriptVersion($url, $sum, $type, $defer, $async);
+		$doc->addScript($url, $options, $attribs);
 
 		return $this;
 	}
@@ -424,7 +431,7 @@ class AssetManager implements ContainerAwareInterface
 		$foundpath = '';
 		$sum       = '';
 
-		$uri = new \JUri($file);
+		$uri = new Uri($file);
 
 		if ($uri->getScheme())
 		{
@@ -598,11 +605,11 @@ class AssetManager implements ContainerAwareInterface
 		// (8) Find: media/windwalker/[file_name].[type]
 		$this->paths->insert('media/windwalker', 100);
 
-		// (9) Find: libraries/windwalker/resource/asset/[type]/[file_name].[type] (For legacy)
-		$this->paths->insert('libraries/windwalker/resource/asset/{type}', 50);
+		// (9) Find: libraries/windwalker/asset/[type]/[file_name].[type] (For legacy)
+		$this->paths->insert('libraries/windwalker/asset/{type}', 50);
 
-		// (10) Find: libraries/windwalker/resource/assets/[file_name].[type] (For legacy)
-		$this->paths->insert('libraries/windwalker/resource/asset', 20);
+		// (10) Find: libraries/windwalker/assets/[file_name].[type] (For legacy)
+		$this->paths->insert('libraries/windwalker/asset', 20);
 
 		// (11) Find: libraries/windwalker/assets/[file_name].[type] (For legacy)
 		$this->paths->insert('libraries/windwalker/assets', 10);
@@ -633,7 +640,7 @@ class AssetManager implements ContainerAwareInterface
 	{
 		if (!($this->container instanceof JoomlaContainer))
 		{
-			$name = ($name == 'windwalker') ? null : $name;
+			$name = ($name === 'windwalker') ? null : $name;
 
 			$this->container = Container::getInstance($name);
 		}
@@ -706,11 +713,11 @@ class AssetManager implements ContainerAwareInterface
 	/**
 	 * Get JDocument.
 	 *
-	 * @return  \JDocument The JDocument object.
+	 * @return  Document The JDocument object.
 	 */
 	public function getDoc()
 	{
-		if (!($this->doc instanceof \JDocument))
+		if (!($this->doc instanceof Document))
 		{
 			$this->doc = $this->getContainer()->get('document');
 		}
@@ -721,11 +728,11 @@ class AssetManager implements ContainerAwareInterface
 	/**
 	 * Set JDocument
 	 *
-	 * @param \JDocument $doc The JDocument object.
+	 * @param Document $doc The JDocument object.
 	 *
 	 * @return  AssetManager Return self to support chaining.
 	 */
-	public function setDoc(\JDocument $doc)
+	public function setDoc(Document $doc)
 	{
 		$this->doc = $doc;
 

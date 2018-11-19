@@ -8,9 +8,14 @@
 
 namespace Windwalker\Controller\Admin;
 
-use Windwalker\String\StringInflector as Inflector;;
+use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Router\Route;
 use Windwalker\Helper\ArrayHelper;
 use Windwalker\Helper\ContextHelper;
+use Windwalker\String\StringInflector as Inflector;
+
+;
 
 /**
  * The Controller to handle single item.
@@ -36,11 +41,11 @@ abstract class AbstractItemController extends AbstractAdminController
 	/**
 	 * Instantiate the controller.
 	 *
-	 * @param   \JInput           $input   The input object.
-	 * @param   \JApplicationCms  $app     The application object.
-	 * @param   array             $config  The config object.
+	 * @param   \JInput         $input   The input object.
+	 * @param   CMSApplication  $app     The application object.
+	 * @param   array           $config  The config object.
 	 */
-	public function __construct(\JInput $input = null, \JApplicationCms $app = null, $config = array())
+	public function __construct(\JInput $input = null, CMSApplication $app = null, $config = array())
 	{
 		parent::__construct($input, $app, $config);
 
@@ -97,14 +102,14 @@ abstract class AbstractItemController extends AbstractAdminController
 
 			if (defined('JDEBUG') && JDEBUG)
 			{
-				\JLog::add(
+				Log::add(
 					sprintf(
 						'Holding edit ID %s.%s %s',
 						$context,
 						$id,
 						str_replace("\n", ' ', print_r($values, 1))
 					),
-					\JLog::INFO,
+					Log::INFO,
 					'controller'
 				);
 			}
@@ -133,14 +138,14 @@ abstract class AbstractItemController extends AbstractAdminController
 
 			if (defined('JDEBUG') && JDEBUG)
 			{
-				\JLog::add(
+				Log::add(
 					sprintf(
 						'Releasing edit ID %s.%s %s',
 						$context,
 						$id,
 						str_replace("\n", ' ', print_r($values, 1))
 					),
-					\JLog::INFO,
+					Log::INFO,
 					'controller'
 				);
 			}
@@ -165,7 +170,7 @@ abstract class AbstractItemController extends AbstractAdminController
 
 			if (defined('JDEBUG') && JDEBUG)
 			{
-				\JLog::add(
+				Log::add(
 					sprintf(
 						'Checking edit ID %s.%s: %d %s',
 						$context,
@@ -173,7 +178,7 @@ abstract class AbstractItemController extends AbstractAdminController
 						(int) $result,
 						str_replace("\n", ' ', print_r($values, 1))
 					),
-					\JLog::INFO,
+					Log::INFO,
 					'controller'
 				);
 			}
@@ -194,7 +199,7 @@ abstract class AbstractItemController extends AbstractAdminController
 	 */
 	public function getSuccessRedirect()
 	{
-		return \JRoute::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false);
+		return Route::_($this->getRedirectItemUrl($this->recordId, $this->urlVar), false);
 	}
 
 	/**
@@ -204,6 +209,6 @@ abstract class AbstractItemController extends AbstractAdminController
 	 */
 	public function getFailRedirect()
 	{
-		return \JRoute::_($this->getRedirectListUrl(), false);
+		return Route::_($this->getRedirectListUrl(), false);
 	}
 }

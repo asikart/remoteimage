@@ -6,10 +6,11 @@
  * @license     GNU General Public License version 2 or later.
  */
 
+use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Factory;
 use Windwalker\Model\Filter\FilterHelper;
 use Windwalker\Model\ListModel;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -167,7 +168,10 @@ class {{extension.name.cap}}Model{{controller.list.name.cap}} extends ListModel
 
 		// Language
 		// =====================================================================================
-		$this->set('filter.language', $app->getLanguageFilter());
+		if ($app instanceof SiteApplication)
+		{
+			$this->set('filter.language', $app->getLanguageFilter());
+		}
 
 		parent::populateState($ordering, 'ASC');
 
@@ -189,8 +193,8 @@ class {{extension.name.cap}}Model{{controller.list.name.cap}} extends ListModel
 		$this->set('list.start', $input->getInt('start', $input->getInt('limitstart', 0)));
 		$this->set(
 			'list.limit',
-			$params->get('num_leading_articles', 0)
-			+ $params->get('num_intro_articles', 15)
+			$params->get('num_leading_items', 1)
+			+ $params->get('num_intro_items', 4)
 		);
 	}
 
@@ -201,6 +205,8 @@ class {{extension.name.cap}}Model{{controller.list.name.cap}} extends ListModel
 	 * @param array          $filters The filters values.
 	 *
 	 * @return  JDatabaseQuery The db query object.
+	 *
+	 * @throws  Exception
 	 */
 	protected function processFilters(\JDatabaseQuery $query, $filters = array())
 	{
@@ -256,7 +262,7 @@ class {{extension.name.cap}}Model{{controller.list.name.cap}} extends ListModel
 
 		// View Level
 		// =====================================================================================
-		if ($access = $this->state->get('filter.access') && $this->filterField('{{controller.item.name.lower}}.access'))
+		if ($this->state->get('filter.access') && $this->filterField('{{controller.item.name.lower}}.access'))
 		{
 			$query->where('{{controller.item.name.lower}}.access ' . new JDatabaseQueryElement('IN()', $user->getAuthorisedViewLevels()));
 		}
@@ -265,7 +271,7 @@ class {{extension.name.cap}}Model{{controller.list.name.cap}} extends ListModel
 		// =====================================================================================
 		if ($this->state->get('filter.language') && $this->filterField('{{controller.item.name.lower}}.language'))
 		{
-			$lang_code = $db->quote(JFactory::getLanguage()->getTag());
+			$lang_code = $db->quote(Factory::getLanguage()->getTag());
 			$query->where("{{controller.item.name.lower}}.language IN ('{$lang_code}', '*')");
 		}
 

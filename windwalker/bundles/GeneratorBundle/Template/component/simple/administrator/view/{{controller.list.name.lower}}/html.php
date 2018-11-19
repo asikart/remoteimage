@@ -12,7 +12,6 @@ use Windwalker\View\Engine\PhpEngine;
 use Windwalker\View\Html\GridView;
 use Windwalker\Xul\XulEngine;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -104,7 +103,9 @@ class {{extension.name.cap}}View{{controller.list.name.cap}}Html extends GridVie
 	 */
 	protected function prepareData()
 	{
-		/** @var {{extension.name.cap}}Model{{controller.list.name.cap}} */
+		$data = $this->getData();
+
+		//
 	}
 
 	/**

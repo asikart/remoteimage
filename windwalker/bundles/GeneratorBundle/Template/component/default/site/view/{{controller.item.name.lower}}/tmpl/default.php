@@ -6,10 +6,11 @@
  * @license     GNU General Public License version 2 or later.
  */
 
-use {{extension.name.cap}}\Router\Route;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route as JRoute;
+use Joomla\CMS\Uri\Uri;
 use Windwalker\View\Helper\FrontViewHelper;
 
-// No direct access
 defined('_JEXEC') or die;
 
 /**
@@ -26,7 +27,7 @@ $params = $data->item->params;
 $item = $data->item;
 ?>
 
-<form action="<?php echo JUri::getInstance(); ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+<form action="<?php echo clone Uri::getInstance(); ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
 	<div id="{{extension.name.cap}}" class="windwalker item container-fluid {{controller.item.name.lower}}<?php echo $this->escape($params->get('pageclass_sfx')); ?>">
 		<div id="{{extension.name.lower}}-wrap-inner">
@@ -37,7 +38,7 @@ $item = $data->item;
 					<!-- Heading -->
 					<!-- ============================================================================= -->
 					<div class="heading">
-						<h2><?php echo $params->get('link_titles', 1) ? JHtml::_('link', $item->link, $this->escape($item->title)) : $this->escape($item->title); ?></h2>
+						<h2><?php echo $params->get('link_titles', 1) ? HTMLHelper::_('link', $item->link, $this->escape($item->title)) : $this->escape($item->title); ?></h2>
 					</div>
 					<!-- ============================================================================= -->
 					<!-- Heading -->
@@ -48,17 +49,11 @@ $item = $data->item;
 					<!-- ============================================================================= -->
 					<!-- afterDisplayTitle -->
 
-					<!-- beforeDisplayContent -->
-					<!-- ============================================================================= -->
-					<?php echo $data->item->event->beforeDisplayContent; ?>
-					<!-- ============================================================================= -->
-					<!-- beforeDisplayContent -->
-
 					<!-- Info -->
 					<!-- ============================================================================= -->
 					<div class="info">
 						<div class="info-inner">
-                            <?php echo FrontViewHelper::showLink('jcategory', $data->category->title, Route::_('{{controller.list.name.lower}}', array('id' => $item->catid)), 'folder'); ?>
+                            <?php echo FrontViewHelper::showLink('jcategory', $data->category->title, JRoute::_('index.php?option={{extension.element.lower}}&view={{controller.list.name.lower}}&id=' . $item->catid), 'folder'); ?>
                             <?php echo FrontViewHelper::showDate('{{extension.element.lower}}_created', $item->created); ?>
                             <?php echo FrontViewHelper::showDate('{{extension.element.lower}}_modified', $item->modified); ?>
                             <?php echo FrontViewHelper::showLabel('{{extension.element.lower}}_created_by', $item->user_name, 'user'); ?>
@@ -69,6 +64,12 @@ $item = $data->item;
 					<!-- ============================================================================= -->
 					<!-- Info -->
 
+                    <!-- beforeDisplayContent -->
+                    <!-- ============================================================================= -->
+					<?php echo $data->item->event->beforeDisplayContent; ?>
+                    <!-- ============================================================================= -->
+                    <!-- beforeDisplayContent -->
+
 					<!-- Content -->
 					<!-- ============================================================================= -->
 					<div class="content">
@@ -77,7 +78,7 @@ $item = $data->item;
 							<div class="span12">
 								<?php if (!empty($item->images)): ?>
 									<div class="content-img">
-										<?php echo JHtml::_('image', $this->escape($item->images), $this->escape($item->title)); ?>
+										<?php echo HTMLHelper::_('image', $this->escape($item->images), $this->escape($item->title)); ?>
 									</div>
 								<?php endif; ?>
 
@@ -110,7 +111,7 @@ $item = $data->item;
 	<div>
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="boxchecked" value="0" />
-		<input type="hidden" name="return" value="<?php echo base64_encode(JUri::getInstance()->toString()); ?>" />
-		<?php echo JHtml::_('form.token'); ?>
+		<input type="hidden" name="return" value="<?php echo base64_encode(Uri::getInstance()->toString()); ?>" />
+		<?php echo HTMLHelper::_('form.token'); ?>
 	</div>
 </form>        

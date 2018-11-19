@@ -6,10 +6,11 @@
  * @license     GNU General Public License version 2 or later.
  */
 
-use Windwalker\Data\Data;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route as JRoute;
+use Joomla\CMS\Uri\Uri;
 use Windwalker\View\Layout\FileLayout;
 
-// No direct access
 defined('_JEXEC') or die;
 
 JHtmlBootstrap::tooltip();
@@ -68,8 +69,8 @@ $user      = $container->get('user');
 
         <div>
             <input type="hidden" name="task" value="" />
-            <input type="hidden" name="return" id="return_url" value="<?php echo base64_encode(JUri::getInstance()->toString()); ?>" />
-            <?php echo JHtml::_('form.token'); ?>
+            <input type="hidden" name="return" id="return_url" value="<?php echo base64_encode(Uri::getInstance()->toString()); ?>" />
+            <?php echo HTMLHelper::_('form.token'); ?>
         </div>
     </div>
 

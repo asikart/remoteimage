@@ -153,6 +153,8 @@ class RadRoute
 	 *                             2: Make URI unsecure using the global unsecure site URI.
 	 *
 	 * @return  string Route url.
+	 *
+	 * @deprecated  Use view() and task() after Joomla3.7 with new router.
 	 */
 	public static function _($resource, $data = array(), $xhtml = true, $ssl = null)
 	{
@@ -183,7 +185,105 @@ class RadRoute
 
 		$url->setPath('index.php');
 
-		return \JRoute::_((string) $url, $xhtml, $ssl);
+		return static::toJoomlaRoute((string) $url, $xhtml, $ssl);
+	}
+
+	/**
+	 * view
+	 *
+	 * @param   string   $resource The resource key to find our route.
+	 * @param   array    $query    The url query data.
+	 * @param   boolean  $xhtml    Replace & by &amp; for XML compilance.
+	 * @param   integer  $ssl      Secure state for the resolved URI.
+	 *                             1: Make URI secure using global secure site URI.
+	 *                             2: Make URI unsecure using the global unsecure site URI.
+	 *
+	 * @return  string
+	 *
+	 * @since   2.1.10
+	 */
+	public static function view($resource, $query = array(), $xhtml = true, $ssl = null)
+	{
+		if (static::$defaultOption && strpos($resource, '@') === false)
+		{
+			$resource = static::$defaultOption . '@' . $resource;
+		}
+
+		$resource = explode('@', $resource, 2);
+
+		$data = array();
+
+		if (count($resource) === 1)
+		{
+			$data['option'] = $resource[0];
+		}
+		else
+		{
+			$data['option'] = $resource[0];
+			$data['view'] = $resource[1];
+		}
+
+		$query = array_merge($data, $query);
+
+		return static::toJoomlaRoute('index.php?' . http_build_query($query), $xhtml, $ssl);
+	}
+
+	/**
+	 * task
+	 *
+	 * @param   string   $resource The resource key to find our route.
+	 * @param   array    $query    The url query data.
+	 * @param   boolean  $xhtml    Replace & by &amp; for XML compilance.
+	 * @param   integer  $ssl      Secure state for the resolved URI.
+	 *                             1: Make URI secure using global secure site URI.
+	 *                             2: Make URI unsecure using the global unsecure site URI.
+	 *
+	 * @return  string
+	 *
+	 * @since   2.1.10
+	 */
+	public static function task($resource, $query = array(), $xhtml = true, $ssl = null)
+	{
+		if (static::$defaultOption && strpos($resource, '@') === false)
+		{
+			$resource = static::$defaultOption . '@' . $resource;
+		}
+
+		$resource = explode('@', $resource, 2);
+
+		$data = array();
+
+		if (count($resource) === 1)
+		{
+			$data['option'] = $resource[0];
+		}
+		else
+		{
+			$data['option'] = $resource[0];
+			$data['task'] = $resource[1];
+		}
+
+		$query = array_merge($data, $query);
+
+		return static::toJoomlaRoute('index.php?' . http_build_query($query), $xhtml, $ssl);
+	}
+
+	/**
+	 * Build by Joomla JRoute.
+	 *
+	 * @param   string   $uri      The URI to build.
+	 * @param   boolean  $xhtml    Replace & by &amp; for XML compilance.
+	 * @param   integer  $ssl      Secure state for the resolved URI.
+	 *                             1: Make URI secure using global secure site URI.
+	 *                             2: Make URI unsecure using the global unsecure site URI.
+	 *
+	 * @return  string Route url.
+	 *
+	 * @since   2.1.10
+	 */
+	public static function toJoomlaRoute($uri, $xhtml = true, $ssl = null)
+	{
+		return \JRoute::_($uri, $xhtml, $ssl);
 	}
 
 	/**
@@ -191,11 +291,11 @@ class RadRoute
 	 *
 	 * @param   array  &$data The query data to build route.
 	 *
-	 * @return  string Route url.
+	 * @return  array Route query.
 	 */
 	public static function build(&$data = array())
 	{
-		$menu = \JFactory::getApplication()->getMenu('site');
+		$menu = \Joomla\CMS\Factory::getApplication()->getMenu('site');
 
 		$items = $menu->getMenu();
 
@@ -598,7 +698,7 @@ class RadRoute
 	{
 		$this->scheme = strtolower($scheme);
 
-		$this->ssl = ($this->scheme == 'https');
+		$this->ssl = ($this->scheme === 'https');
 
 		return $this;
 	}
