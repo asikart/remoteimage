@@ -55,7 +55,10 @@ abstract class RemoteimageComponent extends Component
 		// Register tasks
 		TaskMapper::register($this);
 
-		include_once JPATH_ADMINISTRATOR . '/includes/toolbar.php';
+		if (is_file(JPATH_ADMINISTRATOR . '/includes/toolbar.php'))
+		{
+			include_once JPATH_ADMINISTRATOR . '/includes/toolbar.php';
+		}
 
 		parent::prepare();
 	}
